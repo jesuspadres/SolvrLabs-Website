@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Services — Solvr Labs</title>
+    <title>Services - Solvr Labs</title>
     <meta name="description" content="AI workflow automation, voice AI, and custom software for service businesses. I help you plug AI into your existing workflow.">
     <link rel="icon" type="image/png" href="assets/favicon-solvrlabs.png">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -37,8 +37,13 @@
         .faq-item.open .faq-answer { max-height:300px; }
         .faq-item.open .faq-icon { transform:rotate(45deg); }
         .faq-icon { transition:transform 0.3s ease; }
+        html { overflow-x: clip; }
         @media (max-width: 639px) {
-            .mobile-scale { zoom: 0.82; }
+            .mobile-scale {
+                transform: scale(0.82);
+                transform-origin: top left;
+                width: 122%;
+            }
         }
     </style>
 </head>
@@ -84,7 +89,7 @@
     </section>
 
     <!-- Service 1: AI Workflow Automation -->
-    <section class="py-20 bg-white">
+    <section class="py-20 bg-white overflow-hidden">
         <div class="max-w-6xl mx-auto px-6">
             <div class="grid lg:grid-cols-2 gap-14 items-center">
                 <div>
@@ -209,7 +214,7 @@
     </section>
 
     <!-- Service 2: Voice AI -->
-    <section class="py-20 bg-brand-50/50">
+    <section class="py-20 bg-brand-50/50 overflow-hidden">
         <div class="max-w-6xl mx-auto px-6">
             <div class="grid lg:grid-cols-2 gap-14 items-center">
                 <div class="reveal order-2 lg:order-1 mobile-scale">
@@ -301,7 +306,7 @@
     </section>
 
     <!-- Service 3: Custom AI Software -->
-    <section class="py-20 bg-white">
+    <section class="py-20 bg-white overflow-hidden">
         <div class="max-w-6xl mx-auto px-6">
             <div class="grid lg:grid-cols-2 gap-14 items-center">
                 <div>
