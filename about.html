@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — Solvr Labs</title>
+    <meta name="description" content="I'm a full-stack developer and AI integration specialist. I help service businesses automate their workflows with AI.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#f0f5ff',100:'#e1ebff',200:'#c8d8fe',300:'#a3bffc',400:'#7da0f8',500:'#5a7de6',600:'#4664d6',700:'#3a53bd',800:'#33469a',900:'#2c3a7c',950:'#1d264e' },
+                        gray: { 50:'#f9fafb',100:'#f2f3f6',200:'#e5e7eb',300:'#d1d5db',400:'#9ca3af',500:'#6b7280',600:'#4b5563',700:'#374151',800:'#1f2937',900:'#1d1e20' },
+                    },
+                    fontFamily: { sans: ['"DM Sans"','system-ui','sans-serif'], display: ['"DM Sans"','system-ui','sans-serif'] },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f2f3f6; } ::-webkit-scrollbar-thumb { background: #5a7de6; border-radius: 3px; }
+        .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; }
+        .burger span { display:block; width:22px; height:2px; background:#2c3a7c; transition:all 0.3s ease; }
+        .burger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity:0; }
+        .burger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+    </style>
+</head>
+<body class="bg-white text-gray-900 overflow-x-hidden">
+
+    <!-- Nav -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <a href="index.html" class="py-3.5">
+                    <img src="assets/full-logo-png (1).png" alt="Solvr Labs" class="h-[50px]">
+                </a>
+                <div class="hidden md:flex items-center gap-10">
+                    <a href="index.html" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Home</a>
+                    <a href="services.html" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Services</a>
+                    <a href="about.html" class="text-lg font-medium text-brand-600">About</a>
+                    <a href="index.html#work" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Work</a>
+                    <a href="contact.html" class="px-6 py-2.5 text-base font-semibold rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-colors shadow-sm">Book a Call</a>
+                </div>
+                <button id="burger" class="burger md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
+            <div class="px-6 py-4 space-y-1">
+                <a href="index.html" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Home</a>
+                <a href="services.html" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Services</a>
+                <a href="about.html" class="block px-3 py-2.5 text-sm font-medium text-brand-600 rounded-lg">About</a>
+                <a href="index.html#work" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Work</a>
+                <a href="contact.html" class="block mt-3 px-3 py-2.5 text-sm font-semibold text-center text-white rounded-full bg-brand-600">Book a Call</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="pt-32 pb-16 bg-brand-50/50">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <span class="text-sm font-semibold text-brand-600 uppercase tracking-wider">About</span>
+            <h1 class="font-bold text-4xl sm:text-5xl text-brand-900 mt-3 mb-5">The Person Behind Solvr Labs</h1>
+            <p class="text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed">
+                Full-stack developer and AI integration specialist. I build systems that let businesses automate the work they shouldn't be doing manually.
+            </p>
+        </div>
+    </section>
+
+    <!-- Story -->
+    <section class="py-20 bg-white">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="reveal space-y-6 text-gray-500 leading-relaxed">
+                <p class="text-lg">
+                    I'm a full-stack developer who specializes in AI integration for service businesses.
+                </p>
+                <p>
+                    Most businesses know they should be using AI — but they don't have a tech team to make it happen. They're stuck doing everything manually: answering calls, writing proposals, chasing invoices, following up on leads. That's where I come in.
+                </p>
+                <p>
+                    I take tools like n8n, Claude AI, and voice AI platforms, and I wire them into your existing business so they actually do useful work — not just generate text in a chat window. Missed call? The AI texts back and books the appointment. New lead? A proposal gets drafted automatically. Job complete? The invoice goes out and a review request follows.
+                </p>
+                <p>
+                    When you work with Solvr Labs, you work directly with me. No account managers, no handoffs, no layers between you and the person building your system. That's not a limitation — it means faster communication, better results, and someone who actually understands your business.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- What I'm Building -->
+    <section class="py-20 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="reveal">
+                <span class="text-sm font-semibold text-brand-600 uppercase tracking-wider">Currently Building</span>
+                <h2 class="font-bold text-2xl sm:text-3xl text-brand-900 mt-3 mb-5">TaskLine</h2>
+                <p class="text-gray-500 leading-relaxed mb-4">
+                    A full-stack freelancer management platform with AI-powered proposal generation, scheduling, invoicing, and multi-channel communication. Built with Next.js, Supabase, Stripe, Claude AI, and Twilio.
+                </p>
+                <p class="text-gray-500 leading-relaxed">
+                    TaskLine is my proof of work — it's the kind of AI-integrated product I build for clients, except I'm building it for the service industry I know best.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">Technical Depth</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">What I Work With</h2>
+            </div>
+            <div class="reveal grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="bg-brand-50/60 rounded-xl p-5 border border-brand-100/50">
+                    <div class="text-xs text-brand-600 font-semibold mb-2 uppercase tracking-wider">AI & LLMs</div>
+                    <div class="text-sm text-gray-600 leading-relaxed">Claude API, OpenAI, Prompt Engineering, RAG Pipelines, Vector Databases</div>
+                </div>
+                <div class="bg-brand-50/60 rounded-xl p-5 border border-brand-100/50">
+                    <div class="text-xs text-brand-600 font-semibold mb-2 uppercase tracking-wider">Automation</div>
+                    <div class="text-sm text-gray-600 leading-relaxed">n8n, Make, Zapier, Webhooks, REST APIs, OAuth</div>
+                </div>
+                <div class="bg-brand-50/60 rounded-xl p-5 border border-brand-100/50">
+                    <div class="text-xs text-brand-600 font-semibold mb-2 uppercase tracking-wider">Voice AI</div>
+                    <div class="text-sm text-gray-600 leading-relaxed">Bland.ai, Vapi, Twilio, Cal.com</div>
+                </div>
+                <div class="bg-brand-50/60 rounded-xl p-5 border border-brand-100/50">
+                    <div class="text-xs text-brand-600 font-semibold mb-2 uppercase tracking-wider">Frontend</div>
+                    <div class="text-sm text-gray-600 leading-relaxed">React, Next.js, TypeScript, Tailwind CSS</div>
+                </div>
+                <div class="bg-brand-50/60 rounded-xl p-5 border border-brand-100/50">
+                    <div class="text-xs text-brand-600 font-semibold mb-2 uppercase tracking-wider">Backend & Data</div>
+                    <div class="text-sm text-gray-600 leading-relaxed">Node.js, Python, PostgreSQL, Supabase</div>
+                </div>
+                <div class="bg-brand-50/60 rounded-xl p-5 border border-brand-100/50">
+                    <div class="text-xs text-brand-600 font-semibold mb-2 uppercase tracking-wider">Infrastructure</div>
+                    <div class="text-sm text-gray-600 leading-relaxed">Vercel, AWS, Docker, CI/CD Pipelines</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Open to Opportunities -->
+    <section class="py-14 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6 text-center">
+            <div class="reveal">
+                <p class="text-gray-500 text-sm leading-relaxed">
+                    I'm also open to full-time roles in AI integration, solutions engineering, or forward-deployed engineering.
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="text-brand-600 hover:text-brand-700 font-medium transition-colors ml-1">LinkedIn &rarr;</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-20 bg-brand-600">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <h2 class="reveal font-bold text-3xl sm:text-4xl text-white mb-4">Want to work together?</h2>
+            <p class="reveal reveal-delay-1 text-brand-200 text-lg max-w-xl mx-auto mb-8">Whether you need a single automation or a full platform, I'd like to hear about your business.</p>
+            <a href="contact.html" class="reveal reveal-delay-2 inline-flex items-center gap-2 px-7 py-3 bg-white text-brand-600 hover:bg-brand-50 rounded-full font-semibold transition-colors shadow-lg shadow-brand-700/30">
+                Book a Call
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-14">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <a href="index.html" class="inline-block mb-4"><img src="assets/full-logo-png (1).png" alt="Solvr Labs" class="h-14 brightness-0 invert"></a>
+                    <p class="text-brand-300/60 text-sm leading-relaxed max-w-xs">AI automation and custom software for service businesses.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Navigation</h4>
+                    <ul class="space-y-2"><li><a href="index.html" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home</a></li><li><a href="services.html" class="text-brand-300/50 hover:text-white text-sm transition-colors">Services</a></li><li><a href="about.html" class="text-brand-300/50 hover:text-white text-sm transition-colors">About</a></li><li><a href="contact.html" class="text-brand-300/50 hover:text-white text-sm transition-colors">Contact</a></li></ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Services</h4>
+                    <ul class="space-y-2"><li><a href="services.html" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Workflow Automation</a></li><li><a href="services.html" class="text-brand-300/50 hover:text-white text-sm transition-colors">Voice AI</a></li><li><a href="services.html" class="text-brand-300/50 hover:text-white text-sm transition-colors">Custom Software</a></li></ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-800 mt-10 pt-6 text-center text-brand-300/40 text-xs">&copy; 2026 Solvr Labs, LLC. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('burger').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('mobile-menu').classList.toggle('hidden'); });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

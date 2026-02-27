@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:solvrlabs.com)",
+      "WebFetch(domain:claude.ai)",
+      "Bash(head -500 app/[locale]/page.tsx)",
+      "Bash(cat \"C:\\\\Users\\\\jezzi\\\\OneDrive\\\\Documents\\\\TaskLine\\\\app\\\\[locale]\\\\\\(freelancer\\)\\\\dashboard\\\\page.tsx\")"
+    ]
+  }
+}
