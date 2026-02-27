@@ -4,7 +4,10 @@
       "WebFetch(domain:solvrlabs.com)",
       "WebFetch(domain:claude.ai)",
       "Bash(head -500 app/[locale]/page.tsx)",
-      "Bash(cat \"C:\\\\Users\\\\jezzi\\\\OneDrive\\\\Documents\\\\TaskLine\\\\app\\\\[locale]\\\\\\(freelancer\\)\\\\dashboard\\\\page.tsx\")"
+      "Bash(cat \"C:\\\\Users\\\\jezzi\\\\OneDrive\\\\Documents\\\\TaskLine\\\\app\\\\[locale]\\\\\\(freelancer\\)\\\\dashboard\\\\page.tsx\")",
+      "mcp__claude_ai_Vercel__deploy_to_vercel",
+      "Bash(npx vercel --version)",
+      "Bash(npx vercel deploy --prod --yes)"
     ]
   }
 }
