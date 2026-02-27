@@ -136,12 +136,12 @@
         /* Prevent iOS Safari horizontal scroll */
         html { overflow-x: clip; }
 
-        /* Mobile render scaling — transform + width keeps renders full-width */
+        /* Mobile render scaling — zoom affects layout box so width compensation works */
         @media (max-width: 639px) {
             .mobile-scale {
-                transform: scale(0.82);
-                transform-origin: top left;
+                zoom: 0.82;
                 width: 122%;
+                overflow: hidden;
             }
         }
     </style>
