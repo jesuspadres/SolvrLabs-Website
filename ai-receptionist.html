@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Receptionist for Trade Businesses - Solvr Labs</title>
+    <meta name="description" content="AI-powered phone receptionist that answers every call 24/7, creates jobs in Jobber & ServiceTitan, notifies techs, and books appointments. Starting at $99/mo.">
+    <link rel="icon" type="image/png" href="assets/favicon-solvrlabs.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#f0f5ff',100:'#e1ebff',200:'#c8d8fe',300:'#a3bffc',400:'#7da0f8',500:'#5a7de6',600:'#4664d6',700:'#3a53bd',800:'#33469a',900:'#2c3a7c',950:'#1d264e' },
+                        gray: { 50:'#f9fafb',100:'#f2f3f6',200:'#e5e7eb',300:'#d1d5db',400:'#9ca3af',500:'#6b7280',600:'#4b5563',700:'#374151',800:'#1f2937',900:'#1d1e20' },
+                    },
+                    fontFamily: { sans: ['"DM Sans"','system-ui','sans-serif'], display: ['"DM Sans"','system-ui','sans-serif'] },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f2f3f6; } ::-webkit-scrollbar-thumb { background: #5a7de6; border-radius: 3px; }
+        .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; } .reveal-delay-4 { transition-delay:0.4s; }
+        .burger span { display:block; width:22px; height:2px; background:#2c3a7c; transition:all 0.3s ease; }
+        .burger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity:0; }
+        .burger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+        .faq-answer { max-height:0; overflow:hidden; transition:max-height 0.4s ease-out; }
+        .faq-item.open .faq-answer { max-height:300px; }
+        .faq-item.open .faq-icon { transform:rotate(45deg); }
+        .faq-icon { transition:transform 0.3s ease; }
+        html { overflow-x: clip; }
+
+        /* Call simulator */
+        @keyframes typingDot { 0%,60%,100% { opacity:0.3; } 30% { opacity:1; } }
+        .typing-dot { animation: typingDot 1.4s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes pulseRing { 0% { transform:scale(0.8); opacity:1; } 100% { transform:scale(2); opacity:0; } }
+        .pulse-ring { animation: pulseRing 1.5s ease-out infinite; }
+        .sim-msg { animation: simFadeIn 0.3s ease-out forwards; }
+        @keyframes simFadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+        .evt-item { animation: simFadeIn 0.3s ease-out forwards; }
+
+        /* ROI calculator range slider */
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; background: #e5e7eb; border-radius: 3px; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #4664d6; cursor: pointer; border: 3px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+        input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #4664d6; cursor: pointer; border: 3px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+    </style>
+</head>
+<body class="bg-white text-gray-900 overflow-x-hidden">
+
+    <!-- Nav -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <a href="/" class="py-3.5">
+                    <img src="assets/full-logo-png (1).png" alt="Solvr Labs" class="h-[36px] md:h-[50px]">
+                </a>
+                <div class="hidden md:flex items-center gap-10">
+                    <a href="/" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Home</a>
+                    <a href="/services" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Services</a>
+                    <a href="/about" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">About</a>
+                    <a href="/#work" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Work</a>
+                    <a href="#contact" class="px-6 py-2.5 text-base font-semibold rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-colors shadow-sm">Free Consultation</a>
+                </div>
+                <button id="burger" class="burger md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
+            <div class="px-6 py-4 space-y-1">
+                <a href="/" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Home</a>
+                <a href="/services" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Services</a>
+                <a href="/about" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">About</a>
+                <a href="/#work" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Work</a>
+                <a href="#contact" class="block mt-3 px-3 py-2.5 text-sm font-semibold text-center text-white rounded-full bg-brand-600">Free Consultation</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="pt-32 pb-16 bg-brand-50/50">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 bg-brand-100/60 border border-brand-200/50 rounded-full text-sm text-brand-600 font-medium mb-6">
+                <span class="w-1.5 h-1.5 bg-brand-500 rounded-full animate-pulse"></span>
+                AI-powered receptionist for trade companies
+            </div>
+            <h1 class="reveal reveal-delay-1 font-bold text-4xl sm:text-5xl text-brand-900 mt-3 mb-5 leading-tight">
+                Stop Paying $45K/Year<br>
+                <span class="text-brand-600">for Missed Calls</span>
+            </h1>
+            <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed mb-4">
+                Not just another answering service. An AI receptionist that answers calls,
+                <span class="text-brand-900 font-medium">creates jobs in your software, notifies your techs, and books appointments</span>
+                &mdash; automatically. 24/7. Starting at $99/month.
+            </p>
+            <p class="reveal reveal-delay-3 text-gray-400 text-sm max-w-xl mx-auto mb-8">
+                Other AI services take a message. We run your front office.
+            </p>
+            <div class="reveal reveal-delay-3 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#call-simulator" class="px-7 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-full font-semibold text-base transition-colors shadow-sm">
+                    Watch It Work
+                </a>
+                <a href="#contact" class="px-7 py-3 bg-white hover:bg-gray-50 text-gray-600 rounded-full font-medium text-base transition-colors border border-gray-200 shadow-sm">
+                    Free Consultation
+                </a>
+            </div>
+            <p class="text-xs text-gray-400 mt-6">
+                Free consultation &middot; No credit card &middot; Live demo included
+            </p>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">How It Works</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">From Call to Dispatched Tech in Under 60 Seconds</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Three steps. Zero manual data entry.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="reveal group bg-white rounded-2xl p-7 shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative">
+                    <span class="absolute top-4 right-5 font-bold text-4xl text-brand-100 group-hover:text-brand-200 transition-colors">01</span>
+                    <div class="w-11 h-11 rounded-xl bg-brand-50 flex items-center justify-center mb-5 text-xl">&#128222;</div>
+                    <h3 class="font-bold text-brand-900 mb-1.5">Customer Calls</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Your AI receptionist answers instantly &mdash; no hold times, no voicemail, no missed calls. Even at 2am.</p>
+                </div>
+                <div class="reveal reveal-delay-1 group bg-white rounded-2xl p-7 shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative">
+                    <span class="absolute top-4 right-5 font-bold text-4xl text-brand-100 group-hover:text-brand-200 transition-colors">02</span>
+                    <div class="w-11 h-11 rounded-xl bg-brand-50 flex items-center justify-center mb-5 text-xl">&#129504;</div>
+                    <h3 class="font-bold text-brand-900 mb-1.5">AI Handles the Call</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Not a message pad. Jay captures job details, triages emergencies, answers pricing and availability questions &mdash; like a trained dispatcher.</p>
+                </div>
+                <div class="reveal reveal-delay-2 group bg-white rounded-2xl p-7 shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative">
+                    <span class="absolute top-4 right-5 font-bold text-4xl text-brand-100 group-hover:text-brand-200 transition-colors">03</span>
+                    <div class="w-11 h-11 rounded-xl bg-brand-50 flex items-center justify-center mb-5 text-xl">&#9889;</div>
+                    <h3 class="font-bold text-brand-900 mb-1.5">Software Updates Automatically</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">This is what other AI services can't do. Job created in Jobber, tech notified via SMS, appointment on your calendar. Zero data entry.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call Simulator -->
+    <section id="call-simulator" class="py-20 bg-brand-50/50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-10">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">Live Demo</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">See It In Action</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Watch the AI handle a real emergency plumbing call and automatically sync to every connected system.</p>
+            </div>
+
+            <div class="reveal reveal-delay-3 bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden">
+                <!-- Simulator header -->
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-brand-500" id="sim-status-dot"></div>
+                        <span class="text-sm font-medium text-brand-900" id="sim-status-text">Emergency Burst Pipe &mdash; Premier Plumbing</span>
+                    </div>
+                    <button id="sim-start-btn" onclick="startSimulation()" class="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-full text-sm font-semibold transition-colors shadow-sm">
+                        Start Demo
+                    </button>
+                </div>
+
+                <div class="grid lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-100">
+                    <!-- Transcript panel -->
+                    <div class="p-6">
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Call Transcript</p>
+                        <div id="sim-transcript" class="h-[380px] overflow-y-auto space-y-3 pr-2" style="scroll-behavior:smooth;">
+                            <p class="text-sm text-gray-400 text-center py-16">Click "Start Demo" to begin the simulation.</p>
+                        </div>
+                    </div>
+
+                    <!-- Integration events panel -->
+                    <div class="p-6 bg-gray-50/30">
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Integration Activity</p>
+                        <div id="sim-events" class="h-[380px] overflow-y-auto space-y-2.5 pr-2">
+                            <p class="text-sm text-gray-400 text-center py-16">Integrations will fire after the call ends.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integration Showcase -->
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">Integrations</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">Plugs Into Your Existing Software</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed">Most AI answering services just send you a text. We actually create jobs, book appointments, and notify your team inside the tools you already use.</p>
+                <p class="reveal reveal-delay-3 text-gray-400 text-sm mt-2">Custom-configured for your business during setup.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                <div class="reveal bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border-t-2 border-t-green-400">
+                    <div class="flex items-center gap-3 mb-3"><span class="text-2xl">&#128188;</span><h3 class="text-sm font-semibold text-brand-900">Jobber</h3></div>
+                    <p class="text-xs text-gray-500 leading-relaxed">Auto-create jobs, customers, and dispatch techs when a call comes in.</p>
+                    <div class="mt-3 flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span><span class="text-[10px] text-green-500 font-medium">Ready to connect</span></div>
+                </div>
+                <div class="reveal reveal-delay-1 bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border-t-2 border-t-blue-400">
+                    <div class="flex items-center gap-3 mb-3"><span class="text-2xl">&#128295;</span><h3 class="text-sm font-semibold text-brand-900">ServiceTitan</h3></div>
+                    <p class="text-xs text-gray-500 leading-relaxed">Sync calls to your dispatch board and update customer records in real time.</p>
+                    <div class="mt-3 flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span><span class="text-[10px] text-green-500 font-medium">Ready to connect</span></div>
+                </div>
+                <div class="reveal reveal-delay-2 bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border-t-2 border-t-orange-400">
+                    <div class="flex items-center gap-3 mb-3"><span class="text-2xl">&#127968;</span><h3 class="text-sm font-semibold text-brand-900">Housecall Pro</h3></div>
+                    <p class="text-xs text-gray-500 leading-relaxed">Create estimates, schedule jobs, and notify your crew automatically.</p>
+                    <div class="mt-3 flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span><span class="text-[10px] text-green-500 font-medium">Ready to connect</span></div>
+                </div>
+                <div class="reveal reveal-delay-3 bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border-t-2 border-t-blue-300">
+                    <div class="flex items-center gap-3 mb-3"><span class="text-2xl">&#128197;</span><h3 class="text-sm font-semibold text-brand-900">Google Calendar</h3></div>
+                    <p class="text-xs text-gray-500 leading-relaxed">Check tech availability and book appointments directly on your calendar.</p>
+                    <div class="mt-3 flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span><span class="text-[10px] text-green-500 font-medium">Ready to connect</span></div>
+                </div>
+                <div class="reveal bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border-t-2 border-t-green-500">
+                    <div class="flex items-center gap-3 mb-3"><span class="text-2xl">&#128202;</span><h3 class="text-sm font-semibold text-brand-900">QuickBooks</h3></div>
+                    <p class="text-xs text-gray-500 leading-relaxed">Generate invoices and track payments after jobs are completed.</p>
+                    <div class="mt-3 flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span><span class="text-[10px] text-green-500 font-medium">Ready to connect</span></div>
+                </div>
+                <div class="reveal reveal-delay-1 bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border-t-2 border-t-red-400">
+                    <div class="flex items-center gap-3 mb-3"><span class="text-2xl">&#128172;</span><h3 class="text-sm font-semibold text-brand-900">SMS Notifications</h3></div>
+                    <p class="text-xs text-gray-500 leading-relaxed">Send instant confirmations to customers and job alerts to techs.</p>
+                    <div class="mt-3 flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span><span class="text-[10px] text-green-500 font-medium">Ready to connect</span></div>
+                </div>
+                <div class="reveal reveal-delay-2 bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border-t-2 border-t-purple-500">
+                    <div class="flex items-center gap-3 mb-3"><span class="text-2xl">&#128226;</span><h3 class="text-sm font-semibold text-brand-900">Slack</h3></div>
+                    <p class="text-xs text-gray-500 leading-relaxed">Get real-time notifications in your team channel for new jobs and emergencies.</p>
+                    <div class="mt-3 flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span><span class="text-[10px] text-green-500 font-medium">Ready to connect</span></div>
+                </div>
+                <div class="reveal reveal-delay-3 bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border-t-2 border-t-sky-400">
+                    <div class="flex items-center gap-3 mb-3"><span class="text-2xl">&#9993;&#65039;</span><h3 class="text-sm font-semibold text-brand-900">Email</h3></div>
+                    <p class="text-xs text-gray-500 leading-relaxed">Send call summaries, job confirmations, and follow-ups to customers and your team.</p>
+                    <div class="mt-3 flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span><span class="text-[10px] text-green-500 font-medium">Ready to connect</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator -->
+    <section class="py-20 bg-brand-50/50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">ROI Calculator</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">How Much Are Missed Calls Costing You?</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Most trade businesses miss 30&ndash;60% of inbound calls. Each one is a potential job walking to your competitor.</p>
+            </div>
+
+            <div class="reveal grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Inputs -->
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-7 space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-brand-900 mb-2">Your trade</label>
+                        <select id="roi-trade" onchange="updateROI()" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-brand-900 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+                            <option value="plumbing">Plumbing</option>
+                            <option value="electrical">Electrical</option>
+                            <option value="hvac">HVAC</option>
+                            <option value="roofing">Roofing</option>
+                            <option value="general">Other / General</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <label class="font-medium text-brand-900">Missed calls per week</label>
+                            <span class="text-brand-600 font-semibold" id="roi-calls-val">10</span>
+                        </div>
+                        <input type="range" id="roi-calls" min="1" max="40" value="10" oninput="updateROI()">
+                        <div class="flex justify-between text-[10px] text-gray-400 mt-1"><span>1</span><span>40</span></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <label class="font-medium text-brand-900">Calls that become jobs</label>
+                            <span class="text-brand-600 font-semibold" id="roi-rate-val">40%</span>
+                        </div>
+                        <input type="range" id="roi-rate" min="10" max="80" step="5" value="40" oninput="updateROI()">
+                        <div class="flex justify-between text-[10px] text-gray-400 mt-1"><span>10%</span><span>80%</span></div>
+                    </div>
+                    <div class="pt-2 border-t border-gray-100">
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>Avg job value</span>
+                            <span class="text-brand-900 font-medium" id="roi-avg-job">$350</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div class="space-y-4">
+                    <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+                        <p class="text-xs text-red-500 uppercase tracking-wider font-semibold mb-1">You're losing</p>
+                        <p class="text-3xl font-bold text-red-600" id="roi-monthly-loss">$6,020<span class="text-lg text-red-400">/mo</span></p>
+                        <p class="text-sm text-red-400 mt-1" id="roi-yearly-loss">$72,240 per year in missed revenue</p>
+                    </div>
+                    <div class="bg-brand-50 border border-brand-100 rounded-2xl p-6">
+                        <p class="text-xs text-brand-600 uppercase tracking-wider font-semibold mb-1">With Solvr Labs</p>
+                        <p class="text-3xl font-bold text-brand-700" id="roi-recovered">$6,020<span class="text-lg text-brand-400"> recovered</span></p>
+                        <p class="text-sm text-brand-400 mt-1" id="roi-multiplier">For just $99/mo &mdash; 59x ROI</p>
+                    </div>
+                    <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+                        <div class="grid grid-cols-2 gap-4 text-center">
+                            <div>
+                                <p class="text-2xl font-bold text-brand-900" id="roi-jobs-lost">17</p>
+                                <p class="text-[11px] text-gray-400">Jobs lost / month</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-brand-900" id="roi-calls-lost">40</p>
+                                <p class="text-[11px] text-gray-400">Missed calls / month</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">Compare</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">How We Compare</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 max-w-lg mx-auto">Not all AI answering services are the same. Most just take messages. We run your front office.</p>
+            </div>
+
+            <div class="reveal reveal-delay-3 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden overflow-x-auto">
+                <div class="grid grid-cols-4 min-w-[600px] border-b border-gray-100 bg-gray-50">
+                    <div class="p-4 text-xs font-semibold text-gray-400 uppercase tracking-wider"></div>
+                    <div class="p-4 text-xs font-semibold text-gray-400 uppercase tracking-wider text-center">Human CSR</div>
+                    <div class="p-4 text-xs font-semibold text-gray-400 uppercase tracking-wider text-center">Other AI Services</div>
+                    <div class="p-4 text-xs font-semibold text-brand-600 uppercase tracking-wider text-center">Solvr Labs</div>
+                </div>
+                <div class="min-w-[600px]" id="comparison-rows">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 bg-brand-50/50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">Testimonials</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">What Owners Are Saying</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Real results from trade businesses like yours.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="reveal bg-white rounded-2xl p-7 border border-gray-100 shadow-sm flex flex-col">
+                    <p class="text-sm text-gray-500 leading-relaxed flex-1">&ldquo;We were losing 10-15 calls a week after hours. Now every single one gets answered and a job gets created in Jobber before I even wake up. Paid for itself the first week.&rdquo;</p>
+                    <div class="mt-5 pt-4 border-t border-gray-100">
+                        <p class="text-sm font-semibold text-brand-900">Mike R.</p>
+                        <p class="text-xs text-gray-400">Owner, Premier Plumbing</p>
+                        <span class="inline-block mt-2 px-2.5 py-0.5 bg-brand-50 border border-brand-100 rounded-full text-[10px] text-brand-600 font-medium">40+ jobs recovered/month</span>
+                    </div>
+                </div>
+                <div class="reveal reveal-delay-1 bg-white rounded-2xl p-7 border border-gray-100 shadow-sm flex flex-col">
+                    <p class="text-sm text-gray-500 leading-relaxed flex-1">&ldquo;My dispatcher quit and I was drowning. Jay handles more calls than she ever did, and the jobs show up in ServiceTitan automatically. I don't miss having to do data entry.&rdquo;</p>
+                    <div class="mt-5 pt-4 border-t border-gray-100">
+                        <p class="text-sm font-semibold text-brand-900">Carlos D.</p>
+                        <p class="text-xs text-gray-400">Owner, Rapid HVAC Solutions</p>
+                        <span class="inline-block mt-2 px-2.5 py-0.5 bg-brand-50 border border-brand-100 rounded-full text-[10px] text-brand-600 font-medium">$12K+ in recovered revenue/month</span>
+                    </div>
+                </div>
+                <div class="reveal reveal-delay-2 bg-white rounded-2xl p-7 border border-gray-100 shadow-sm flex flex-col">
+                    <p class="text-sm text-gray-500 leading-relaxed flex-1">&ldquo;I was skeptical about AI answering my phones. Then a customer left a review thanking 'the friendly guy who answered at 11pm.' That sold me.&rdquo;</p>
+                    <div class="mt-5 pt-4 border-t border-gray-100">
+                        <p class="text-sm font-semibold text-brand-900">Sarah T.</p>
+                        <p class="text-xs text-gray-400">Owner, Bright Spark Electric</p>
+                        <span class="inline-block mt-2 px-2.5 py-0.5 bg-brand-50 border border-brand-100 rounded-full text-[10px] text-brand-600 font-medium">Zero missed calls since setup</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">Pricing</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">Simple, Transparent Pricing</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">One plan. Everything included. Pay for what you use beyond the base.</p>
+            </div>
+
+            <div class="reveal grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-6 items-center">
+                <!-- Setup fee -->
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-7">
+                    <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">One-Time Setup</div>
+                    <div class="mb-2">
+                        <span class="text-3xl font-bold text-brand-900">Custom Quote</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-6">Priced based on your business needs. Quoted during consultation.</p>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start gap-2.5"><svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-500">AI trained on your services, pricing, and availability</span></div>
+                        <div class="flex items-start gap-2.5"><svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-500">Integration with your existing software</span></div>
+                        <div class="flex items-start gap-2.5"><svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-500">Phone number setup and call routing</span></div>
+                        <div class="flex items-start gap-2.5"><svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-500">Testing and go-live support</span></div>
+                    </div>
+                </div>
+
+                <!-- Plus separator -->
+                <div class="hidden lg:flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-full bg-brand-50 border border-brand-100 flex items-center justify-center">
+                        <span class="text-xl font-bold text-brand-600">+</span>
+                    </div>
+                </div>
+                <div class="lg:hidden flex items-center justify-center -my-2">
+                    <div class="w-10 h-10 rounded-full bg-brand-50 border border-brand-100 flex items-center justify-center">
+                        <span class="text-xl font-bold text-brand-600">+</span>
+                    </div>
+                </div>
+
+                <!-- Monthly plan -->
+                <div class="bg-white rounded-2xl border-2 border-brand-600 shadow-lg p-7 relative">
+                    <div class="absolute -top-3 left-6 px-3 py-0.5 bg-brand-600 rounded-full text-[11px] font-semibold text-white">Most Popular</div>
+                    <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Monthly Plan</div>
+                    <div class="flex items-baseline gap-1 mb-2">
+                        <span class="text-4xl font-bold text-brand-900">$99</span>
+                        <span class="text-gray-400">/month</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-6">Everything you need. Usage-based after included limits.</p>
+                    <div class="space-y-2.5 text-sm mb-6">
+                        <div class="flex items-start gap-2.5"><svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-500">300 AI call minutes/month</span></div>
+                        <div class="flex items-start gap-2.5"><svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-500">1,000 SMS notifications/month</span></div>
+                        <div class="flex items-start gap-2.5"><svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-500">10 simultaneous calls included</span></div>
+                        <div class="flex items-start gap-2.5"><svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-500">All integrations (Jobber, Calendar, SMS, Slack, etc.)</span></div>
+                        <div class="flex items-start gap-2.5"><svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-500">Custom AI training for your business</span></div>
+                        <div class="flex items-start gap-2.5"><svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-500">Dashboard & reporting</span></div>
+                        <div class="flex items-start gap-2.5"><svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-500">30+ languages supported</span></div>
+                        <div class="flex items-start gap-2.5"><svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-500">24/7 availability</span></div>
+                        <div class="flex items-start gap-2.5"><svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-500">Ongoing optimization & updates</span></div>
+                    </div>
+                    <div class="border-t border-gray-100 pt-4">
+                        <p class="text-xs font-medium text-gray-400 mb-2">Beyond included limits:</p>
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs"><span class="text-gray-400">Additional call minutes</span><span class="text-brand-900 font-medium">starting at $0.20/min</span></div>
+                            <div class="flex justify-between text-xs"><span class="text-gray-400">Additional SMS</span><span class="text-brand-900 font-medium">starting at $0.04/msg</span></div>
+                            <div class="flex justify-between text-xs"><span class="text-gray-400">Extra simultaneous call slots</span><span class="text-brand-900 font-medium">$8/slot/month</span></div>
+                        </div>
+                        <p class="text-[11px] text-gray-400 mt-2">Exact rates based on your workflow. Quoted during setup.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Free consultation banner -->
+            <div class="reveal mt-8 bg-brand-50 border border-brand-100 rounded-2xl p-7 text-center">
+                <p class="text-sm font-semibold text-brand-700 mb-1">Not sure yet? Start with a free consultation.</p>
+                <p class="text-xs text-gray-500 mb-4 max-w-md mx-auto">We'll walk you through a live demo built for your trade, answer every question, and give you a custom quote &mdash; no cost, no pressure.</p>
+                <a href="#contact" class="inline-block px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-full font-semibold text-sm transition-colors shadow-sm">
+                    Book Free Consultation
+                </a>
+            </div>
+
+            <p class="text-center text-xs text-gray-400 mt-6">No long-term contracts. Cancel anytime.</p>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-20 bg-brand-50/50">
+        <div class="max-w-2xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">FAQ</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">Common Questions</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 max-w-lg mx-auto">Everything you need to know before getting started.</p>
+            </div>
+            <div class="space-y-3">
+                <div class="reveal faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
+                    <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">Can callers tell it's AI?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Most can't. Jay uses a natural-sounding voice with realistic pacing, pauses, and conversational flow. We've had callers leave reviews saying "your receptionist was so helpful" without realizing it was AI. During your free consultation, you'll hear it yourself and judge.</p></div>
+                </div>
+                <div class="reveal reveal-delay-1 faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
+                    <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">What if the AI says something wrong?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Jay is custom-trained on your business &mdash; your services, pricing, service area, and availability. It doesn't make things up. If a caller asks something outside its training, it takes a message and flags it for your review. You approve the AI's knowledge base before it goes live.</p></div>
+                </div>
+                <div class="reveal reveal-delay-2 faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
+                    <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">Does it work with my version of Jobber / ServiceTitan?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Yes. We integrate with Jobber, ServiceTitan, Housecall Pro, Google Calendar, QuickBooks, and more. During setup, we connect directly to your accounts and configure the workflows to match how your business operates &mdash; not a generic template.</p></div>
+                </div>
+                <div class="reveal reveal-delay-3 faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
+                    <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">What happens after hours or on weekends?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Jay answers 24/7/365 &mdash; nights, weekends, holidays. Emergency calls trigger instant SMS and Slack alerts to your on-call tech. Non-urgent calls get a job created and a confirmation sent to the customer. You wake up to a full schedule, not a pile of voicemails.</p></div>
+                </div>
+                <div class="reveal faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
+                    <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">How long does setup take?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Most businesses are live within 3-5 business days. We handle everything: AI training, software integration, phone routing, and testing. You just answer a few questions about your business and give us access to your tools.</p></div>
+                </div>
+                <div class="reveal reveal-delay-1 faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
+                    <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">Can I still answer calls myself?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Absolutely. You can set Jay to answer only when you're unavailable &mdash; after hours, during jobs, or when your line is busy. Or let Jay handle everything and focus on the work. It's fully configurable.</p></div>
+                </div>
+                <div class="reveal reveal-delay-2 faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
+                    <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">What if I want to cancel?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">No long-term contracts. Cancel anytime with 30 days notice. Your phone number routes back to you and we hand over any data from your account. No lock-in, no hassle.</p></div>
+                </div>
+                <div class="reveal reveal-delay-3 faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
+                    <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">What languages do you support?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Over 30 languages including English, Spanish, French, German, Portuguese, Hindi, Japanese, Italian, Dutch, Russian, and more. The AI can auto-detect the caller's language and switch mid-conversation. No separate setup or extra cost.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+                <!-- Left copy -->
+                <div>
+                    <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 bg-brand-50 border border-brand-100 rounded-full text-sm text-brand-600 font-medium mb-5">
+                        <span class="w-1.5 h-1.5 bg-brand-500 rounded-full animate-pulse"></span>
+                        Free &mdash; no obligation
+                    </div>
+                    <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mb-4 leading-tight">Get a Free Consultation + Live Demo</h2>
+                    <p class="reveal reveal-delay-2 text-gray-500 leading-relaxed mb-8">We'll walk you through a live demo customized for your trade. See exactly how calls get handled, how jobs get created in your software, and how your techs get notified &mdash; all in real time.</p>
+                    <div class="reveal reveal-delay-3 space-y-4">
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <div><p class="text-sm font-medium text-brand-900">15-minute call</p><p class="text-xs text-gray-400">Quick walkthrough tailored to your business</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <div><p class="text-sm font-medium text-brand-900">Live AI demo</p><p class="text-xs text-gray-400">Hear the AI handle a call for your specific trade</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <div><p class="text-sm font-medium text-brand-900">Custom integration plan</p><p class="text-xs text-gray-400">We'll map out exactly how it connects to your tools</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <div class="reveal bg-white rounded-2xl border border-gray-100 shadow-lg p-7">
+                    <form id="contact-form" action="https://formsubmit.co/jessy@solvrlabs.com" method="POST">
+                        <input type="hidden" name="_subject" value="AI Receptionist — Free Consultation Request">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="text" name="_honey" style="display:none">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">Your name</label>
+                                <input type="text" name="name" required placeholder="Mike Johnson" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-brand-900 placeholder:text-gray-300 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">Email</label>
+                                <input type="email" name="email" required placeholder="mike@johnsonsplumbing.com" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-brand-900 placeholder:text-gray-300 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">Tell me about your business</label>
+                                <textarea name="business" required rows="3" placeholder="e.g. We're a 5-person HVAC company getting 20+ calls a day and missing about half of them..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-brand-900 placeholder:text-gray-300 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 resize-none"></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-full font-semibold text-sm transition-colors shadow-sm mt-2">
+                                Book My Free Consultation
+                            </button>
+                            <p class="text-[11px] text-gray-400 text-center">No credit card. No commitment. We'll reach out within a few hours.</p>
+                        </div>
+                    </form>
+                    <div id="form-success" class="hidden text-center py-8">
+                        <div class="text-4xl mb-4">&#9989;</div>
+                        <h3 class="text-xl font-bold text-brand-900 mb-2">We'll be in touch!</h3>
+                        <p class="text-sm text-gray-500">Expect a call or text within a few hours to schedule your free consultation and live demo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats + CTA -->
+    <section class="py-20 bg-brand-600">
+        <div class="max-w-6xl mx-auto px-6">
+            <!-- Stats -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
+                <div class="reveal bg-white/10 backdrop-blur rounded-2xl p-5 text-center border border-white/10">
+                    <div class="text-2xl font-bold text-white">2,400+</div>
+                    <div class="text-sm text-brand-200 mt-1">Calls Handled</div>
+                    <div class="text-[10px] text-brand-300/50 mt-1">across active clients</div>
+                </div>
+                <div class="reveal reveal-delay-1 bg-white/10 backdrop-blur rounded-2xl p-5 text-center border border-white/10">
+                    <div class="text-2xl font-bold text-white">97%</div>
+                    <div class="text-sm text-brand-200 mt-1">Caller Satisfaction</div>
+                    <div class="text-[10px] text-brand-300/50 mt-1">based on post-call surveys</div>
+                </div>
+                <div class="reveal reveal-delay-2 bg-white/10 backdrop-blur rounded-2xl p-5 text-center border border-white/10">
+                    <div class="text-2xl font-bold text-white">$480K+</div>
+                    <div class="text-sm text-brand-200 mt-1">In Jobs Captured</div>
+                    <div class="text-[10px] text-brand-300/50 mt-1">that would have been missed</div>
+                </div>
+                <div class="reveal reveal-delay-3 bg-white/10 backdrop-blur rounded-2xl p-5 text-center border border-white/10">
+                    <div class="text-2xl font-bold text-white">1:07</div>
+                    <div class="text-sm text-brand-200 mt-1">Avg Call Duration</div>
+                    <div class="text-[10px] text-brand-300/50 mt-1">fast, efficient, no hold times</div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="reveal text-center">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 border border-white/20 rounded-full text-xs text-brand-100 mb-6">
+                    Limited setup slots available this month
+                </div>
+                <h2 class="font-bold text-3xl sm:text-4xl text-white mb-4">Ready to Stop Missing Calls?</h2>
+                <p class="text-brand-200 text-lg max-w-xl mx-auto mb-8">Get a free consultation and live demo customized for your business. See exactly what your callers will experience.</p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#contact" class="inline-flex items-center gap-2 px-7 py-3 bg-white text-brand-600 hover:bg-brand-50 rounded-full font-semibold transition-colors shadow-lg shadow-brand-700/30">
+                        Book Free Consultation
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </a>
+                    <a href="/contact" class="px-7 py-3 bg-transparent hover:bg-white/10 text-white rounded-full font-medium transition-colors border border-white/30">
+                        Ask a Question
+                    </a>
+                </div>
+                <p class="text-xs text-brand-300/50 mt-6">jessy@solvrlabs.com &middot; Solvr Labs</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-14">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <a href="/" class="inline-block mb-4"><img src="assets/full-logo-png (1).png" alt="Solvr Labs" class="h-10 md:h-14 brightness-0 invert"></a>
+                    <p class="text-brand-300/60 text-sm leading-relaxed max-w-xs">AI automation and custom software for service businesses.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Navigation</h4>
+                    <ul class="space-y-2"><li><a href="/" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home</a></li><li><a href="/services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Services</a></li><li><a href="/about" class="text-brand-300/50 hover:text-white text-sm transition-colors">About</a></li><li><a href="/contact" class="text-brand-300/50 hover:text-white text-sm transition-colors">Contact</a></li></ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Services</h4>
+                    <ul class="space-y-2"><li><a href="/services" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Workflow Automation</a></li><li><a href="/services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Voice AI</a></li><li><a href="/ai-receptionist" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Receptionist</a></li><li><a href="/services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Custom Software</a></li></ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-800 mt-10 pt-6 text-center text-brand-300/40 text-xs">&copy; 2026 Solvr Labs, LLC. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        // Burger menu
+        document.getElementById('burger').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('mobile-menu').classList.toggle('hidden'); });
+
+        // Reveal on scroll
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // ==========================================
+        // Comparison Table
+        // ==========================================
+        const comparisonData = [
+            { metric: 'Monthly Cost', csr: '$3,000\u2013$4,500', otherAi: '$49\u2013$299', solvr: 'Starting at $99', highlight: true },
+            { metric: 'Availability', csr: 'Mon\u2013Fri, 8\u20135', otherAi: '24/7', solvr: '24/7' },
+            { metric: 'After the Call', csr: 'Manual data entry', otherAi: 'Sends you a text or email', solvr: 'Creates job in your software', highlight: true },
+            { metric: 'Software Integration', csr: 'None', otherAi: 'None or basic', solvr: 'Jobber, ServiceTitan, Calendar, QuickBooks', highlight: true },
+            { metric: 'Tech Notifications', csr: 'You call them yourself', otherAi: 'Not included', solvr: 'Auto SMS + Slack to on-call tech' },
+            { metric: 'Appointment Booking', csr: 'Manual', otherAi: 'Sends a booking link', solvr: 'Books directly on your calendar' },
+            { metric: 'Simultaneous Calls', csr: '1 at a time', otherAi: 'Unlimited', solvr: '10 included, $8/mo per extra slot' },
+            { metric: 'Setup', csr: '2\u20134 weeks training', otherAi: 'Self-serve, generic', solvr: 'Custom-built for your business' },
+            { metric: 'Languages', csr: 'Usually 1', otherAi: 'English only or basic', solvr: '30+ languages with auto-detection' },
+        ];
+        const rowsEl = document.getElementById('comparison-rows');
+        comparisonData.forEach((row, i) => {
+            const isLast = i === comparisonData.length - 1;
+            rowsEl.innerHTML += `
+                <div class="grid grid-cols-4 ${!isLast ? 'border-b border-gray-100' : ''} ${row.highlight ? 'bg-brand-50/40' : ''}">
+                    <div class="p-4 text-sm font-medium text-brand-900 flex items-center">${row.metric}</div>
+                    <div class="p-4 text-xs text-gray-400 text-center flex items-center justify-center">${row.csr}</div>
+                    <div class="p-4 text-xs text-gray-400 text-center flex items-center justify-center">${row.otherAi}</div>
+                    <div class="p-4 text-xs text-center flex items-center justify-center ${row.highlight ? 'text-brand-600 font-semibold' : 'text-brand-900'}">${row.solvr}</div>
+                </div>`;
+        });
+
+        // ==========================================
+        // ROI Calculator
+        // ==========================================
+        const avgJobValues = { plumbing: 350, electrical: 300, hvac: 450, roofing: 5000, general: 400 };
+        function updateROI() {
+            const trade = document.getElementById('roi-trade').value;
+            const missed = parseInt(document.getElementById('roi-calls').value);
+            const rate = parseInt(document.getElementById('roi-rate').value);
+            const avgJob = avgJobValues[trade] || 400;
+            const monthlyJobs = Math.round(missed * 4.3 * (rate / 100));
+            const monthlyLoss = monthlyJobs * avgJob;
+            const yearlyLoss = monthlyLoss * 12;
+            const roi = monthlyLoss > 0 ? Math.round((monthlyLoss - 99) / 99 * 100) : 0;
+
+            document.getElementById('roi-calls-val').textContent = missed;
+            document.getElementById('roi-rate-val').textContent = rate + '%';
+            document.getElementById('roi-avg-job').textContent = '$' + avgJob.toLocaleString();
+            document.getElementById('roi-monthly-loss').innerHTML = '$' + monthlyLoss.toLocaleString() + '<span class="text-lg text-red-400">/mo</span>';
+            document.getElementById('roi-yearly-loss').textContent = '$' + yearlyLoss.toLocaleString() + ' per year in missed revenue';
+            document.getElementById('roi-recovered').innerHTML = '$' + monthlyLoss.toLocaleString() + '<span class="text-lg text-brand-400"> recovered</span>';
+            document.getElementById('roi-multiplier').innerHTML = 'For just $99/mo &mdash; ' + (roi > 0 ? roi + 'x' : 'instant') + ' ROI';
+            document.getElementById('roi-jobs-lost').textContent = monthlyJobs;
+            document.getElementById('roi-calls-lost').textContent = missed * 4;
+        }
+
+        // ==========================================
+        // Call Simulator
+        // ==========================================
+        const transcript = [
+            { speaker: 'ai', text: "Hi, thanks for calling Premier Plumbing! This is Jay, how can I help you today?" },
+            { speaker: 'caller', text: "Hi, yeah, I've got water coming through my basement ceiling. I think a pipe burst upstairs." },
+            { speaker: 'ai', text: "Oh no, that sounds urgent. Let me get your information right away so we can get someone out to you. Can I get your name?" },
+            { speaker: 'caller', text: "It's Sarah Mitchell." },
+            { speaker: 'ai', text: "Thanks, Sarah. Can you tell me a bit more about what's happening? Where exactly is the water coming from?" },
+            { speaker: 'caller', text: "It's dripping through the ceiling in the basement, right below the upstairs bathroom. It started about 20 minutes ago. I turned off the water main but it's still dripping." },
+            { speaker: 'ai', text: "Good call turning off the water main \u2014 that'll help minimize the damage. What's the address for the job?" },
+            { speaker: 'caller', text: "742 Oakwood Drive, Austin, Texas 78745." },
+            { speaker: 'ai', text: "Got it. Let me confirm \u2014 you've got water coming through the basement ceiling below the upstairs bathroom at 742 Oakwood Drive. You've turned off the main water supply. I'm flagging this as an emergency and getting this to Mike right away." },
+            { speaker: 'caller', text: "Yes, that's right. The sooner the better." },
+            { speaker: 'ai', text: "Absolutely, Sarah. I'll have Mike reach out to you as soon as possible. In the meantime, placing towels or buckets under the drip can help. Thanks for calling Premier Plumbing, we'll be in touch shortly!" },
+            { speaker: 'caller', text: "Thank you so much." },
+        ];
+        const integrationEvents = [
+            { icon: '&#128188;', service: 'Jobber', action: 'Creating customer record', detail: 'Sarah Mitchell \u2022 (512) 555-0147', color: 'border-green-400' },
+            { icon: '&#128197;', service: 'Google Calendar', action: 'Checking technician availability', detail: 'Mike \u2014 next available slot found', color: 'border-blue-300' },
+            { icon: '&#128188;', service: 'Jobber', action: 'Creating emergency job', detail: 'Burst pipe \u2022 742 Oakwood Dr \u2022 EMERGENCY', color: 'border-green-400' },
+            { icon: '&#128172;', service: 'SMS', action: 'Sending confirmation to customer', detail: '"We\'ve received your request and Mike will call you shortly."', color: 'border-red-400' },
+            { icon: '&#128226;', service: 'Slack', action: 'Notifying #dispatch channel', detail: '\ud83d\udea8 EMERGENCY: Burst pipe at 742 Oakwood Dr', color: 'border-purple-500' },
+            { icon: '&#128172;', service: 'SMS', action: 'Alerting on-call technician', detail: 'Mike notified via text with job details', color: 'border-red-400' },
+        ];
+
+        let simState = 'idle';
+        let simTimers = [];
+
+        function clearSimTimers() { simTimers.forEach(t => clearTimeout(t)); simTimers = []; }
+
+        function startSimulation() {
+            if (simState === 'running') return;
+            simState = 'running';
+            clearSimTimers();
+
+            const btn = document.getElementById('sim-start-btn');
+            const dot = document.getElementById('sim-status-dot');
+            const statusText = document.getElementById('sim-status-text');
+            const transcriptEl = document.getElementById('sim-transcript');
+            const eventsEl = document.getElementById('sim-events');
+
+            btn.textContent = 'Running...';
+            btn.classList.add('opacity-50', 'pointer-events-none');
+            dot.className = 'w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse';
+            statusText.textContent = 'Call in progress...';
+            transcriptEl.innerHTML = '';
+            eventsEl.innerHTML = '<p class="text-sm text-gray-400 text-center py-16">Waiting for call to finish...</p>';
+
+            // Show transcript messages
+            transcript.forEach((msg, i) => {
+                const delay = 800 + i * 2200;
+                // Show typing indicator first
+                const typingDelay = delay - 600;
+                if (i > 0) {
+                    simTimers.push(setTimeout(() => {
+                        const typing = document.createElement('div');
+                        typing.id = 'typing-indicator';
+                        typing.className = `flex ${msg.speaker === 'ai' ? 'justify-start' : 'justify-end'}`;
+                        typing.innerHTML = `<div class="px-4 py-2 rounded-xl ${msg.speaker === 'ai' ? 'bg-brand-50' : 'bg-gray-100'} text-sm flex gap-1">
+                            <span class="typing-dot w-1.5 h-1.5 rounded-full bg-gray-400 inline-block"></span>
+                            <span class="typing-dot w-1.5 h-1.5 rounded-full bg-gray-400 inline-block"></span>
+                            <span class="typing-dot w-1.5 h-1.5 rounded-full bg-gray-400 inline-block"></span>
+                        </div>`;
+                        transcriptEl.appendChild(typing);
+                        transcriptEl.scrollTop = transcriptEl.scrollHeight;
+                    }, typingDelay));
+                }
+
+                simTimers.push(setTimeout(() => {
+                    const existing = document.getElementById('typing-indicator');
+                    if (existing) existing.remove();
+
+                    const div = document.createElement('div');
+                    div.className = `sim-msg flex ${msg.speaker === 'ai' ? 'justify-start' : 'justify-end'}`;
+                    const label = msg.speaker === 'ai' ? 'Jay (AI)' : 'Sarah';
+                    const bubbleColor = msg.speaker === 'ai' ? 'bg-brand-50 text-brand-900' : 'bg-gray-100 text-gray-700';
+                    div.innerHTML = `<div class="max-w-[85%]">
+                        <p class="text-[10px] ${msg.speaker === 'ai' ? 'text-brand-500' : 'text-gray-400'} mb-1 ${msg.speaker === 'ai' ? '' : 'text-right'}">${label}</p>
+                        <div class="px-4 py-2.5 rounded-xl ${bubbleColor} text-sm leading-relaxed">${msg.text}</div>
+                    </div>`;
+                    transcriptEl.appendChild(div);
+                    transcriptEl.scrollTop = transcriptEl.scrollHeight;
+                }, delay));
+            });
+
+            // After transcript, show "analyzing" then fire events
+            const eventsStartDelay = 800 + transcript.length * 2200 + 1000;
+            simTimers.push(setTimeout(() => {
+                dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse';
+                statusText.textContent = 'Call ended \u2014 syncing integrations...';
+                eventsEl.innerHTML = '';
+
+                integrationEvents.forEach((evt, i) => {
+                    // Show as "loading"
+                    simTimers.push(setTimeout(() => {
+                        const div = document.createElement('div');
+                        div.id = 'evt-' + i;
+                        div.className = 'evt-item flex items-start gap-3 p-3 rounded-xl border-l-2 ' + evt.color + ' bg-gray-50';
+                        div.innerHTML = `
+                            <span class="text-lg shrink-0 mt-0.5">${evt.icon}</span>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-semibold text-brand-900">${evt.service}</span>
+                                    <span class="w-3 h-3 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" id="evt-spin-${i}"></span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-0.5">${evt.action}</p>
+                                <p class="text-[10px] text-gray-400 mt-0.5">${evt.detail}</p>
+                            </div>`;
+                        eventsEl.appendChild(div);
+                        eventsEl.scrollTop = eventsEl.scrollHeight;
+                    }, i * 1800));
+
+                    // Mark as complete
+                    simTimers.push(setTimeout(() => {
+                        const spinner = document.getElementById('evt-spin-' + i);
+                        if (spinner) {
+                            spinner.className = '';
+                            spinner.innerHTML = '<svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
+                        }
+                    }, i * 1800 + 1200));
+                });
+
+                // All done
+                simTimers.push(setTimeout(() => {
+                    dot.className = 'w-2.5 h-2.5 rounded-full bg-green-500';
+                    statusText.textContent = 'Complete \u2014 all integrations synced';
+                    btn.textContent = 'Replay Demo';
+                    btn.classList.remove('opacity-50', 'pointer-events-none');
+                    simState = 'idle';
+                }, integrationEvents.length * 1800 + 1500));
+
+            }, eventsStartDelay));
+        }
+
+        // ==========================================
+        // Contact Form
+        // ==========================================
+        const form = document.getElementById('contact-form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const data = new FormData(form);
+                fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+                    .then(() => {
+                        form.classList.add('hidden');
+                        document.getElementById('form-success').classList.remove('hidden');
+                    })
+                    .catch(() => {
+                        form.classList.add('hidden');
+                        document.getElementById('form-success').classList.remove('hidden');
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
