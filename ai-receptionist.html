@@ -521,7 +521,7 @@
             </div>
 
             <!-- Trade panels -->
-            <div class="reveal relative min-h-[420px] sm:min-h-[360px]">
+            <div id="trade-wrap" class="reveal relative overflow-hidden">
 
                 <!-- Plumbing -->
                 <div id="trade-panel-0" class="trade-panel absolute inset-0 transition-all duration-300 opacity-100 translate-y-0">
@@ -733,6 +733,7 @@
 
     <script>
     function switchTrade(idx) {
+        var wrap = document.getElementById('trade-wrap');
         document.querySelectorAll('.trade-btn').forEach((b,i) => {
             b.className = i === idx
                 ? 'trade-btn px-5 py-2.5 rounded-full text-sm font-semibold transition-all bg-brand-600 text-white shadow-sm'
@@ -742,12 +743,22 @@
             if (i === idx) {
                 p.classList.remove('opacity-0','translate-y-4','pointer-events-none');
                 p.classList.add('opacity-100','translate-y-0');
+                if (wrap) wrap.style.height = p.scrollHeight + 'px';
             } else {
                 p.classList.remove('opacity-100','translate-y-0');
                 p.classList.add('opacity-0','translate-y-4','pointer-events-none');
             }
         });
     }
+    (function(){
+        var wrap = document.getElementById('trade-wrap');
+        var first = document.querySelector('.trade-panel');
+        if (wrap && first) { wrap.style.height = first.scrollHeight + 'px'; wrap.style.transition = 'height .3s ease'; }
+        window.addEventListener('resize', function(){
+            var active = document.querySelector('.trade-panel.opacity-100') || document.querySelector('.trade-panel:not(.pointer-events-none)');
+            if (wrap && active) wrap.style.height = active.scrollHeight + 'px';
+        });
+    })();
     </script>
 
     <!-- ROI Calculator -->
