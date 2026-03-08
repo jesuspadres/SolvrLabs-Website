@@ -1,0 +1,41 @@
+name: Weekly Blog Post
+
+on:
+  schedule:
+    # Every Monday at 9am UTC (2am MST)
+    - cron: '0 9 * * 1'
+  workflow_dispatch: # Manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  generate-post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate blog post
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/generate-blog-post.js
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "Solvr Labs Bot"
+          git config user.email "bot@solvrlabs.com"
+          git add blog/ blog.html
+          git commit -m "blog: auto-generate weekly post"
+          git push
