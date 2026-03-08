@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How I Use Claude to Build My Entire Business - Solvr Labs</title>
+    <meta name="description" content="From writing code to drafting proposals to planning automations — how Claude AI became the core tool behind everything I build at Solvr Labs.">
+    <link rel="icon" type="image/png" href="../assets/favicon-solvrlabs.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#f0f5ff',100:'#e1ebff',200:'#c8d8fe',300:'#a3bffc',400:'#7da0f8',500:'#5a7de6',600:'#4664d6',700:'#3a53bd',800:'#33469a',900:'#2c3a7c',950:'#1d264e' },
+                        gray: { 50:'#f9fafb',100:'#f2f3f6',200:'#e5e7eb',300:'#d1d5db',400:'#9ca3af',500:'#6b7280',600:'#4b5563',700:'#374151',800:'#1f2937',900:'#1d1e20' },
+                    },
+                    fontFamily: { sans: ['"DM Sans"','system-ui','sans-serif'], display: ['"DM Sans"','system-ui','sans-serif'] },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+        html { overflow-x: clip; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f2f3f6; } ::-webkit-scrollbar-thumb { background: #5a7de6; border-radius: 3px; }
+        .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; }
+        .burger span { display:block; width:22px; height:2px; background:#2c3a7c; transition:all 0.3s ease; }
+        .burger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity:0; }
+        .burger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+        .prose h2 { font-size: 1.5rem; font-weight: 700; color: #2c3a7c; margin-top: 2.5rem; margin-bottom: 1rem; }
+        .prose h3 { font-size: 1.25rem; font-weight: 600; color: #33469a; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .prose p { color: #6b7280; line-height: 1.8; margin-bottom: 1.25rem; }
+        .prose ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; }
+        .prose ul li { color: #6b7280; line-height: 1.8; margin-bottom: 0.5rem; }
+        .prose strong { color: #374151; font-weight: 600; }
+        .prose code { background: #f0f5ff; color: #4664d6; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
+        .prose blockquote { border-left: 3px solid #5a7de6; padding-left: 1.25rem; margin: 1.5rem 0; font-style: italic; color: #9ca3af; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 overflow-x-hidden">
+
+    <!-- Nav -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <a href="/" class="py-3.5">
+                    <img src="../assets/full-logo-png (1).png" alt="Solvr Labs" class="h-[36px] md:h-[50px]">
+                </a>
+                <div class="hidden md:flex items-center gap-10">
+                    <a href="/" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Home</a>
+                    <a href="/services" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Services</a>
+                    <a href="/about" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">About</a>
+                    <a href="/#work" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Work</a>
+                    <a href="/contact" class="px-6 py-2.5 text-base font-semibold rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-colors shadow-sm">Book a Call</a>
+                </div>
+                <button id="burger" class="burger md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
+            <div class="px-6 py-4 space-y-1">
+                <a href="/" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Home</a>
+                <a href="/services" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Services</a>
+                <a href="/about" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">About</a>
+                <a href="/#work" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Work</a>
+                <a href="/contact" class="block mt-3 px-3 py-2.5 text-sm font-semibold text-center text-white rounded-full bg-brand-600">Book a Call</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Article Header -->
+    <section class="pt-32 pb-12 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <a href="/blog" class="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors mb-6">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
+                Back to Blog
+            </a>
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-xs font-semibold text-brand-600 bg-brand-100 px-2.5 py-1 rounded-full">Build Log</span>
+                <span class="text-xs text-gray-400">Mar 8, 2026</span>
+            </div>
+            <h1 class="font-bold text-3xl sm:text-4xl text-brand-900 leading-tight mb-4">How I Use Claude to Build My Entire Business</h1>
+            <p class="text-gray-500 text-lg leading-relaxed">From writing code to drafting proposals to planning automations — how Claude AI became the core tool behind everything I build at Solvr Labs.</p>
+        </div>
+    </section>
+
+    <!-- Article Body -->
+    <article class="py-16 bg-white">
+        <div class="max-w-3xl mx-auto px-6 prose">
+            <h2>Building a One-Person AI Company with AI</h2>
+
+<p>I'll be honest — I couldn't run Solvr Labs without Claude. Not because I'm not capable, but because the math just doesn't work. As a solo developer building AI automation systems for service businesses, I'm essentially doing the job of 4-5 people: developer, sales person, proposal writer, content creator, and system architect.</p>
+
+<p>Claude has become my co-founder, and I want to show you exactly how I use it across every part of my business. This isn't about replacing human creativity — it's about amplifying what one person can build.</p>
+
+<h2>Code Generation: From Idea to Implementation</h2>
+
+<p>Let's start with the obvious one. I use Claude for probably 60% of my code generation, especially for the repetitive stuff that would otherwise eat my entire day.</p>
+
+<p>Last week I was building a webhook handler for a landscaping client's booking system. Instead of writing boilerplate Express routes and validation logic from scratch, I gave Claude the context:</p>
+
+<blockquote>
+"I need a Next.js API route that receives booking webhooks from Acuity Scheduling, validates the payload, extracts customer info, and creates a record in Supabase. The booking should trigger an n8n workflow via webhook."
+</blockquote>
+
+<p>Three minutes later, I had working code. Not perfect code — I still had to adjust the Supabase schema mapping and add proper error handling — but 80% of the grunt work was done.</p>
+
+<p>The real power isn't in generating entire applications (though Claude can do that). It's in handling the tedious parts so I can focus on the business logic and integrations that actually matter to my clients.</p>
+
+<h2>Automation Logic: Planning Complex Workflows</h2>
+
+<p>Here's where Claude really shines for my business. Service businesses need complex automation workflows, and mapping these out used to take hours of whiteboarding.</p>
+
+<p>Take my property management client. They needed an automation that:</p>
+<ul>
+<li>Receives maintenance requests via SMS</li>
+<li>Categorizes urgency using AI</li>
+<li>Routes to appropriate contractors</li>
+<li>Tracks responses and escalates if needed</li>
+<li>Updates the tenant and property owner</li>
+</ul>
+
+<p>I described this workflow to Claude and asked it to break down the <code>n8n</code> nodes I'd need, the decision points, and the data transformations. It gave me a complete workflow map with specific node configurations.</p>
+
+<p>The result? What used to take 2-3 hours of planning now takes 20 minutes. I spend my time on implementation and client-specific customizations instead of figuring out basic workflow logic.</p>
+
+<h2>Client Proposals: From Generic to Compelling</h2>
+
+<p>Writing proposals used to be my least favorite part of the business. I'd spend hours trying to explain technical concepts in business terms, usually ending up with something that sounded either too complex or too dumbed-down.</p>
+
+<p>Now I give Claude the client's pain points, their industry context, and the technical solution I'm proposing. It helps me translate between worlds.</p>
+
+<p>For a cleaning service client, I needed to explain why they needed an AI phone assistant integrated with their scheduling system. Claude helped me frame it as "Never miss another booking because you're on-site with a client" rather than "AI-powered voice recognition with calendar API integration."</p>
+
+<p>Same solution, but now the proposal actually speaks to what keeps the business owner up at night.</p>
+
+<h2>Content Creation: Technical Writing Made Human</h2>
+
+<p>You're reading Claude's work right now — sort of. I give it the outline, key points, and my voice/tone requirements. It generates the first draft, then I edit heavily to add specific examples, personal experiences, and technical details.</p>
+
+<p>The magic is in the collaboration. Claude handles structure and flow, I add the human details that only come from actually building these systems. Without it, I'd either have no blog (bad for SEO) or I'd spend all my development time writing instead of shipping.</p>
+
+<h2>Architecture Planning: From Concept to Technical Spec</h2>
+
+<p>When I started building TaskLine (my task management system for service businesses), I knew what I wanted but not exactly how to structure it. I described the requirements to Claude:</p>
+
+<blockquote>
+"Multi-tenant SaaS for service businesses. Customer management, job scheduling, team dispatch, SMS notifications, payment collection. Built with Next.js, Supabase, deployed on Vercel."
+</blockquote>
+
+<p>Claude gave me a complete technical architecture: database schema, API structure, authentication flow, and deployment strategy. It even suggested specific Supabase features I hadn't considered, like Row Level Security for multi-tenancy.</p>
+
+<p>I'm not blindly following its recommendations, but having a solid starting point saved me days of architectural decision-making. Now I can focus on the parts that require human judgment — UX decisions, business logic edge cases, and client-specific customizations.</p>
+
+<h2>The Reality Check: What Claude Can't Do</h2>
+
+<p>Let me be clear about the limitations. Claude can't:</p>
+<ul>
+<li>Understand client relationships and context</li>
+<li>Debug complex integration issues</li>
+<li>Make strategic business decisions</li>
+<li>Handle the human side of sales calls</li>
+<li>Test and iterate based on real user feedback</li>
+</ul>
+
+<p>It's a powerful co-pilot, not an autopilot. The value is in handling the predictable work so I can focus on the stuff that requires human intuition and experience.</p>
+
+<h2>The Compound Effect</h2>
+
+<p>Here's what's really changed my business: it's not just that each task is faster. It's that I can take on complexity I couldn't handle before.</p>
+
+<p>Six months ago, building a complete AI phone system with CRM integration and automated follow-up would have been a 3-month project. Now it's 3-4 weeks. That means I can serve smaller businesses that couldn't afford lengthy development cycles, and I can iterate faster with existing clients.</p>
+
+<p>Claude lets me punch above my weight class as a solo developer. I'm competing with agencies and winning because I can move fast and keep costs reasonable.</p>
+
+<h2>Your AI-Powered Business</h2>
+
+<p>If you're running a service business and feeling overwhelmed by manual processes, you're probably a perfect fit for AI automation. The technology is finally at the point where small businesses can benefit from enterprise-level automation without enterprise-level costs.</p>
+
+<p>I'm building these systems every day for plumbers, cleaners, landscapers, and property managers who want to focus on their craft instead of administrative busywork. <a href="/contact" class="text-brand-600 hover:text-brand-700 font-medium">Want to talk about what AI automation could do for your business?</a> I'd love to hear about your specific challenges and see how we can solve them together.</p>
+        </div>
+    </article>
+
+    <!-- More Posts -->
+    <section class="py-16 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <h3 class="reveal font-bold text-xl text-brand-900 mb-6">More Posts</h3>
+            <div class="reveal reveal-delay-1 space-y-4">
+                <a href="/blog/building-ai-receptionist" class="block bg-white rounded-xl p-5 border border-gray-200/80 hover:border-brand-200 transition-colors">
+                    <span class="text-xs text-gray-400">Mar 2, 2026</span>
+                    <h4 class="font-semibold text-brand-900 mt-1">Building an AI Receptionist That Actually Picks Up the Phone</h4>
+                </a>
+                <a href="/blog/building-taskline" class="block bg-white rounded-xl p-5 border border-gray-200/80 hover:border-brand-200 transition-colors">
+                    <span class="text-xs text-gray-400">Feb 5, 2026</span>
+                    <h4 class="font-semibold text-brand-900 mt-1">Building TaskLine: AI-Powered Freelancer Management</h4>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-14">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <a href="/" class="inline-block mb-4"><img src="../assets/full-logo-png (1).png" alt="Solvr Labs" class="h-10 md:h-14 brightness-0 invert"></a>
+                    <p class="text-brand-300/60 text-sm leading-relaxed max-w-xs">AI automation and custom software for service businesses.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Navigation</h4>
+                    <ul class="space-y-2"><li><a href="/" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home</a></li><li><a href="/services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Services</a></li><li><a href="/about" class="text-brand-300/50 hover:text-white text-sm transition-colors">About</a></li><li><a href="/blog" class="text-brand-300/50 hover:text-white text-sm transition-colors">Blog</a></li><li><a href="/contact" class="text-brand-300/50 hover:text-white text-sm transition-colors">Contact</a></li></ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Services</h4>
+                    <ul class="space-y-2"><li><a href="/ai-automation" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Workflow Automation</a></li><li><a href="/ai-receptionist" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Receptionist</a></li><li><a href="/custom-software" class="text-brand-300/50 hover:text-white text-sm transition-colors">Custom Software</a></li></ul>
+                    <h4 class="font-semibold text-sm mb-3 mt-5 uppercase tracking-wider text-brand-300/80">Industries</h4>
+                    <ul class="space-y-2"><li><a href="/home-services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home Services</a></li><li><a href="/property-management" class="text-brand-300/50 hover:text-white text-sm transition-colors">Property Management</a></li></ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-800 mt-10 pt-6 text-center text-brand-300/40 text-xs">&copy; 2026 Solvr Labs, LLC. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('burger').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('mobile-menu').classList.toggle('hidden'); });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

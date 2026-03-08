@@ -1,12 +1,5 @@
 [
   {
-    "slug": "how-i-use-claude-to-build-my-entire-business",
-    "title": "How I Use Claude to Build My Entire Business",
-    "tag": "Build Log",
-    "summary": "From writing code to drafting proposals to planning automations — how Claude AI became the core tool behind everything I build at Solvr Labs.",
-    "context": "Jessy uses Claude Code for building the website, generating blog posts, writing automation logic, drafting client proposals, and even planning the architecture for TaskLine. This post covers the day-to-day reality of building a one-person AI company with AI as your co-builder."
-  },
-  {
     "slug": "automating-a-blog-with-ai-and-github-actions",
     "title": "I Automated This Blog With AI and GitHub Actions",
     "tag": "Build Log",
