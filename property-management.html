@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI for Property Management Companies | Solvr Labs</title>
+    <meta name="description" content="AI automation for property management. Handle tenant requests, maintenance dispatch, lease renewals, after-hours emergencies, and rent collection — without adding headcount.">
+    <link rel="icon" type="image/png" href="assets/favicon-solvrlabs.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#f0f5ff',100:'#e1ebff',200:'#c8d8fe',300:'#a3bffc',400:'#7da0f8',500:'#5a7de6',600:'#4664d6',700:'#3a53bd',800:'#33469a',900:'#2c3a7c',950:'#1d264e' },
+                        gray: { 50:'#f9fafb',100:'#f2f3f6',200:'#e5e7eb',300:'#d1d5db',400:'#9ca3af',500:'#6b7280',600:'#4b5563',700:'#374151',800:'#1f2937',900:'#1d1e20' },
+                    },
+                    fontFamily: { sans: ['"DM Sans"','system-ui','sans-serif'], display: ['"DM Sans"','system-ui','sans-serif'] },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f2f3f6; } ::-webkit-scrollbar-thumb { background: #5a7de6; border-radius: 3px; }
+        .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; } .reveal-delay-4 { transition-delay:0.4s; }
+        .burger span { display:block; width:22px; height:2px; background:#2c3a7c; transition:all 0.3s ease; }
+        .burger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity:0; }
+        .burger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+        .faq-answer { max-height:0; overflow:hidden; transition:max-height 0.4s ease-out; }
+        .faq-item.open .faq-answer { max-height:300px; }
+        .faq-item.open .faq-icon { transform:rotate(45deg); }
+        .faq-icon { transition:transform 0.3s ease; }
+        html { overflow-x: clip; }
+
+        /* Hero dashboard animation */
+        @keyframes dashSlideIn { 0% { opacity:0; transform:translateY(10px); } 100% { opacity:1; transform:translateY(0); } }
+        @keyframes dashPulseGreen { 0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); } 50% { box-shadow: 0 0 0 8px rgba(34,197,94,0); } }
+        @keyframes dashBarGrow { 0% { width: 0; } 100% { width: var(--bar-w); } }
+        .dash-item { animation: dashSlideIn 0.4s ease-out forwards; opacity:0; }
+        .dash-item-1 { animation-delay: 0.3s; }
+        .dash-item-2 { animation-delay: 0.6s; }
+        .dash-item-3 { animation-delay: 0.9s; }
+        .dash-item-4 { animation-delay: 1.2s; }
+        .dash-item-5 { animation-delay: 1.5s; }
+        .dash-item-6 { animation-delay: 1.8s; }
+        .dash-bar { animation: dashBarGrow 0.8s ease-out forwards; width: 0; }
+        .dash-bar-1 { animation-delay: 1.0s; }
+        .dash-bar-2 { animation-delay: 1.2s; }
+        .dash-bar-3 { animation-delay: 1.4s; }
+        .dash-pulse { animation: dashPulseGreen 2s ease-in-out infinite; }
+
+        /* 3D tilt */
+        .tilt-wrapper { perspective: 1000px; }
+        .tilt-card { transform-style: preserve-3d; transition: transform 0.15s ease-out, box-shadow 0.3s ease; }
+        .tilt-card:hover { box-shadow: 0 25px 60px -12px rgba(70, 100, 214, 0.25), 0 10px 30px -8px rgba(0,0,0,0.1); }
+        .tilt-card .tilt-shine { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; z-index: 10; background: radial-gradient(600px circle at var(--shine-x, 50%) var(--shine-y, 50%), rgba(255,255,255,0.15), transparent 40%); }
+        .tilt-card:hover .tilt-shine { opacity: 1; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 overflow-x-hidden">
+
+    <!-- Nav -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <a href="/" class="py-3.5">
+                    <img src="assets/full-logo-png (1).png" alt="Solvr Labs" class="h-[36px] md:h-[50px]">
+                </a>
+                <div class="hidden md:flex items-center gap-10">
+                    <a href="/" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Home</a>
+                    <a href="/services" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Services</a>
+                    <a href="/about" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">About</a>
+                    <a href="/#work" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Work</a>
+                    <a href="/contact" class="px-6 py-2.5 text-base font-semibold rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-colors shadow-sm">Book a Call</a>
+                </div>
+                <button id="burger" class="burger md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
+            <div class="px-6 py-4 space-y-1">
+                <a href="/" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Home</a>
+                <a href="/services" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Services</a>
+                <a href="/about" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">About</a>
+                <a href="/#work" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Work</a>
+                <a href="/contact" class="block mt-3 px-3 py-2.5 text-sm font-semibold text-center text-white rounded-full bg-brand-600">Book a Call</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="relative min-h-0 lg:min-h-[calc(100vh-250px)] flex items-center bg-white overflow-hidden">
+        <div class="absolute top-0 right-0 w-[400px] h-[400px] sm:w-[700px] sm:h-[700px] bg-brand-100/50 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4 pointer-events-none"></div>
+        <div class="relative max-w-[90rem] mx-auto px-6 sm:px-10 pt-24 pb-10 sm:pt-24 lg:pt-20 lg:pb-14 w-full">
+            <div class="grid lg:grid-cols-5 gap-8 lg:gap-10 items-center">
+                <!-- Text -->
+                <div class="lg:col-span-2">
+                    <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 bg-brand-100/60 border border-brand-200/50 rounded-full text-sm text-brand-600 font-medium mb-6">
+                        <span class="w-1.5 h-1.5 bg-brand-500 rounded-full animate-pulse"></span>
+                        For Property Management
+                    </div>
+                    <h1 class="reveal reveal-delay-1 font-extrabold text-4xl sm:text-5xl lg:text-[4.25rem] text-brand-900 mb-6 sm:mb-8 tracking-tight" style="line-height:1.05">
+                        <span class="block text-[1.5rem] sm:text-[2rem] lg:text-[3rem] font-bold mb-1">Manage more doors.</span><span class="bg-gradient-to-r from-brand-600 via-brand-500 to-emerald-500 bg-clip-text text-transparent" style="padding-bottom:2px">Without more people.</span>
+                    </h1>
+                    <p class="reveal reveal-delay-2 text-base sm:text-lg lg:text-[1.2rem] text-gray-500 leading-relaxed mb-4">
+                        AI that answers tenant calls 24/7, dispatches maintenance, follows up on rent, and handles the repetitive work that buries your team.
+                    </p>
+                    <p class="reveal reveal-delay-2 text-sm text-gray-400 mb-8">
+                        Scale your portfolio without scaling your payroll. Works with AppFolio, Buildium, and Rent Manager.
+                    </p>
+                    <div class="reveal reveal-delay-3 flex flex-wrap gap-4">
+                        <a href="/contact" class="inline-flex items-center gap-2 px-7 py-3 sm:gap-2.5 sm:px-9 sm:py-4 bg-brand-600 hover:bg-brand-700 rounded-full text-white text-base sm:text-lg font-semibold transition-colors shadow-md shadow-brand-600/20">
+                            Book a Call
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        </a>
+                        <a href="#problems" class="inline-flex items-center gap-2 px-7 py-3 sm:gap-2.5 sm:px-9 sm:py-4 border border-gray-200 hover:border-brand-200 hover:bg-brand-50 rounded-full text-gray-700 text-base sm:text-lg font-semibold transition-colors">
+                            See the Problems We Solve
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Animated Property Dashboard Mockup -->
+                <div class="relative lg:col-span-3 lg:scale-105 lg:origin-center tilt-wrapper">
+                    <div id="hero-render" class="tilt-card relative bg-white rounded-2xl shadow-2xl shadow-gray-200/60 border border-gray-200/80 overflow-hidden">
+                        <div class="tilt-shine"></div>
+                        <!-- Browser chrome -->
+                        <div class="flex items-center gap-2 px-5 py-3 bg-gray-50 border-b border-gray-100">
+                            <div class="w-3 h-3 rounded-full bg-red-300"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-300"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-300"></div>
+                            <div class="ml-3 flex-1 bg-white rounded-md px-3 py-1.5 border border-gray-200 text-[11px] text-gray-400 font-mono">portal.solvrlabs.com/dashboard</div>
+                        </div>
+
+                        <div class="p-4 sm:p-6 bg-gradient-to-br from-slate-50 to-white">
+                            <!-- Header -->
+                            <div class="flex items-center justify-between mb-5">
+                                <div>
+                                    <div class="text-xs font-semibold text-brand-600 uppercase tracking-wider">Property Dashboard</div>
+                                    <div class="text-sm font-bold text-gray-900 mt-1">March 2026 &mdash; 127 Units Managed</div>
+                                </div>
+                                <div class="flex items-center gap-1.5 px-2.5 py-1 bg-green-50 border border-green-200 rounded-full dash-pulse">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                                    <span class="text-[10px] font-semibold text-green-700">All Systems Active</span>
+                                </div>
+                            </div>
+
+                            <!-- Stats row -->
+                            <div class="grid grid-cols-4 gap-2 sm:gap-3 mb-5">
+                                <div class="dash-item dash-item-1 bg-white rounded-lg border border-gray-100 p-2 sm:p-3 text-center">
+                                    <div class="text-base sm:text-lg font-bold text-brand-600">96%</div>
+                                    <div class="text-[9px] sm:text-[10px] text-gray-400">Rent Collected</div>
+                                </div>
+                                <div class="dash-item dash-item-1 bg-white rounded-lg border border-gray-100 p-2 sm:p-3 text-center">
+                                    <div class="text-base sm:text-lg font-bold text-emerald-600">3</div>
+                                    <div class="text-[9px] sm:text-[10px] text-gray-400">Open Tickets</div>
+                                </div>
+                                <div class="dash-item dash-item-1 bg-white rounded-lg border border-gray-100 p-2 sm:p-3 text-center">
+                                    <div class="text-base sm:text-lg font-bold text-purple-600">12</div>
+                                    <div class="text-[9px] sm:text-[10px] text-gray-400">Renewals Due</div>
+                                </div>
+                                <div class="dash-item dash-item-1 bg-white rounded-lg border border-gray-100 p-2 sm:p-3 text-center">
+                                    <div class="text-base sm:text-lg font-bold text-amber-600">0</div>
+                                    <div class="text-[9px] sm:text-[10px] text-gray-400">Vacancies</div>
+                                </div>
+                            </div>
+
+                            <!-- Rent collection bars -->
+                            <div class="dash-item dash-item-2 bg-white rounded-lg border border-gray-100 p-3 sm:p-4 mb-4">
+                                <div class="text-[10px] font-semibold text-gray-600 uppercase tracking-wider mb-3">Rent Collection Status</div>
+                                <div class="space-y-2.5">
+                                    <div class="flex items-center gap-2 sm:gap-3">
+                                        <span class="text-[10px] text-gray-500 w-16 sm:w-20 flex-shrink-0">Paid on time</span>
+                                        <div class="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden"><div class="dash-bar dash-bar-1 bg-emerald-500 h-full rounded-full" style="--bar-w:82%"></div></div>
+                                        <span class="text-[10px] font-semibold text-gray-700 w-8 text-right">104</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 sm:gap-3">
+                                        <span class="text-[10px] text-gray-500 w-16 sm:w-20 flex-shrink-0">Paid late</span>
+                                        <div class="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden"><div class="dash-bar dash-bar-2 bg-amber-400 h-full rounded-full" style="--bar-w:14%"></div></div>
+                                        <span class="text-[10px] font-semibold text-gray-700 w-8 text-right">18</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 sm:gap-3">
+                                        <span class="text-[10px] text-gray-500 w-16 sm:w-20 flex-shrink-0">Outstanding</span>
+                                        <div class="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden"><div class="dash-bar dash-bar-3 bg-red-400 h-full rounded-full" style="--bar-w:4%"></div></div>
+                                        <span class="text-[10px] font-semibold text-gray-700 w-8 text-right">5</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Activity feed -->
+                            <div class="bg-white rounded-lg border border-gray-100 divide-y divide-gray-50">
+                                <div class="dash-item dash-item-3 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5">
+                                    <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="text-[10px] sm:text-xs font-medium text-gray-800 truncate">Emergency: <span class="font-semibold">Unit 3B</span> &mdash; water leak reported at 1:17 AM</div>
+                                    </div>
+                                    <span class="text-[10px] text-red-400 font-semibold flex-shrink-0 hidden sm:inline">Dispatched</span>
+                                </div>
+                                <div class="dash-item dash-item-4 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5">
+                                    <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-amber-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="text-[10px] sm:text-xs font-medium text-gray-800 truncate">Rent reminder sent to <span class="font-semibold">5 overdue tenants</span> with payment links</div>
+                                    </div>
+                                    <span class="text-[10px] text-amber-500 font-semibold flex-shrink-0 hidden sm:inline">Auto</span>
+                                </div>
+                                <div class="dash-item dash-item-5 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5">
+                                    <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="text-[10px] sm:text-xs font-medium text-gray-800 truncate">Lease renewal signed: <span class="font-semibold">Unit 8C</span> &mdash; extended 12 months</div>
+                                    </div>
+                                    <span class="text-[10px] text-green-500 font-semibold flex-shrink-0 hidden sm:inline">Complete</span>
+                                </div>
+                                <div class="dash-item dash-item-6 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5">
+                                    <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="text-[10px] sm:text-xs font-medium text-gray-800 truncate">AI answered 4 tenant calls today. <span class="text-green-600 font-semibold">0 reached your phone.</span></div>
+                                    </div>
+                                    <span class="text-[10px] text-green-500 font-semibold flex-shrink-0 hidden sm:inline">Live</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Problem -->
+    <section id="problems" class="py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">The Problem</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">Every new door adds more chaos</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Property management doesn't scale linearly. Every unit you add multiplies calls, maintenance requests, and admin work.</p>
+            </div>
+
+            <div class="reveal grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="bg-red-50/50 rounded-xl border border-red-100 p-6 text-center">
+                    <div class="text-3xl font-bold text-red-600 mb-2">44%</div>
+                    <p class="text-sm text-gray-600">of tenant calls happen outside of business hours</p>
+                </div>
+                <div class="bg-red-50/50 rounded-xl border border-red-100 p-6 text-center">
+                    <div class="text-3xl font-bold text-red-600 mb-2">$2,800</div>
+                    <p class="text-sm text-gray-600">average cost of tenant turnover that faster response prevents</p>
+                </div>
+                <div class="bg-red-50/50 rounded-xl border border-red-100 p-6 text-center">
+                    <div class="text-3xl font-bold text-red-600 mb-2">5+ hrs</div>
+                    <p class="text-sm text-gray-600">per week spent chasing late rent and sending reminders manually</p>
+                </div>
+                <div class="bg-red-50/50 rounded-xl border border-red-100 p-6 text-center">
+                    <div class="text-3xl font-bold text-red-600 mb-2">67%</div>
+                    <p class="text-sm text-gray-600">of maintenance requests require back-and-forth before dispatch</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- A Day Without / With -->
+    <section class="py-24 bg-brand-50/50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">Your Day, Transformed</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">What changes when AI handles the tenant work</h2>
+            </div>
+
+            <div class="reveal grid lg:grid-cols-2 gap-6">
+                <!-- Without -->
+                <div class="rounded-2xl border-2 border-red-100 bg-white p-7">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900">A typical day without Solvr Labs</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-gray-400 mt-0.5 w-14 flex-shrink-0">6:45 AM</span>
+                            <p class="text-sm text-gray-600">Wake up to 4 voicemails. Tenant in Unit 3B says the heat stopped last night. Another says there's water coming through the ceiling.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-gray-400 mt-0.5 w-14 flex-shrink-0">9:00 AM</span>
+                            <p class="text-sm text-gray-600">Spend the first hour calling plumbers and HVAC techs. One can come Thursday. Another doesn't answer.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-gray-400 mt-0.5 w-14 flex-shrink-0">11:30 AM</span>
+                            <p class="text-sm text-gray-600">Rent was due 5 days ago. 8 units still haven't paid. You start sending individual reminder texts.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-gray-400 mt-0.5 w-14 flex-shrink-0">2:00 PM</span>
+                            <p class="text-sm text-gray-600">Lease renewal coming up for 12A. You meant to send the renewal letter two weeks ago. The tenant is already looking elsewhere.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-gray-400 mt-0.5 w-14 flex-shrink-0">9:30 PM</span>
+                            <p class="text-sm text-gray-600">Tenant calls about a lockout. You're at dinner with your family. Answer it anyway. Spend 30 minutes coordinating a locksmith.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- With -->
+                <div class="rounded-2xl border-2 border-green-100 bg-white p-7">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900">The same day with Solvr Labs</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-green-600 mt-0.5 w-14 flex-shrink-0">6:45 AM</span>
+                            <p class="text-sm text-gray-600">Check your phone. AI answered both calls overnight. HVAC emergency was dispatched to your on-call vendor at 11 PM. Plumber already scheduled for 8 AM.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-green-600 mt-0.5 w-14 flex-shrink-0">9:00 AM</span>
+                            <p class="text-sm text-gray-600">Your morning is clear. AI handled 3 maintenance calls this morning &mdash; one dispatched, two scheduled for this week. You got a summary in Discord.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-green-600 mt-0.5 w-14 flex-shrink-0">11:30 AM</span>
+                            <p class="text-sm text-gray-600">Rent reminders were sent automatically on the 3rd. Follow-up texts went out yesterday. 6 of 8 late tenants have already paid via the link.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-green-600 mt-0.5 w-14 flex-shrink-0">2:00 PM</span>
+                            <p class="text-sm text-gray-600">Lease renewal for 12A was sent 30 days before expiry. Tenant signed digitally last week. You didn't touch it.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-green-600 mt-0.5 w-14 flex-shrink-0">9:30 PM</span>
+                            <p class="text-sm text-gray-600">Tenant calls about a lockout. AI answers, confirms their identity, dispatches the locksmith, and texts the tenant an ETA. You never see your phone.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What Gets Automated -->
+    <section class="py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">What Gets Automated</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">Six workflows that eat your time</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Each one runs 24/7 without you lifting a finger.</p>
+            </div>
+
+            <div class="reveal grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Card 1 -->
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Tenant Request Intake</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">AI answers tenant calls, collects issue details, creates a maintenance ticket, and assigns priority &mdash; no human needed for the intake step.</p>
+                    <div class="flex items-center gap-2 text-xs text-gray-400">
+                        <span class="px-2 py-0.5 bg-gray-100 rounded-full">Tenant calls</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <span class="px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-full">Ticket created</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-10 h-10 rounded-lg bg-brand-50 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Maintenance Dispatch</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">AI triages urgency, matches to the right vendor, sends the work order, and confirms the appointment with the tenant automatically.</p>
+                    <div class="flex items-center gap-2 text-xs text-gray-400">
+                        <span class="px-2 py-0.5 bg-gray-100 rounded-full">Ticket opened</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <span class="px-2 py-0.5 bg-brand-50 text-brand-600 rounded-full">Vendor dispatched</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Rent Collection Follow-Up</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">Automated reminders before and after rent is due. Escalating sequence: friendly text, payment link, formal notice &mdash; all hands-free.</p>
+                    <div class="flex items-center gap-2 text-xs text-gray-400">
+                        <span class="px-2 py-0.5 bg-gray-100 rounded-full">Rent overdue</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <span class="px-2 py-0.5 bg-amber-50 text-amber-600 rounded-full">Reminder sequence</span>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Lease Renewal Automation</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">AI sends renewal notices 60/30 days before expiry. Includes updated terms, digital signing link, and follow-up if no response.</p>
+                    <div class="flex items-center gap-2 text-xs text-gray-400">
+                        <span class="px-2 py-0.5 bg-gray-100 rounded-full">60 days out</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <span class="px-2 py-0.5 bg-purple-50 text-purple-600 rounded-full">Renewal sent</span>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">After-Hours Emergency Routing</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">AI answers emergency calls at 2 AM, determines urgency, dispatches the on-call vendor, and notifies you &mdash; only if it's truly urgent.</p>
+                    <div class="flex items-center gap-2 text-xs text-gray-400">
+                        <span class="px-2 py-0.5 bg-gray-100 rounded-full">Emergency call</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <span class="px-2 py-0.5 bg-red-50 text-red-500 rounded-full">Vendor dispatched</span>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Vacancy Marketing & Screening</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">New vacancy triggers listing syndication, AI answers prospect calls, pre-screens applicants, and schedules showings automatically.</p>
+                    <div class="flex items-center gap-2 text-xs text-gray-400">
+                        <span class="px-2 py-0.5 bg-gray-100 rounded-full">Unit vacant</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <span class="px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full">Showing booked</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Three Solutions -->
+    <section class="py-24 bg-brand-50/50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">How We Help</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">Three systems that scale your portfolio</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Each one eliminates a different bottleneck. Most clients start with the AI receptionist and add automations once they see the impact.</p>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Solution 1: AI Receptionist -->
+                <div class="reveal bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+                    <div class="grid lg:grid-cols-5 gap-0">
+                        <div class="lg:col-span-3 p-7 sm:p-9">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-200/50 rounded-full text-xs text-emerald-700 font-medium mb-4">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                                AI Receptionist
+                            </div>
+                            <h3 class="font-bold text-2xl text-brand-900 mb-3">Every tenant call answered, 24/7</h3>
+                            <p class="text-gray-500 leading-relaxed mb-5">An AI receptionist that answers tenant calls in real-time, handles maintenance requests, routes emergencies to your on-call vendor, and provides answers about lease terms, payment portals, and office hours &mdash; without your team picking up the phone.</p>
+                            <div class="grid sm:grid-cols-2 gap-3 mb-6">
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Creates maintenance tickets from calls</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Dispatches emergencies immediately</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Answers questions about lease terms</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Screens prospective tenant inquiries</span></div>
+                            </div>
+                            <a href="/ai-receptionist" class="inline-flex items-center gap-2 px-6 py-2.5 bg-brand-600 hover:bg-brand-700 rounded-full text-white text-sm font-semibold transition-colors shadow-sm">
+                                Learn More
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            </a>
+                        </div>
+                        <div class="lg:col-span-2 bg-gradient-to-br from-emerald-50 to-brand-50 p-7 sm:p-9 flex flex-col justify-center">
+                            <div class="text-xs font-semibold text-emerald-600 uppercase tracking-wider mb-4">Real scenario</div>
+                            <div class="space-y-3">
+                                <div class="bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
+                                    <div class="text-[10px] text-gray-400 mb-1">Tuesday, 1:17 AM</div>
+                                    <div class="text-xs font-medium text-gray-700">"There's water coming through the ceiling in my bathroom"</div>
+                                </div>
+                                <div class="bg-emerald-50 rounded-lg border border-emerald-200 p-3 shadow-sm">
+                                    <div class="text-[10px] text-emerald-600 mb-1">AI Receptionist</div>
+                                    <div class="text-xs text-gray-700">Flagged as emergency. Identified unit and tenant. Called your on-call plumber. Texted tenant: "A plumber is on the way, ETA 45 min."</div>
+                                </div>
+                                <div class="bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
+                                    <div class="text-[10px] text-gray-400 mb-1">Result</div>
+                                    <div class="text-xs font-medium text-gray-700">Leak contained by 2:15 AM. Damage minimized. You slept through it &mdash; reviewed the summary at 7 AM.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solution 2: Workflow Automation -->
+                <div class="reveal bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+                    <div class="grid lg:grid-cols-5 gap-0">
+                        <div class="lg:col-span-3 p-7 sm:p-9">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-brand-50 border border-brand-200/50 rounded-full text-xs text-brand-700 font-medium mb-4">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                                Workflow Automation
+                            </div>
+                            <h3 class="font-bold text-2xl text-brand-900 mb-3">Automate the admin that buries you</h3>
+                            <p class="text-gray-500 leading-relaxed mb-5">Rent reminders, lease renewals, vendor coordination, move-in/move-out checklists, inspection scheduling &mdash; all on autopilot. Connected to your existing property management software.</p>
+                            <div class="grid sm:grid-cols-2 gap-3 mb-6">
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Automated rent reminder sequences</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Lease renewal drip campaigns</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Maintenance vendor coordination</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Move-in/move-out automation</span></div>
+                            </div>
+                            <a href="/ai-automation" class="inline-flex items-center gap-2 px-6 py-2.5 bg-brand-600 hover:bg-brand-700 rounded-full text-white text-sm font-semibold transition-colors shadow-sm">
+                                Learn More
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            </a>
+                        </div>
+                        <div class="lg:col-span-2 bg-gradient-to-br from-brand-50 to-purple-50 p-7 sm:p-9 flex flex-col justify-center">
+                            <div class="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-4">What it looks like</div>
+                            <div class="space-y-2.5">
+                                <div class="flex items-center gap-3 bg-white rounded-lg border border-gray-200 px-3 py-2.5 shadow-sm">
+                                    <div class="w-7 h-7 rounded-full bg-amber-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    </div>
+                                    <div class="text-xs text-gray-700">Rent due in 3 days &mdash; reminder sent to 42 tenants</div>
+                                </div>
+                                <div class="flex items-center gap-3 bg-white rounded-lg border border-gray-200 px-3 py-2.5 shadow-sm">
+                                    <div class="w-7 h-7 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3.5 h-3.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    </div>
+                                    <div class="text-xs text-gray-700">5 units overdue &mdash; follow-up SMS with payment link sent</div>
+                                </div>
+                                <div class="flex items-center gap-3 bg-white rounded-lg border border-gray-200 px-3 py-2.5 shadow-sm">
+                                    <div class="w-7 h-7 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3.5 h-3.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                    </div>
+                                    <div class="text-xs text-gray-700">Lease for Unit 8C expires in 60 days &mdash; renewal sent</div>
+                                </div>
+                                <div class="flex items-center gap-3 bg-white rounded-lg border border-gray-200 px-3 py-2.5 shadow-sm">
+                                    <div class="w-7 h-7 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    </div>
+                                    <div class="text-xs text-gray-700">3 tenants signed renewals this week. 0 manual effort.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solution 3: Custom Software -->
+                <div class="reveal bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+                    <div class="grid lg:grid-cols-5 gap-0">
+                        <div class="lg:col-span-3 p-7 sm:p-9">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-purple-50 border border-purple-200/50 rounded-full text-xs text-purple-700 font-medium mb-4">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                                Custom Software
+                            </div>
+                            <h3 class="font-bold text-2xl text-brand-900 mb-3">Your own property management platform</h3>
+                            <p class="text-gray-500 leading-relaxed mb-5">When AppFolio and Buildium don't cut it, we build a custom platform around your exact workflow &mdash; tenant portal, owner reporting, maintenance tracking, AI insights, and everything connected.</p>
+                            <div class="grid sm:grid-cols-2 gap-3 mb-6">
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Tenant portal with request tracking</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Owner dashboard with financials</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Vendor management system</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">AI-powered maintenance predictions</span></div>
+                            </div>
+                            <a href="/custom-software" class="inline-flex items-center gap-2 px-6 py-2.5 bg-brand-600 hover:bg-brand-700 rounded-full text-white text-sm font-semibold transition-colors shadow-sm">
+                                Learn More
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            </a>
+                        </div>
+                        <div class="lg:col-span-2 bg-gradient-to-br from-purple-50 to-brand-50 p-7 sm:p-9 flex flex-col justify-center">
+                            <div class="text-xs font-semibold text-purple-600 uppercase tracking-wider mb-4">Who this is for</div>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <svg class="w-3 h-3 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    </div>
+                                    <p class="text-sm text-gray-600">You manage 50+ units and your current software can't keep up</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <div class="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <svg class="w-3 h-3 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    </div>
+                                    <p class="text-sm text-gray-600">Your owners want better reporting than AppFolio provides</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <div class="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <svg class="w-3 h-3 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    </div>
+                                    <p class="text-sm text-gray-600">You want tenants to self-serve instead of calling your office</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <div class="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <svg class="w-3 h-3 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    </div>
+                                    <p class="text-sm text-gray-600">You need AI to predict maintenance issues before they escalate</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Types -->
+    <section class="py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">Portfolio Types</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">Works for every property type</h2>
+            </div>
+
+            <div class="reveal grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm text-center hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Multi-Family</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Apartment buildings and complexes. High tenant volume, constant maintenance requests, and rent collection at scale.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm text-center hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Single-Family Rentals</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Scattered-site portfolios where coordination is the bottleneck. Each property needs the same care at different locations.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm text-center hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Commercial</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Office, retail, and mixed-use properties. Tenant communication, lease management, and vendor coordination simplified.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm text-center hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">HOA / Condo</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Board communications, common area maintenance, violation tracking, and resident complaint management automated.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-24 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">FAQ</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">Questions from property managers</h2>
+            </div>
+
+            <div class="reveal space-y-3">
+                <div class="faq-item border border-gray-200 rounded-xl overflow-hidden bg-white">
+                    <button class="faq-question w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-brand-900 pr-4">How does the AI handle emergencies vs. non-urgent requests?</span>
+                        <span class="faq-icon text-brand-600 text-xl font-light flex-shrink-0">+</span>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-gray-500 leading-relaxed pb-5">The AI is trained to identify emergencies (flooding, gas leaks, fire, no heat in winter, no AC in summer) and immediately dispatch your on-call vendor while notifying you. Non-urgent requests (leaky faucet, appliance issue, cosmetic repairs) get logged as tickets and scheduled during normal business hours. You set the rules for what counts as urgent.</p>
+                    </div>
+                </div>
+                <div class="faq-item border border-gray-200 rounded-xl overflow-hidden bg-white">
+                    <button class="faq-question w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-brand-900 pr-4">Will this work with my property management software?</span>
+                        <span class="faq-icon text-brand-600 text-xl font-light flex-shrink-0">+</span>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-gray-500 leading-relaxed pb-5">Yes. We integrate with AppFolio, Buildium, Rent Manager, Yardi, and most major PM platforms. If your software has an API or can send/receive emails, we can connect it. We also work with Google Sheets, QuickBooks, and Stripe for simpler setups.</p>
+                    </div>
+                </div>
+                <div class="faq-item border border-gray-200 rounded-xl overflow-hidden bg-white">
+                    <button class="faq-question w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-brand-900 pr-4">How many units do I need to manage for this to make sense?</span>
+                        <span class="faq-icon text-brand-600 text-xl font-light flex-shrink-0">+</span>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-gray-500 leading-relaxed pb-5">Most of our PM clients manage 20-500+ units. Even at 20 units, the after-hours call handling and rent reminders alone save significant time. The ROI scales with your portfolio &mdash; the more doors, the more hours saved per week.</p>
+                    </div>
+                </div>
+                <div class="faq-item border border-gray-200 rounded-xl overflow-hidden bg-white">
+                    <button class="faq-question w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-brand-900 pr-4">Can tenants tell they're talking to AI?</span>
+                        <span class="faq-icon text-brand-600 text-xl font-light flex-shrink-0">+</span>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-gray-500 leading-relaxed pb-5">The AI is conversational and natural. It uses your company name, knows your properties, and can answer questions about lease terms, payment portals, and office hours. Most tenants don't realize it's AI &mdash; they just know someone picked up the phone when they called.</p>
+                    </div>
+                </div>
+                <div class="faq-item border border-gray-200 rounded-xl overflow-hidden bg-white">
+                    <button class="faq-question w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-brand-900 pr-4">What about fair housing compliance?</span>
+                        <span class="faq-icon text-brand-600 text-xl font-light flex-shrink-0">+</span>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-gray-500 leading-relaxed pb-5">The AI is trained to follow fair housing guidelines. It treats every caller consistently, never asks discriminatory questions, and follows the same script for every prospect. This actually reduces your compliance risk compared to human receptionists who might inadvertently say the wrong thing.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-20 bg-brand-600">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <h2 class="reveal font-bold text-3xl sm:text-4xl text-white mb-4">Ready to manage more doors without more headcount?</h2>
+            <p class="reveal reveal-delay-1 text-brand-200 text-lg max-w-xl mx-auto mb-8">Tell me about your portfolio and what's eating your time. I'll tell you which AI solutions will make the biggest impact.</p>
+            <a href="/contact" class="reveal reveal-delay-2 inline-flex items-center gap-2 px-7 py-3 bg-white text-brand-600 hover:bg-brand-50 rounded-full font-semibold transition-colors shadow-lg shadow-brand-700/30">
+                Book a Call
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-14">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <a href="/" class="inline-block mb-4">
+                        <img src="assets/full-logo-png (1).png" alt="Solvr Labs" class="h-10 md:h-14 brightness-0 invert">
+                    </a>
+                    <p class="text-brand-300/60 text-sm leading-relaxed max-w-xs">AI automation and custom software for service businesses.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Navigation</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home</a></li>
+                        <li><a href="/services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Services</a></li>
+                        <li><a href="/about" class="text-brand-300/50 hover:text-white text-sm transition-colors">About</a></li>
+                        <li><a href="/blog" class="text-brand-300/50 hover:text-white text-sm transition-colors">Blog</a></li>
+                        <li><a href="/contact" class="text-brand-300/50 hover:text-white text-sm transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/ai-automation" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Workflow Automation</a></li>
+                        <li><a href="/ai-receptionist" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Receptionist</a></li>
+                        <li><a href="/custom-software" class="text-brand-300/50 hover:text-white text-sm transition-colors">Custom Software</a></li>
+                    </ul>
+                    <h4 class="font-semibold text-sm mb-3 mt-5 uppercase tracking-wider text-brand-300/80">Industries</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/home-services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home Services</a></li>
+                        <li><a href="/property-management" class="text-brand-300/50 hover:text-white text-sm transition-colors">Property Management</a></li>
+                        <li><a href="/cleaning-services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Cleaning Services</a></li>
+                        <li><a href="/landscaping" class="text-brand-300/50 hover:text-white text-sm transition-colors">Landscaping</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-800 mt-10 pt-6 text-center text-brand-300/40 text-xs">
+                &copy; 2026 Solvr Labs, LLC. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('burger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.querySelector('.faq-question').addEventListener('click', () => {
+                const wasOpen = item.classList.contains('open');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+                if (!wasOpen) item.classList.add('open');
+            });
+        });
+
+        // 3D tilt effect
+        const card = document.getElementById('hero-render');
+        if (card) {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+                const rotateX = (0.5 - y) * 8;
+                const rotateY = (x - 0.5) * 8;
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                card.style.setProperty('--shine-x', `${x * 100}%`);
+                card.style.setProperty('--shine-y', `${y * 100}%`);
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+            });
+        }
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI for Landscaping & Lawn Care Companies | Solvr Labs</title>
+    <meta name="description" content="AI automation built for landscaping and lawn care businesses. Answer every call, book every yard, dispatch crews smarter, and automate seasonal upsells — so you stop losing leads while you're on the mower.">
+    <link rel="icon" type="image/png" href="assets/favicon-solvrlabs.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#f0f5ff',100:'#e1ebff',200:'#c8d8fe',300:'#a3bffc',400:'#7da0f8',500:'#5a7de6',600:'#4664d6',700:'#3a53bd',800:'#33469a',900:'#2c3a7c',950:'#1d264e' },
+                        gray: { 50:'#f9fafb',100:'#f2f3f6',200:'#e5e7eb',300:'#d1d5db',400:'#9ca3af',500:'#6b7280',600:'#4b5563',700:'#374151',800:'#1f2937',900:'#1d1e20' },
+                    },
+                    fontFamily: { sans: ['"DM Sans"','system-ui','sans-serif'], display: ['"DM Sans"','system-ui','sans-serif'] },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f2f3f6; } ::-webkit-scrollbar-thumb { background: #5a7de6; border-radius: 3px; }
+        .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; } .reveal-delay-4 { transition-delay:0.4s; }
+        .burger span { display:block; width:22px; height:2px; background:#2c3a7c; transition:all 0.3s ease; }
+        .burger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity:0; }
+        .burger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+        .faq-answer { max-height:0; overflow:hidden; transition:max-height 0.4s ease-out; }
+        .faq-item.open .faq-answer { max-height:300px; }
+        .faq-item.open .faq-icon { transform:rotate(45deg); }
+        .faq-icon { transition:transform 0.3s ease; }
+        html { overflow-x: clip; }
+
+        /* Hero crew dispatch animation */
+        @keyframes heroSlideIn { 0% { opacity:0; transform:translateY(10px); } 100% { opacity:1; transform:translateY(0); } }
+        @keyframes heroPulseGreen { 0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); } 50% { box-shadow: 0 0 0 8px rgba(34,197,94,0); } }
+        @keyframes heroNotify { 0% { opacity:0; transform:translateY(8px) scale(0.97); } 100% { opacity:1; transform:translateY(0) scale(1); } }
+        .hero-msg { animation: heroSlideIn 0.5s ease-out forwards; opacity:0; }
+        .hero-msg-1 { animation-delay: 0.3s; }
+        .hero-msg-2 { animation-delay: 0.9s; }
+        .hero-msg-3 { animation-delay: 1.5s; }
+        .hero-msg-4 { animation-delay: 2.1s; }
+        .hero-msg-5 { animation-delay: 2.7s; }
+        .hero-notify { animation: heroNotify 0.5s ease-out forwards; animation-delay: 3.4s; opacity:0; }
+        .hero-pulse-green { animation: heroPulseGreen 2s ease-in-out infinite; }
+
+        /* 3D tilt */
+        .tilt-wrapper { perspective: 1000px; }
+        .tilt-card { transform-style: preserve-3d; transition: transform 0.15s ease-out, box-shadow 0.3s ease; }
+        .tilt-card:hover { box-shadow: 0 25px 60px -12px rgba(70, 100, 214, 0.25), 0 10px 30px -8px rgba(0,0,0,0.1); }
+        .tilt-card .tilt-shine { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; z-index: 10; background: radial-gradient(600px circle at var(--shine-x, 50%) var(--shine-y, 50%), rgba(255,255,255,0.15), transparent 40%); }
+        .tilt-card:hover .tilt-shine { opacity: 1; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 overflow-x-hidden">
+
+    <!-- Nav -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <a href="/" class="py-3.5"><img src="assets/full-logo-png (1).png" alt="Solvr Labs" class="h-[36px] md:h-[50px]"></a>
+                <div class="hidden md:flex items-center gap-10">
+                    <a href="/" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Home</a>
+                    <a href="/services" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Services</a>
+                    <a href="/about" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">About</a>
+                    <a href="/#work" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Work</a>
+                    <a href="/contact" class="px-6 py-2.5 text-base font-semibold rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-colors shadow-sm">Book a Call</a>
+                </div>
+                <button id="burger" class="burger md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
+            <div class="px-6 py-4 space-y-1">
+                <a href="/" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Home</a>
+                <a href="/services" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Services</a>
+                <a href="/about" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">About</a>
+                <a href="/#work" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Work</a>
+                <a href="/contact" class="block mt-3 px-3 py-2.5 text-sm font-semibold text-center text-white rounded-full bg-brand-600">Book a Call</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="relative min-h-0 lg:min-h-[calc(100vh-250px)] flex items-center bg-white overflow-hidden">
+        <div class="absolute top-0 right-0 w-[400px] h-[400px] sm:w-[700px] sm:h-[700px] bg-brand-100/50 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4 pointer-events-none"></div>
+        <div class="relative max-w-[90rem] mx-auto px-6 sm:px-10 pt-24 pb-10 sm:pt-24 lg:pt-20 lg:pb-14 w-full">
+            <div class="grid lg:grid-cols-5 gap-8 lg:gap-10 items-center">
+                <!-- Text -->
+                <div class="lg:col-span-2">
+                    <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 bg-brand-100/60 border border-brand-200/50 rounded-full text-sm text-brand-600 font-medium mb-6">
+                        <span class="w-1.5 h-1.5 bg-brand-500 rounded-full animate-pulse"></span>
+                        For Landscaping Companies
+                    </div>
+                    <h1 class="reveal reveal-delay-1 font-extrabold text-4xl sm:text-5xl lg:text-[4.25rem] text-brand-900 mb-6 sm:mb-8 tracking-tight" style="line-height:1.05">
+                        <span class="block text-[1.5rem] sm:text-[2rem] lg:text-[3rem] font-bold mb-1">Book more yards.</span><span class="bg-gradient-to-r from-brand-600 via-brand-500 to-emerald-500 bg-clip-text text-transparent" style="padding-bottom:2px">Dispatch smarter.</span>
+                    </h1>
+                    <p class="reveal reveal-delay-2 text-base sm:text-lg lg:text-[1.2rem] text-gray-500 leading-relaxed mb-4">
+                        Landscaping and lawn care companies <span class="text-brand-900 font-medium">lose leads during mowing season</span> and waste hours on manual scheduling, route planning, and chasing quotes.
+                    </p>
+                    <p class="reveal reveal-delay-2 text-sm text-gray-400 mb-8">
+                        AI answers every call. Books every estimate. Dispatches crews, sends quotes, and upsells seasonal services automatically.
+                    </p>
+                    <div class="reveal reveal-delay-3 flex flex-wrap gap-4">
+                        <a href="/contact" class="inline-flex items-center gap-2 px-7 py-3 sm:gap-2.5 sm:px-9 sm:py-4 bg-brand-600 hover:bg-brand-700 rounded-full text-white text-base sm:text-lg font-semibold transition-colors shadow-md shadow-brand-600/20">
+                            Book a Call
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        </a>
+                        <a href="#problems" class="inline-flex items-center gap-2 px-7 py-3 sm:gap-2.5 sm:px-9 sm:py-4 border border-gray-200 hover:border-brand-200 hover:bg-brand-50 rounded-full text-gray-700 text-base sm:text-lg font-semibold transition-colors">
+                            See the Problems We Solve
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Animated Crew Dispatch Mockup -->
+                <div class="relative lg:col-span-3 lg:scale-105 lg:origin-center tilt-wrapper">
+                    <div id="hero-render" class="tilt-card relative bg-white rounded-2xl shadow-2xl shadow-gray-200/60 border border-gray-200/80 overflow-hidden">
+                        <div class="tilt-shine"></div>
+                        <!-- Browser chrome -->
+                        <div class="flex items-center gap-2 px-5 py-3 bg-gray-50 border-b border-gray-100">
+                            <div class="w-3 h-3 rounded-full bg-red-300"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-300"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-300"></div>
+                            <div class="ml-3 flex-1 bg-white rounded-md px-3 py-1.5 border border-gray-200 text-[11px] text-gray-400 font-mono">dispatch.solvrlabs.com</div>
+                        </div>
+
+                        <div class="p-4 sm:p-6 bg-gradient-to-br from-slate-50 to-white">
+                            <!-- Header -->
+                            <div class="flex items-center justify-between mb-5">
+                                <div>
+                                    <div class="text-xs font-semibold text-brand-600 uppercase tracking-wider">Crew Dispatch &mdash; Wednesday</div>
+                                    <div class="text-sm font-bold text-gray-900 mt-1">Route Board</div>
+                                </div>
+                                <div class="flex items-center gap-1.5 px-2.5 py-1 bg-green-50 border border-green-200 rounded-full hero-pulse-green">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                                    <span class="text-[10px] font-semibold text-green-700">3 Crews Active</span>
+                                </div>
+                            </div>
+
+                            <!-- Crew A -->
+                            <div class="hero-msg hero-msg-1 mb-3">
+                                <div class="bg-white rounded-lg border border-gray-100 overflow-hidden">
+                                    <div class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-emerald-50 border-b border-emerald-100">
+                                        <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
+                                            <span class="text-[9px] font-bold text-white">A</span>
+                                        </div>
+                                        <span class="text-xs font-bold text-gray-800">Crew A &mdash; Route 1</span>
+                                        <span class="ml-auto text-[9px] font-medium text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded">3 stops</span>
+                                    </div>
+                                    <div class="divide-y divide-gray-50">
+                                        <div class="hero-msg hero-msg-2 flex items-center gap-2 px-3 sm:px-4 py-2">
+                                            <span class="text-[10px] font-mono text-gray-400 w-12 flex-shrink-0">8:00 AM</span>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="text-[10px] sm:text-xs font-medium text-gray-800 truncate">Johnson Residence</div>
+                                                <div class="text-[9px] text-gray-400 truncate">Mow + Edge</div>
+                                            </div>
+                                            <svg class="w-3.5 h-3.5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                        </div>
+                                        <div class="hero-msg hero-msg-3 flex items-center gap-2 px-3 sm:px-4 py-2">
+                                            <span class="text-[10px] font-mono text-gray-400 w-12 flex-shrink-0">9:30 AM</span>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="text-[10px] sm:text-xs font-medium text-gray-800 truncate">Oak Creek Office Park</div>
+                                                <div class="text-[9px] text-gray-400 truncate">Full Service</div>
+                                            </div>
+                                            <div class="w-3.5 h-3.5 rounded-full border-2 border-gray-200 flex-shrink-0"></div>
+                                        </div>
+                                        <div class="hero-msg hero-msg-4 flex items-center gap-2 px-3 sm:px-4 py-2">
+                                            <span class="text-[10px] font-mono text-gray-400 w-12 flex-shrink-0">11:00 AM</span>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="text-[10px] sm:text-xs font-medium text-gray-800 truncate">412 Elm St</div>
+                                                <div class="text-[9px] text-gray-400 truncate">Hedge Trim</div>
+                                            </div>
+                                            <div class="w-3.5 h-3.5 rounded-full border-2 border-gray-200 flex-shrink-0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Crew B -->
+                            <div class="hero-msg hero-msg-3 mb-3">
+                                <div class="bg-white rounded-lg border border-gray-100 overflow-hidden">
+                                    <div class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-brand-50 border-b border-brand-100">
+                                        <div class="w-6 h-6 rounded-full bg-brand-500 flex items-center justify-center flex-shrink-0">
+                                            <span class="text-[9px] font-bold text-white">B</span>
+                                        </div>
+                                        <span class="text-xs font-bold text-gray-800">Crew B &mdash; Route 2</span>
+                                        <span class="ml-auto text-[9px] font-medium text-brand-600 bg-brand-100 px-1.5 py-0.5 rounded">2 stops</span>
+                                    </div>
+                                    <div class="divide-y divide-gray-50">
+                                        <div class="hero-msg hero-msg-4 flex items-center gap-2 px-3 sm:px-4 py-2">
+                                            <span class="text-[10px] font-mono text-gray-400 w-12 flex-shrink-0">8:30 AM</span>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="text-[10px] sm:text-xs font-medium text-gray-800 truncate">Sunset Apartments</div>
+                                                <div class="text-[9px] text-gray-400 truncate">Common Areas</div>
+                                            </div>
+                                            <div class="w-3.5 h-3.5 rounded-full border-2 border-gray-200 flex-shrink-0"></div>
+                                        </div>
+                                        <div class="hero-msg hero-msg-5 flex items-center gap-2 px-3 sm:px-4 py-2">
+                                            <span class="text-[10px] font-mono text-gray-400 w-12 flex-shrink-0">10:30 AM</span>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="text-[10px] sm:text-xs font-medium text-gray-800 truncate">Williams Property</div>
+                                                <div class="text-[9px] text-gray-400 truncate">Spring Cleanup</div>
+                                            </div>
+                                            <div class="w-3.5 h-3.5 rounded-full border-2 border-gray-200 flex-shrink-0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Notification -->
+                            <div class="hero-notify bg-emerald-50 rounded-lg border border-emerald-200 px-3 sm:px-4 py-3 flex items-start gap-2.5">
+                                <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-[10px] sm:text-xs font-semibold text-emerald-800">New call &rarr; AI booked</div>
+                                    <div class="text-[9px] sm:text-[10px] text-emerald-700 mt-0.5">Thursday 2 PM &mdash; 1.2 acre lot &mdash; estimate + mow</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Problem -->
+    <section id="problems" class="py-24 bg-brand-50/50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">The Problem</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">You're losing revenue every week and don't see it</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Landscaping businesses leave thousands on the table through missed calls, forgotten follow-ups, and inefficient routing.</p>
+            </div>
+
+            <div class="reveal grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="bg-white rounded-xl border border-red-100 p-6 text-center">
+                    <div class="text-3xl font-bold text-red-600 mb-2">55%</div>
+                    <p class="text-sm text-gray-600">of new lawn care leads call during business hours when you're on a job</p>
+                </div>
+                <div class="bg-white rounded-xl border border-red-100 p-6 text-center">
+                    <div class="text-3xl font-bold text-red-600 mb-2">$2,400</div>
+                    <p class="text-sm text-gray-600">average annual value of a recurring lawn care client you never followed up with</p>
+                </div>
+                <div class="bg-white rounded-xl border border-red-100 p-6 text-center">
+                    <div class="text-3xl font-bold text-red-600 mb-2">6+ hrs</div>
+                    <p class="text-sm text-gray-600">per week spent on route planning, scheduling, and follow-ups instead of mowing</p>
+                </div>
+                <div class="bg-white rounded-xl border border-red-100 p-6 text-center">
+                    <div class="text-3xl font-bold text-red-600 mb-2">35%</div>
+                    <p class="text-sm text-gray-600">of one-time customers never become recurring &mdash; because nobody followed up</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- A Day Without / With -->
+    <section class="py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">Your Day, Transformed</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">What changes when AI runs your back office</h2>
+            </div>
+
+            <div class="reveal grid lg:grid-cols-2 gap-6">
+                <!-- Without -->
+                <div class="rounded-2xl border-2 border-red-100 bg-white p-7">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900">A typical day without Solvr Labs</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-gray-400 mt-0.5 w-14 flex-shrink-0">7:30 AM</span>
+                            <p class="text-sm text-gray-600">Loading the trailer. Phone rings twice &mdash; can't answer with your hands full. Both go to voicemail.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-gray-400 mt-0.5 w-14 flex-shrink-0">9:15 AM</span>
+                            <p class="text-sm text-gray-600">Mowing a residential lot. Miss 3 calls from new leads looking for weekly service. They call the next company on Google.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-gray-400 mt-0.5 w-14 flex-shrink-0">12:00 PM</span>
+                            <p class="text-sm text-gray-600">Lunch break. Drive back to the shop to check tomorrow's route on the whiteboard. Realize you forgot a stop.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-gray-400 mt-0.5 w-14 flex-shrink-0">4:00 PM</span>
+                            <p class="text-sm text-gray-600">Homeowner from last week wants a hardscaping quote. You keep meaning to send it but haven't had time.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-gray-400 mt-0.5 w-14 flex-shrink-0">7:30 PM</span>
+                            <p class="text-sm text-gray-600">Sitting at the kitchen table planning routes for tomorrow and trying to remember who you need to call back. A $3,000 hardscaping lead goes cold.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- With -->
+                <div class="rounded-2xl border-2 border-green-100 bg-white p-7">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900">The same day with Solvr Labs</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-green-600 mt-0.5 w-14 flex-shrink-0">7:30 AM</span>
+                            <p class="text-sm text-gray-600">Loading the trailer. AI answers both calls, books one for a free estimate Thursday and adds the other to your weekly route starting next week.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-green-600 mt-0.5 w-14 flex-shrink-0">9:15 AM</span>
+                            <p class="text-sm text-gray-600">Mowing. AI answers 3 calls, qualifies each lead, sends confirmation texts, and books estimates on optimal route days.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-green-600 mt-0.5 w-14 flex-shrink-0">12:00 PM</span>
+                            <p class="text-sm text-gray-600">Open your phone. Tomorrow's route is already optimized with a new booking slotted in between existing stops. Minimal extra drive time.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-green-600 mt-0.5 w-14 flex-shrink-0">4:00 PM</span>
+                            <p class="text-sm text-gray-600">Hardscaping quote was auto-sent 3 days ago. AI followed up yesterday. Customer just approved &mdash; $3,200 job booked.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="text-xs font-mono text-green-600 mt-0.5 w-14 flex-shrink-0">7:30 PM</span>
+                            <p class="text-sm text-gray-600">Home with your family. AI auto-upsold spring cleanup to 12 existing clients today. Routes for the week are done. Review requests sent.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What Gets Automated -->
+    <section class="py-24 bg-brand-50/50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">What Gets Automated</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">Six workflows that run without you</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Every one of these used to eat your evenings. Now they happen automatically.</p>
+            </div>
+
+            <div class="reveal grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Card 1: New Lead Booking -->
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">New Lead Booking</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">Prospect calls &rarr; AI books an estimate or recurring service slot &rarr; sends confirmation text with date, time, and address.</p>
+                    <div class="flex items-center gap-2 text-[10px] font-medium text-emerald-600 bg-emerald-50 rounded-full px-3 py-1.5 w-fit">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                        Trigger: Inbound call &rarr; Action: Book + confirm
+                    </div>
+                </div>
+
+                <!-- Card 2: Seasonal Upsell Campaigns -->
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Seasonal Upsell Campaigns</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">Spring cleanup, fall leaf removal, snow plowing &rarr; AI texts existing clients with offers &rarr; books interested ones on the calendar.</p>
+                    <div class="flex items-center gap-2 text-[10px] font-medium text-amber-600 bg-amber-50 rounded-full px-3 py-1.5 w-fit">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                        Trigger: Season change &rarr; Action: Text + book
+                    </div>
+                </div>
+
+                <!-- Card 3: Route Optimization Alerts -->
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-11 h-11 rounded-xl bg-brand-50 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Route Optimization Alerts</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">New booking comes in &rarr; AI suggests the optimal day based on existing crew routes &rarr; minimizes drive time between stops.</p>
+                    <div class="flex items-center gap-2 text-[10px] font-medium text-brand-600 bg-brand-50 rounded-full px-3 py-1.5 w-fit">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                        Trigger: New booking &rarr; Action: Route suggestion
+                    </div>
+                </div>
+
+                <!-- Card 4: Quote Follow-Up -->
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-11 h-11 rounded-xl bg-purple-50 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Quote Follow-Up</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">Estimate given &rarr; AI sends a follow-up sequence over 5 days via text and email &rarr; converts undecided prospects into booked jobs.</p>
+                    <div class="flex items-center gap-2 text-[10px] font-medium text-purple-600 bg-purple-50 rounded-full px-3 py-1.5 w-fit">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                        Trigger: Estimate sent &rarr; Action: 5-day drip
+                    </div>
+                </div>
+
+                <!-- Card 5: Weather Rescheduling -->
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-11 h-11 rounded-xl bg-sky-50 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Weather Rescheduling</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">Rain forecast detected &rarr; AI texts all affected clients with a reschedule notice &rarr; rebooks them on the next available day automatically.</p>
+                    <div class="flex items-center gap-2 text-[10px] font-medium text-sky-600 bg-sky-50 rounded-full px-3 py-1.5 w-fit">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                        Trigger: Rain forecast &rarr; Action: Auto-reschedule
+                    </div>
+                </div>
+
+                <!-- Card 6: Review & Referral Requests -->
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-11 h-11 rounded-xl bg-rose-50 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Review & Referral Requests</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">Service completed &rarr; automated review request text with Google link &rarr; follow-up with referral incentive offer 3 days later.</p>
+                    <div class="flex items-center gap-2 text-[10px] font-medium text-rose-600 bg-rose-50 rounded-full px-3 py-1.5 w-fit">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                        Trigger: Job done &rarr; Action: Review + referral
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Types -->
+    <section class="py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">Service Types We Support</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">Built for every type of outdoor service</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Whether you mow lawns or build patios, the AI adapts to your services and workflow.</p>
+            </div>
+
+            <div class="reveal grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm text-center hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Lawn Maintenance</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Weekly mowing, edging, trimming, and fertilization. AI handles recurring scheduling, route planning, and seasonal adjustments.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm text-center hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Landscape Design & Install</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Garden beds, plantings, irrigation, and design projects. AI qualifies leads, sends estimates, and follows up until the job is booked.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm text-center hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Hardscaping</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Patios, retaining walls, walkways, and outdoor kitchens. AI captures high-value leads and nurtures them through multi-week follow-ups.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200/80 p-6 shadow-sm text-center hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+                    </div>
+                    <h3 class="font-bold text-brand-900 mb-2">Snow Removal / Seasonal</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Snow plowing, fall leaf removal, spring cleanup. AI upsells seasonal services to your existing client base and manages weather-based scheduling.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Three Solutions -->
+    <section class="py-24 bg-brand-50/50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">How We Help</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">Three systems that grow your landscaping business</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Each one solves a different problem. Most landscapers start with one and add the others once they see the results.</p>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Solution 1: AI Receptionist -->
+                <div class="reveal bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+                    <div class="grid lg:grid-cols-5 gap-0">
+                        <div class="lg:col-span-3 p-7 sm:p-9">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-200/50 rounded-full text-xs text-emerald-700 font-medium mb-4">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                                AI Receptionist
+                            </div>
+                            <h3 class="font-bold text-2xl text-brand-900 mb-3">Never miss another lawn care lead</h3>
+                            <p class="text-gray-500 leading-relaxed mb-5">An AI that answers your phone 24/7, has a real conversation with the caller, books estimates and recurring services on your calendar, and sends confirmation texts &mdash; all while you're behind the mower.</p>
+                            <div class="grid sm:grid-cols-2 gap-3 mb-6">
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Answers every call in under 2 seconds</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Knows your service area and pricing</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Books estimates + recurring service</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Speaks English, Spanish, and 30+ languages</span></div>
+                            </div>
+                            <a href="/ai-receptionist" class="inline-flex items-center gap-2 px-6 py-2.5 bg-brand-600 hover:bg-brand-700 rounded-full text-white text-sm font-semibold transition-colors shadow-sm">
+                                Learn More
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            </a>
+                        </div>
+                        <div class="lg:col-span-2 bg-gradient-to-br from-emerald-50 to-brand-50 p-7 sm:p-9 flex flex-col justify-center">
+                            <div class="text-xs font-semibold text-emerald-600 uppercase tracking-wider mb-4">Real scenario</div>
+                            <div class="space-y-3">
+                                <div class="bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
+                                    <div class="text-[10px] text-gray-400 mb-1">Tuesday, 10:15 AM</div>
+                                    <div class="text-xs font-medium text-gray-700">"Hi, I need someone to mow my yard weekly. It's about an acre. Do you service the Westlake area?"</div>
+                                </div>
+                                <div class="bg-emerald-50 rounded-lg border border-emerald-200 p-3 shadow-sm">
+                                    <div class="text-[10px] text-emerald-600 mb-1">AI Receptionist</div>
+                                    <div class="text-xs text-gray-700">Confirmed service area. Collected address and lot size. Quoted weekly mow + edge. Booked recurring Thursday slot on Crew A's route. Sent confirmation text.</div>
+                                </div>
+                                <div class="bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
+                                    <div class="text-[10px] text-gray-400 mb-1">Result</div>
+                                    <div class="text-xs font-medium text-gray-700">New recurring client worth $2,400/year. Booked in 90 seconds while you were on a job site.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solution 2: Workflow Automation -->
+                <div class="reveal bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+                    <div class="grid lg:grid-cols-5 gap-0">
+                        <div class="lg:col-span-3 p-7 sm:p-9">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-brand-50 border border-brand-200/50 rounded-full text-xs text-brand-700 font-medium mb-4">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                                Workflow Automation
+                            </div>
+                            <h3 class="font-bold text-2xl text-brand-900 mb-3">Automate the busywork between jobs</h3>
+                            <p class="text-gray-500 leading-relaxed mb-5">AI handles quote follow-ups, seasonal upsell campaigns, weather rescheduling, review requests, and route suggestions. Connected to your existing tools &mdash; Jobber, LMN, Google Calendar, QuickBooks.</p>
+                            <div class="grid sm:grid-cols-2 gap-3 mb-6">
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Auto follow-up on unsent quotes</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Weather-triggered rescheduling</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Seasonal upsell text campaigns</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Review requests sent after every job</span></div>
+                            </div>
+                            <a href="/ai-automation" class="inline-flex items-center gap-2 px-6 py-2.5 bg-brand-600 hover:bg-brand-700 rounded-full text-white text-sm font-semibold transition-colors shadow-sm">
+                                Learn More
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            </a>
+                        </div>
+                        <div class="lg:col-span-2 bg-gradient-to-br from-brand-50 to-purple-50 p-7 sm:p-9 flex flex-col justify-center">
+                            <div class="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-4">What it looks like</div>
+                            <div class="space-y-2.5">
+                                <div class="flex items-center gap-3 bg-white rounded-lg border border-gray-200 px-3 py-2.5 shadow-sm">
+                                    <div class="w-7 h-7 rounded-full bg-sky-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3.5 h-3.5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+                                    </div>
+                                    <div class="text-xs text-gray-700">Rain forecast Thursday &mdash; 14 clients affected</div>
+                                </div>
+                                <div class="flex items-center gap-3 bg-white rounded-lg border border-gray-200 px-3 py-2.5 shadow-sm">
+                                    <div class="w-7 h-7 rounded-full bg-brand-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3.5 h-3.5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                                    </div>
+                                    <div class="text-xs text-gray-700">AI SMS: "Due to rain, we'll be there Friday instead..."</div>
+                                </div>
+                                <div class="flex items-center gap-3 bg-white rounded-lg border border-gray-200 px-3 py-2.5 shadow-sm">
+                                    <div class="w-7 h-7 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3.5 h-3.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    </div>
+                                    <div class="text-xs text-gray-700">14 clients auto-rescheduled to Friday routes</div>
+                                </div>
+                                <div class="flex items-center gap-3 bg-white rounded-lg border border-gray-200 px-3 py-2.5 shadow-sm">
+                                    <div class="w-7 h-7 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    </div>
+                                    <div class="text-xs text-gray-700">Zero calls needed. You slept through the whole thing.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solution 3: Custom Software -->
+                <div class="reveal bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+                    <div class="grid lg:grid-cols-5 gap-0">
+                        <div class="lg:col-span-3 p-7 sm:p-9">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-purple-50 border border-purple-200/50 rounded-full text-xs text-purple-700 font-medium mb-4">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                                Custom Software
+                            </div>
+                            <h3 class="font-bold text-2xl text-brand-900 mb-3">One platform for your entire operation</h3>
+                            <p class="text-gray-500 leading-relaxed mb-5">When spreadsheets and duct-taped apps can't keep up, we build you a custom platform. Crews, routes, clients, quotes, invoicing, and AI &mdash; all in one place, designed around how your landscaping business actually runs.</p>
+                            <div class="grid sm:grid-cols-2 gap-3 mb-6">
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Crew dispatch + route visualization</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Client portal with service history</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">AI-generated quotes and proposals</span></div>
+                                <div class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Revenue dashboard with crew profitability</span></div>
+                            </div>
+                            <a href="/custom-software" class="inline-flex items-center gap-2 px-6 py-2.5 bg-brand-600 hover:bg-brand-700 rounded-full text-white text-sm font-semibold transition-colors shadow-sm">
+                                Learn More
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            </a>
+                        </div>
+                        <div class="lg:col-span-2 bg-gradient-to-br from-purple-50 to-brand-50 p-7 sm:p-9 flex flex-col justify-center">
+                            <div class="text-xs font-semibold text-purple-600 uppercase tracking-wider mb-4">Who this is for</div>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <svg class="w-3 h-3 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    </div>
+                                    <p class="text-sm text-gray-600">You're managing 3+ crews and routes are a mess</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <div class="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <svg class="w-3 h-3 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    </div>
+                                    <p class="text-sm text-gray-600">You're using spreadsheets, whiteboards, and 4+ apps that don't sync</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <div class="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <svg class="w-3 h-3 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    </div>
+                                    <p class="text-sm text-gray-600">You want one source of truth for clients, crews, and revenue</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <div class="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <svg class="w-3 h-3 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    </div>
+                                    <p class="text-sm text-gray-600">You're scaling fast and need software that grows with you</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-24 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">FAQ</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">Questions from landscaping business owners</h2>
+            </div>
+
+            <div class="reveal space-y-3">
+                <div class="faq-item border border-gray-200 rounded-xl overflow-hidden bg-white">
+                    <button class="faq-question w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-brand-900 pr-4">Will the AI know my service area and what I offer?</span>
+                        <span class="faq-icon text-brand-600 text-xl font-light flex-shrink-0">+</span>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-gray-500 leading-relaxed pb-5">Yes. We train the AI on your specific service area, pricing tiers, service types (mowing, landscaping, hardscaping, snow removal), and availability. It knows which zip codes you cover, your lot size thresholds, and what services you offer in each season. Callers get accurate information every time.</p>
+                    </div>
+                </div>
+                <div class="faq-item border border-gray-200 rounded-xl overflow-hidden bg-white">
+                    <button class="faq-question w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-brand-900 pr-4">Can it handle seasonal schedule changes?</span>
+                        <span class="faq-icon text-brand-600 text-xl font-light flex-shrink-0">+</span>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-gray-500 leading-relaxed pb-5">Absolutely. The AI adjusts for seasonal transitions automatically. When you switch from mowing season to fall cleanup or snow removal, the AI updates its booking options, pricing, and availability. It can also proactively reach out to existing clients with seasonal service offers.</p>
+                    </div>
+                </div>
+                <div class="faq-item border border-gray-200 rounded-xl overflow-hidden bg-white">
+                    <button class="faq-question w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-brand-900 pr-4">What if I have multiple crews?</span>
+                        <span class="faq-icon text-brand-600 text-xl font-light flex-shrink-0">+</span>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-gray-500 leading-relaxed pb-5">The system is built for multi-crew operations. Each crew has its own route and availability. When a new booking comes in, the AI suggests the best crew and day based on geographic proximity to existing stops, minimizing windshield time. You can scale from 1 crew to 10 without changing the system.</p>
+                    </div>
+                </div>
+                <div class="faq-item border border-gray-200 rounded-xl overflow-hidden bg-white">
+                    <button class="faq-question w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-brand-900 pr-4">Does this work with my current scheduling tool?</span>
+                        <span class="faq-icon text-brand-600 text-xl font-light flex-shrink-0">+</span>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-gray-500 leading-relaxed pb-5">Yes. We integrate with Jobber, LMN, Service Autopilot, Yardbook, Google Calendar, and more. We don't replace your existing tools &mdash; we make them smarter by connecting them to AI. If you're using spreadsheets, we can work with that too and help you upgrade over time.</p>
+                    </div>
+                </div>
+                <div class="faq-item border border-gray-200 rounded-xl overflow-hidden bg-white">
+                    <button class="faq-question w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-brand-900 pr-4">How fast can I get started?</span>
+                        <span class="faq-icon text-brand-600 text-xl font-light flex-shrink-0">+</span>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-gray-500 leading-relaxed pb-5">The AI receptionist can be answering your calls within 1-2 weeks. Workflow automations like weather rescheduling and seasonal upsells take about the same. We start with a discovery call to understand your routes, services, and pain points, then build and test everything before it goes live.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-20 bg-brand-600">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <h2 class="reveal font-bold text-3xl sm:text-4xl text-white mb-4">Stop losing leads while you're on the mower</h2>
+            <p class="reveal reveal-delay-1 text-brand-200 text-lg max-w-xl mx-auto mb-8">Tell me about your landscaping business and what's eating your time. I'll tell you honestly which AI solutions will actually move the needle.</p>
+            <a href="/contact" class="reveal reveal-delay-2 inline-flex items-center gap-2 px-7 py-3 bg-white text-brand-600 hover:bg-brand-50 rounded-full font-semibold transition-colors shadow-lg shadow-brand-700/30">
+                Book a Call
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-14">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <a href="/" class="inline-block mb-4"><img src="assets/full-logo-png (1).png" alt="Solvr Labs" class="h-10 md:h-14 brightness-0 invert"></a>
+                    <p class="text-brand-300/60 text-sm leading-relaxed max-w-xs">AI automation and custom software for service businesses.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Navigation</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home</a></li>
+                        <li><a href="/services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Services</a></li>
+                        <li><a href="/about" class="text-brand-300/50 hover:text-white text-sm transition-colors">About</a></li>
+                        <li><a href="/contact" class="text-brand-300/50 hover:text-white text-sm transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/ai-automation" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Workflow Automation</a></li>
+                        <li><a href="/ai-receptionist" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Receptionist</a></li>
+                        <li><a href="/custom-software" class="text-brand-300/50 hover:text-white text-sm transition-colors">Custom Software</a></li>
+                    </ul>
+                    <h4 class="font-semibold text-sm mb-3 mt-5 uppercase tracking-wider text-brand-300/80">Industries</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/home-services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home Services</a></li>
+                        <li><a href="/property-management" class="text-brand-300/50 hover:text-white text-sm transition-colors">Property Management</a></li>
+                        <li><a href="/cleaning-services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Cleaning Services</a></li>
+                        <li><a href="/landscaping" class="text-brand-300/50 hover:text-white text-sm transition-colors">Landscaping</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-800 mt-10 pt-6 text-center text-brand-300/40 text-xs">&copy; 2026 Solvr Labs, LLC. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('burger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.querySelector('.faq-question').addEventListener('click', () => {
+                const wasOpen = item.classList.contains('open');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+                if (!wasOpen) item.classList.add('open');
+            });
+        });
+
+        // 3D tilt effect
+        const card = document.getElementById('hero-render');
+        if (card) {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+                const rotateX = (0.5 - y) * 8;
+                const rotateY = (x - 0.5) * 8;
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                card.style.setProperty('--shine-x', `${x * 100}%`);
+                card.style.setProperty('--shine-y', `${y * 100}%`);
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+            });
+        }
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

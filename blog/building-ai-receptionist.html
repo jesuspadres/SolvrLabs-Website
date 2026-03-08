@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building an AI Receptionist That Actually Picks Up the Phone - Solvr Labs</title>
+    <meta name="description" content="How I built a voice AI system that answers calls 24/7, books appointments on Google Calendar, and alerts the team on Discord.">
+    <link rel="icon" type="image/png" href="../assets/favicon-solvrlabs.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#f0f5ff',100:'#e1ebff',200:'#c8d8fe',300:'#a3bffc',400:'#7da0f8',500:'#5a7de6',600:'#4664d6',700:'#3a53bd',800:'#33469a',900:'#2c3a7c',950:'#1d264e' },
+                        gray: { 50:'#f9fafb',100:'#f2f3f6',200:'#e5e7eb',300:'#d1d5db',400:'#9ca3af',500:'#6b7280',600:'#4b5563',700:'#374151',800:'#1f2937',900:'#1d1e20' },
+                    },
+                    fontFamily: { sans: ['"DM Sans"','system-ui','sans-serif'], display: ['"DM Sans"','system-ui','sans-serif'] },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+        html { overflow-x: clip; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f2f3f6; } ::-webkit-scrollbar-thumb { background: #5a7de6; border-radius: 3px; }
+        .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; }
+        .burger span { display:block; width:22px; height:2px; background:#2c3a7c; transition:all 0.3s ease; }
+        .burger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity:0; }
+        .burger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+        .prose h2 { font-size: 1.5rem; font-weight: 700; color: #2c3a7c; margin-top: 2.5rem; margin-bottom: 1rem; }
+        .prose h3 { font-size: 1.25rem; font-weight: 600; color: #33469a; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .prose p { color: #6b7280; line-height: 1.8; margin-bottom: 1.25rem; }
+        .prose ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; }
+        .prose ul li { color: #6b7280; line-height: 1.8; margin-bottom: 0.5rem; }
+        .prose strong { color: #374151; font-weight: 600; }
+        .prose code { background: #f0f5ff; color: #4664d6; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
+        .prose blockquote { border-left: 3px solid #5a7de6; padding-left: 1.25rem; margin: 1.5rem 0; font-style: italic; color: #9ca3af; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 overflow-x-hidden">
+
+    <!-- Nav -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <a href="/" class="py-3.5">
+                    <img src="../assets/full-logo-png (1).png" alt="Solvr Labs" class="h-[36px] md:h-[50px]">
+                </a>
+                <div class="hidden md:flex items-center gap-10">
+                    <a href="/" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Home</a>
+                    <a href="/services" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Services</a>
+                    <a href="/about" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">About</a>
+                    <a href="/#work" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Work</a>
+                    <a href="/contact" class="px-6 py-2.5 text-base font-semibold rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-colors shadow-sm">Book a Call</a>
+                </div>
+                <button id="burger" class="burger md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
+            <div class="px-6 py-4 space-y-1">
+                <a href="/" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Home</a>
+                <a href="/services" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Services</a>
+                <a href="/about" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">About</a>
+                <a href="/#work" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Work</a>
+                <a href="/contact" class="block mt-3 px-3 py-2.5 text-sm font-semibold text-center text-white rounded-full bg-brand-600">Book a Call</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Article Header -->
+    <section class="pt-32 pb-12 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <a href="/blog" class="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors mb-6">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
+                Back to Blog
+            </a>
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-xs font-semibold text-brand-600 bg-brand-100 px-2.5 py-1 rounded-full">Build Log</span>
+                <span class="text-xs text-gray-400">Mar 2, 2026</span>
+            </div>
+            <h1 class="font-bold text-3xl sm:text-4xl text-brand-900 leading-tight mb-4">Building an AI Receptionist That Actually Picks Up the Phone</h1>
+            <p class="text-gray-500 text-lg leading-relaxed">How I wired together voice AI, Google Calendar, and Discord to handle every incoming call for a service business &mdash; without a human touching the phone.</p>
+        </div>
+    </section>
+
+    <!-- Article Body -->
+    <article class="py-16 bg-white">
+        <div class="max-w-3xl mx-auto px-6 prose">
+
+            <h2>The Problem</h2>
+            <p>Here's something I kept hearing from every service business I talked to: they were missing calls. Not because they didn't care &mdash; but because they were on a job site, driving between appointments, or just busy doing the actual work.</p>
+            <p>A missed call from a potential customer is money left on the table. Most people don't leave voicemails anymore. They just call the next business on the list. One plumber told me he estimated he was losing $3,000&ndash;$5,000 a month in missed leads. He knew it was happening. He just didn't have a way to fix it without hiring a full-time receptionist.</p>
+
+            <h2>What I Built</h2>
+            <p>I built an AI receptionist that answers every call, 24/7. Not a voicemail system. Not a phone tree. An actual conversational AI that picks up, talks to the caller, understands what they need, and takes action.</p>
+            <p>Here's what happens when someone calls:</p>
+            <ul>
+                <li>The AI answers in a natural voice, introduces itself, and asks how it can help</li>
+                <li>It understands the caller's intent &mdash; are they booking a service, asking about pricing, or reporting an emergency?</li>
+                <li>For appointments, it checks availability on <strong>Google Calendar</strong> in real time and books the slot</li>
+                <li>It sends the business owner a detailed summary via <strong>Discord</strong> &mdash; who called, what they need, and what was booked</li>
+                <li>For emergencies (like a burst pipe at 2am), it triggers an urgent alert with a different notification priority</li>
+            </ul>
+
+            <h2>The Stack</h2>
+            <p>The voice AI layer handles the actual phone conversation &mdash; speech-to-text, natural language understanding, and text-to-speech. I spent a lot of time tuning the voice to sound natural. The uncanny valley is real with voice AI, and if the caller feels like they're talking to a robot, they hang up.</p>
+            <p>Behind the voice layer, the logic runs through <strong>n8n</strong> workflows. n8n is where I wire everything together &mdash; it receives webhook events from the voice platform, processes the call data, hits the Google Calendar API, and pushes notifications to Discord.</p>
+            <p>The Google Calendar integration was straightforward but had some tricky edge cases. Timezone handling is always a headache, and I had to account for buffer time between appointments (you can't book a plumber back-to-back with zero travel time).</p>
+
+            <h2>The Hard Parts</h2>
+            <h3>Getting the AI to stop hallucinating services</h3>
+            <p>Early on, the AI would confidently tell callers that the business offered services it didn't actually offer. A caller would ask "do you do electrical work?" and the AI would say "absolutely!" &mdash; even though the client was a plumbing company. I had to be really deliberate with the system prompt and add explicit guardrails about what services exist and what to say when asked about something outside the scope.</p>
+
+            <h3>Emergency detection</h3>
+            <p>Figuring out what counts as an "emergency" sounds easy until you try to codify it. "My basement is flooding" is clearly urgent. "I think my toilet is running" is not. But "there's water coming from somewhere and I don't know where" &mdash; that's a judgment call. I built a scoring system that weighs keywords, urgency language, and time of day to make that decision.</p>
+
+            <h3>The handoff problem</h3>
+            <p>Sometimes callers want to talk to a real person. The AI needs to know when to stop trying to help and just route the call. I set up a transfer flow that connects the caller to the business owner's cell if they ask for a human, with a warm handoff message so the owner has context before picking up.</p>
+
+            <h2>Results</h2>
+            <p>The first client I deployed this for went from missing ~40% of their incoming calls to capturing every single one. Within the first month, they booked 23 appointments that would have otherwise gone to a competitor. At their average job value, that's roughly $8,000 in revenue they would have lost.</p>
+            <p>The Discord notifications turned out to be the feature they loved most. The owner told me he checks his Discord channel between jobs and always knows exactly what's coming next. No more checking voicemail, no more calling people back three hours later and hoping they haven't already hired someone else.</p>
+
+            <h2>What's Next</h2>
+            <p>I'm working on adding SMS follow-up &mdash; after the call, the AI texts the caller a confirmation with the appointment details and a link to reschedule if needed. I'm also building out a dashboard so business owners can see call volume, booking rates, and common questions at a glance.</p>
+            <p>If you're a service business losing leads to missed calls, <a href="/contact" class="text-brand-600 hover:text-brand-700 font-medium">let's talk about what this could look like for you</a>.</p>
+
+        </div>
+    </article>
+
+    <!-- More Posts -->
+    <section class="py-16 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <h3 class="reveal font-bold text-xl text-brand-900 mb-6">More Posts</h3>
+            <div class="reveal reveal-delay-1 space-y-4">
+                <a href="/blog/why-small-businesses-need-ai-automation" class="block bg-white rounded-xl p-5 border border-gray-200/80 hover:border-brand-200 transition-colors">
+                    <span class="text-xs text-gray-400">Feb 18, 2026</span>
+                    <h4 class="font-semibold text-brand-900 mt-1">Why Small Businesses Need AI Automation Right Now</h4>
+                </a>
+                <a href="/blog/building-taskline" class="block bg-white rounded-xl p-5 border border-gray-200/80 hover:border-brand-200 transition-colors">
+                    <span class="text-xs text-gray-400">Feb 5, 2026</span>
+                    <h4 class="font-semibold text-brand-900 mt-1">Building TaskLine: AI-Powered Freelancer Management</h4>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-14">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <a href="/" class="inline-block mb-4"><img src="../assets/full-logo-png (1).png" alt="Solvr Labs" class="h-10 md:h-14 brightness-0 invert"></a>
+                    <p class="text-brand-300/60 text-sm leading-relaxed max-w-xs">AI automation and custom software for service businesses.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Navigation</h4>
+                    <ul class="space-y-2"><li><a href="/" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home</a></li><li><a href="/services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Services</a></li><li><a href="/about" class="text-brand-300/50 hover:text-white text-sm transition-colors">About</a></li><li><a href="/blog" class="text-brand-300/50 hover:text-white text-sm transition-colors">Blog</a></li><li><a href="/contact" class="text-brand-300/50 hover:text-white text-sm transition-colors">Contact</a></li></ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Services</h4>
+                    <ul class="space-y-2"><li><a href="/ai-automation" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Workflow Automation</a></li><li><a href="/ai-receptionist" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Receptionist</a></li><li><a href="/custom-software" class="text-brand-300/50 hover:text-white text-sm transition-colors">Custom Software</a></li></ul>
+                    <h4 class="font-semibold text-sm mb-3 mt-5 uppercase tracking-wider text-brand-300/80">Industries</h4>
+                    <ul class="space-y-2"><li><a href="/home-services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home Services</a></li><li><a href="/property-management" class="text-brand-300/50 hover:text-white text-sm transition-colors">Property Management</a></li></ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-800 mt-10 pt-6 text-center text-brand-300/40 text-xs">&copy; 2026 Solvr Labs, LLC. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('burger').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('mobile-menu').classList.toggle('hidden'); });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

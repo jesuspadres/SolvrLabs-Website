@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building TaskLine: AI-Powered Freelancer Management - Solvr Labs</title>
+    <meta name="description" content="I'm building a platform that handles proposals, scheduling, invoicing, and client communication — all with AI baked in from day one.">
+    <link rel="icon" type="image/png" href="../assets/favicon-solvrlabs.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#f0f5ff',100:'#e1ebff',200:'#c8d8fe',300:'#a3bffc',400:'#7da0f8',500:'#5a7de6',600:'#4664d6',700:'#3a53bd',800:'#33469a',900:'#2c3a7c',950:'#1d264e' },
+                        gray: { 50:'#f9fafb',100:'#f2f3f6',200:'#e5e7eb',300:'#d1d5db',400:'#9ca3af',500:'#6b7280',600:'#4b5563',700:'#374151',800:'#1f2937',900:'#1d1e20' },
+                    },
+                    fontFamily: { sans: ['"DM Sans"','system-ui','sans-serif'], display: ['"DM Sans"','system-ui','sans-serif'] },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+        html { overflow-x: clip; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f2f3f6; } ::-webkit-scrollbar-thumb { background: #5a7de6; border-radius: 3px; }
+        .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; }
+        .burger span { display:block; width:22px; height:2px; background:#2c3a7c; transition:all 0.3s ease; }
+        .burger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity:0; }
+        .burger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+        .prose h2 { font-size: 1.5rem; font-weight: 700; color: #2c3a7c; margin-top: 2.5rem; margin-bottom: 1rem; }
+        .prose h3 { font-size: 1.25rem; font-weight: 600; color: #33469a; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .prose p { color: #6b7280; line-height: 1.8; margin-bottom: 1.25rem; }
+        .prose ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; }
+        .prose ul li { color: #6b7280; line-height: 1.8; margin-bottom: 0.5rem; }
+        .prose strong { color: #374151; font-weight: 600; }
+        .prose code { background: #f0f5ff; color: #4664d6; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
+        .prose blockquote { border-left: 3px solid #5a7de6; padding-left: 1.25rem; margin: 1.5rem 0; font-style: italic; color: #9ca3af; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 overflow-x-hidden">
+
+    <!-- Nav -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <a href="/" class="py-3.5">
+                    <img src="../assets/full-logo-png (1).png" alt="Solvr Labs" class="h-[36px] md:h-[50px]">
+                </a>
+                <div class="hidden md:flex items-center gap-10">
+                    <a href="/" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Home</a>
+                    <a href="/services" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Services</a>
+                    <a href="/about" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">About</a>
+                    <a href="/#work" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Work</a>
+                    <a href="/contact" class="px-6 py-2.5 text-base font-semibold rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-colors shadow-sm">Book a Call</a>
+                </div>
+                <button id="burger" class="burger md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
+            <div class="px-6 py-4 space-y-1">
+                <a href="/" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Home</a>
+                <a href="/services" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Services</a>
+                <a href="/about" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">About</a>
+                <a href="/#work" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Work</a>
+                <a href="/contact" class="block mt-3 px-3 py-2.5 text-sm font-semibold text-center text-white rounded-full bg-brand-600">Book a Call</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Article Header -->
+    <section class="pt-32 pb-12 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <a href="/blog" class="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors mb-6">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
+                Back to Blog
+            </a>
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-xs font-semibold text-brand-600 bg-brand-100 px-2.5 py-1 rounded-full">Build Log</span>
+                <span class="text-xs text-gray-400">Feb 5, 2026</span>
+            </div>
+            <h1 class="font-bold text-3xl sm:text-4xl text-brand-900 leading-tight mb-4">Building TaskLine: AI-Powered Freelancer Management</h1>
+            <p class="text-gray-500 text-lg leading-relaxed">I'm building a full-stack platform that handles proposals, scheduling, invoicing, and client communication &mdash; with AI wired into every step.</p>
+        </div>
+    </section>
+
+    <!-- Article Body -->
+    <article class="py-16 bg-white">
+        <div class="max-w-3xl mx-auto px-6 prose">
+
+            <h2>Why I'm Building This</h2>
+            <p>I've been freelancing in the service industry long enough to know the pain points. You spend your mornings writing proposals, your evenings chasing invoices, and your weekends updating your calendar. The actual work &mdash; the stuff you're good at &mdash; gets squeezed into whatever time is left.</p>
+            <p>There are tools out there for each of these problems individually. But none of them talk to each other, and none of them have AI baked in from the start. So I decided to build the platform I wish I had.</p>
+
+            <h2>What TaskLine Does</h2>
+            <p>TaskLine is a freelancer management platform built for service professionals &mdash; contractors, cleaners, landscapers, handymen, anyone who runs jobs and manages clients. Here's the core feature set:</p>
+
+            <h3>AI-Powered Proposal Generation</h3>
+            <p>You enter a few details about the job &mdash; type of work, square footage, special requirements &mdash; and <strong>Claude AI</strong> drafts a professional proposal. It pulls from your pricing history, adjusts for the scope, and formats it ready to send. What used to take 30 minutes now takes about 90 seconds.</p>
+            <p>The key insight was training the AI on the freelancer's own past proposals. Generic templates sound generic. But when the AI has seen 50 of your previous proposals, it writes in your voice, uses your pricing patterns, and includes the specific disclaimers and terms you always include.</p>
+
+            <h3>Smart Scheduling</h3>
+            <p>TaskLine manages your calendar with awareness of travel time, job duration, and buffer windows. When a client wants to book, the system shows available slots that actually make sense &mdash; not a 9am in Scottsdale followed by a 10am in Mesa when there's a 40-minute drive between them.</p>
+            <p>This was one of the harder engineering problems. I'm using <strong>Google Maps API</strong> for travel time estimation and building the availability logic on top of <strong>Supabase</strong> with PostgreSQL. The query to find valid appointment slots considering travel time between existing bookings was not trivial.</p>
+
+            <h3>Automated Invoicing</h3>
+            <p>When a job is marked complete, TaskLine generates an invoice through <strong>Stripe</strong>, sends it to the client via email and SMS, and follows up automatically if payment is late. No more spreadsheets. No more "hey, I sent that invoice two weeks ago, did you get it?"</p>
+            <p>The Stripe integration handles the payment processing, but the real value is in the automation layer on top. Late payment reminders escalate gradually &mdash; a friendly nudge at 3 days, a firmer reminder at 7, and a final notice at 14. Each message is generated by AI so it sounds human, not like a collections bot.</p>
+
+            <h3>Multi-Channel Communication</h3>
+            <p>Clients can reach you through the TaskLine portal, SMS (via <strong>Twilio</strong>), or email &mdash; and everything lands in one unified inbox. The AI can draft responses to common questions, and you just review and send. For messages that need a personal touch, you write them yourself. For "what time is my appointment?", the AI handles it.</p>
+
+            <h2>The Tech Stack</h2>
+            <p>I'm building TaskLine with:</p>
+            <ul>
+                <li><strong>Next.js</strong> &mdash; React framework for the frontend and API routes</li>
+                <li><strong>Supabase</strong> &mdash; PostgreSQL database, auth, and real-time subscriptions</li>
+                <li><strong>Stripe</strong> &mdash; Payment processing and invoicing</li>
+                <li><strong>Claude AI</strong> &mdash; Proposal generation, message drafting, and intent classification</li>
+                <li><strong>Twilio</strong> &mdash; SMS and voice communication</li>
+                <li><strong>Vercel</strong> &mdash; Hosting and deployment</li>
+            </ul>
+            <p>I chose this stack because every piece is production-proven and scales well. Supabase's real-time subscriptions are particularly useful &mdash; when a client sends a message or a payment comes in, the dashboard updates instantly without polling.</p>
+
+            <h2>Challenges So Far</h2>
+
+            <h3>The proposal quality problem</h3>
+            <p>Getting Claude to generate proposals that don't sound like AI was the first major challenge. The solution was a combination of few-shot prompting (feeding it real proposals as examples), structured output (enforcing a specific format with sections and pricing tables), and a feedback loop where the freelancer can rate the output and the system learns their preferences over time.</p>
+            <p>I store approved proposals in Supabase and use them as context for future generations. After about 10-15 approved proposals, the AI output is nearly indistinguishable from what the freelancer would write themselves.</p>
+
+            <h3>Scheduling complexity</h3>
+            <p>Calendar logic sounds simple until you account for: variable job durations, travel time between locations, buffer time for cleanup, lunch breaks, different availability on different days, recurring jobs, and last-minute cancellations that open up new slots. The scheduling engine is probably the most complex piece of the entire platform.</p>
+
+            <h3>Keeping costs reasonable</h3>
+            <p>AI API calls add up. If every proposal generation, every message draft, and every classification hits the Claude API, costs can spiral. I built a caching layer for common responses and use lighter classification models for simple intent detection, only reaching for Claude when the task genuinely needs it.</p>
+
+            <h2>What's Next</h2>
+            <p>I'm currently working on the client portal &mdash; a simple interface where clients can view their upcoming appointments, pay invoices, and message their service provider. After that, I'm building out the analytics dashboard so freelancers can see revenue trends, booking patterns, and client retention metrics.</p>
+            <p>TaskLine is my proof of work. It's the kind of AI-integrated platform I build for clients, except I'm building it for the industry I know best. If you're interested in following the build or want to be an early tester, <a href="/contact" class="text-brand-600 hover:text-brand-700 font-medium">reach out</a>.</p>
+
+        </div>
+    </article>
+
+    <!-- More Posts -->
+    <section class="py-16 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <h3 class="reveal font-bold text-xl text-brand-900 mb-6">More Posts</h3>
+            <div class="reveal reveal-delay-1 space-y-4">
+                <a href="/blog/building-ai-receptionist" class="block bg-white rounded-xl p-5 border border-gray-200/80 hover:border-brand-200 transition-colors">
+                    <span class="text-xs text-gray-400">Mar 2, 2026</span>
+                    <h4 class="font-semibold text-brand-900 mt-1">Building an AI Receptionist That Actually Picks Up the Phone</h4>
+                </a>
+                <a href="/blog/why-small-businesses-need-ai-automation" class="block bg-white rounded-xl p-5 border border-gray-200/80 hover:border-brand-200 transition-colors">
+                    <span class="text-xs text-gray-400">Feb 18, 2026</span>
+                    <h4 class="font-semibold text-brand-900 mt-1">Why Small Businesses Need AI Automation Right Now</h4>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-14">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <a href="/" class="inline-block mb-4"><img src="../assets/full-logo-png (1).png" alt="Solvr Labs" class="h-10 md:h-14 brightness-0 invert"></a>
+                    <p class="text-brand-300/60 text-sm leading-relaxed max-w-xs">AI automation and custom software for service businesses.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Navigation</h4>
+                    <ul class="space-y-2"><li><a href="/" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home</a></li><li><a href="/services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Services</a></li><li><a href="/about" class="text-brand-300/50 hover:text-white text-sm transition-colors">About</a></li><li><a href="/blog" class="text-brand-300/50 hover:text-white text-sm transition-colors">Blog</a></li><li><a href="/contact" class="text-brand-300/50 hover:text-white text-sm transition-colors">Contact</a></li></ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Services</h4>
+                    <ul class="space-y-2"><li><a href="/ai-automation" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Workflow Automation</a></li><li><a href="/ai-receptionist" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Receptionist</a></li><li><a href="/custom-software" class="text-brand-300/50 hover:text-white text-sm transition-colors">Custom Software</a></li></ul>
+                    <h4 class="font-semibold text-sm mb-3 mt-5 uppercase tracking-wider text-brand-300/80">Industries</h4>
+                    <ul class="space-y-2"><li><a href="/home-services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home Services</a></li><li><a href="/property-management" class="text-brand-300/50 hover:text-white text-sm transition-colors">Property Management</a></li></ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-800 mt-10 pt-6 text-center text-brand-300/40 text-xs">&copy; 2026 Solvr Labs, LLC. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('burger').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('mobile-menu').classList.toggle('hidden'); });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
