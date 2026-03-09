@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Automated This Blog With AI and GitHub Actions - Solvr Labs</title>
+    <meta name="description" content="How I set up a system that generates a new blog post every week using Claude API, GitHub Actions, and zero manual work.">
+    <link rel="icon" type="image/png" href="../assets/favicon-solvrlabs.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#f0f5ff',100:'#e1ebff',200:'#c8d8fe',300:'#a3bffc',400:'#7da0f8',500:'#5a7de6',600:'#4664d6',700:'#3a53bd',800:'#33469a',900:'#2c3a7c',950:'#1d264e' },
+                        gray: { 50:'#f9fafb',100:'#f2f3f6',200:'#e5e7eb',300:'#d1d5db',400:'#9ca3af',500:'#6b7280',600:'#4b5563',700:'#374151',800:'#1f2937',900:'#1d1e20' },
+                    },
+                    fontFamily: { sans: ['"DM Sans"','system-ui','sans-serif'], display: ['"DM Sans"','system-ui','sans-serif'] },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+        html { overflow-x: clip; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f2f3f6; } ::-webkit-scrollbar-thumb { background: #5a7de6; border-radius: 3px; }
+        .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; }
+        .burger span { display:block; width:22px; height:2px; background:#2c3a7c; transition:all 0.3s ease; }
+        .burger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity:0; }
+        .burger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+        .prose h2 { font-size: 1.5rem; font-weight: 700; color: #2c3a7c; margin-top: 2.5rem; margin-bottom: 1rem; }
+        .prose h3 { font-size: 1.25rem; font-weight: 600; color: #33469a; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .prose p { color: #6b7280; line-height: 1.8; margin-bottom: 1.25rem; }
+        .prose ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; }
+        .prose ul li { color: #6b7280; line-height: 1.8; margin-bottom: 0.5rem; }
+        .prose strong { color: #374151; font-weight: 600; }
+        .prose code { background: #f0f5ff; color: #4664d6; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
+        .prose blockquote { border-left: 3px solid #5a7de6; padding-left: 1.25rem; margin: 1.5rem 0; font-style: italic; color: #9ca3af; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 overflow-x-hidden">
+
+    <!-- Nav -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <a href="/" class="py-3.5">
+                    <img src="../assets/full-logo-png (1).png" alt="Solvr Labs" class="h-[36px] md:h-[50px]">
+                </a>
+                <div class="hidden md:flex items-center gap-10">
+                    <a href="/" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Home</a>
+                    <a href="/services" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Services</a>
+                    <a href="/about" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">About</a>
+                    <a href="/#work" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Work</a>
+                    <a href="/contact" class="px-6 py-2.5 text-base font-semibold rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-colors shadow-sm">Book a Call</a>
+                </div>
+                <button id="burger" class="burger md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
+            <div class="px-6 py-4 space-y-1">
+                <a href="/" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Home</a>
+                <a href="/services" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Services</a>
+                <a href="/about" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">About</a>
+                <a href="/#work" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Work</a>
+                <a href="/contact" class="block mt-3 px-3 py-2.5 text-sm font-semibold text-center text-white rounded-full bg-brand-600">Book a Call</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Article Header -->
+    <section class="pt-32 pb-12 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <a href="/blog" class="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors mb-6">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
+                Back to Blog
+            </a>
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-xs font-semibold text-brand-600 bg-brand-100 px-2.5 py-1 rounded-full">Build Log</span>
+                <span class="text-xs text-gray-400">Mar 9, 2026</span>
+            </div>
+            <h1 class="font-bold text-3xl sm:text-4xl text-brand-900 leading-tight mb-4">I Automated This Blog With AI and GitHub Actions</h1>
+            <p class="text-gray-500 text-lg leading-relaxed">How I set up a system that generates a new blog post every week using Claude API, GitHub Actions, and zero manual work.</p>
+        </div>
+    </section>
+
+    <!-- Article Body -->
+    <article class="py-16 bg-white">
+        <div class="max-w-3xl mx-auto px-6 prose">
+            <h2>Why I Automated My Own Blog</h2>
+
+<p>I've been building AI automation systems for service businesses for months now, but my own blog? Dead silent. Classic cobbler's children situation.</p>
+
+<p>The problem wasn't lack of ideas. Every client call, every build session, every debugging nightmare gives me something worth sharing. The problem was sitting down to actually write. So I did what any reasonable developer would do: I automated the entire process.</p>
+
+<p>Now my blog publishes a new post every Tuesday at 9 AM, without me touching a keyboard. Here's how I built it.</p>
+
+<h2>The Architecture</h2>
+
+<p>The system has four main pieces:</p>
+
+<ul>
+<li>A topics queue stored as JSON in my repo</li>
+<li>A Node.js script that calls Claude API to generate posts</li>
+<li>GitHub Actions running on a cron schedule</li>
+<li>Vercel automatically deploying when new posts hit main</li>
+</ul>
+
+<p>Simple, reliable, and it runs itself. Let me walk through each part.</p>
+
+<h2>The Topics Queue System</h2>
+
+<p>I keep a <code>topics-queue.json</code> file in my repo that looks like this:</p>
+
+<blockquote>
+<p>"Why I Switched from Zapier to n8n for Client Automations" came from a client who was paying $300/month for Zapier workflows that I rebuilt in n8n for free.</p>
+</blockquote>
+
+<p>Each topic includes the title, a summary, some context about where the idea came from, and a priority level. The context is crucial—it gives Claude the real-world background that makes posts feel authentic instead of generic.</p>
+
+<p>When I'm on a client call and they mention a pain point I've solved before, I add it to the queue. When I'm debugging something tricky and find a good solution, it goes in the queue. When I discover a new tool or technique, queue.</p>
+
+<p>The topics come from real problems I'm actually solving. That's what keeps this blog grounded instead of turning into AI-generated fluff.</p>
+
+<h2>The Generation Script</h2>
+
+<p>My <code>generate-post.js</code> script does the heavy lifting:</p>
+
+<ul>
+<li>Pulls the highest priority topic from the queue</li>
+<li>Sends a detailed prompt to Claude API with my writing style, technical preferences, and the topic context</li>
+<li>Generates the full blog post HTML</li>
+<li>Creates a new file in my <code>posts/</code> directory</li>
+<li>Updates the topics queue to remove the used topic</li>
+<li>Commits and pushes the changes</li>
+</ul>
+
+<p>The prompt engineering was the trickiest part. I had to be really specific about my voice, the technical tools I use, and the kinds of examples that would resonate with my audience. After a few iterations, Claude started generating posts that actually sound like me.</p>
+
+<p>I also include information about Solvr Labs, my tech stack (n8n, Supabase, Next.js, etc.), and my target audience of service business owners. The more context I give Claude, the better the output.</p>
+
+<h2>GitHub Actions Cron Job</h2>
+
+<p>Every Tuesday at 9 AM EST, GitHub Actions runs my workflow:</p>
+
+<ul>
+<li>Checks out the repo</li>
+<li>Sets up Node.js</li>
+<li>Installs dependencies</li>
+<li>Runs the generation script</li>
+<li>Pushes any new content</li>
+</ul>
+
+<p>The workflow only creates a post if there are topics in the queue. If I forget to add new topics, it just skips the week instead of generating random content.</p>
+
+<p>I love that it runs whether I'm heads-down on client work, taking a vacation, or completely forgot what day it is. Consistency without the mental overhead.</p>
+
+<h2>Vercel Auto-Deploy</h2>
+
+<p>Since my blog is built with Next.js and hosted on Vercel, every push to main triggers an automatic deployment. The GitHub Action pushes the new post, Vercel rebuilds the site, and the post goes live—all without any manual intervention.</p>
+
+<p>The entire pipeline from topic selection to live post takes about 2 minutes. Most of that is Claude thinking and Vercel building.</p>
+
+<h2>What Works Really Well</h2>
+
+<p>This system has been running for two months now, and I'm genuinely impressed with the results:</p>
+
+<ul>
+<li><strong>Consistency</strong>: New post every Tuesday, no exceptions</li>
+<li><strong>Quality</strong>: Claude nails my writing style better than I expected</li>
+<li><strong>Relevance</strong>: Since topics come from real client work, posts are practical and useful</li>
+<li><strong>Zero maintenance</strong>: I just keep adding topics to the queue when inspiration strikes</li>
+</ul>
+
+<p>The posts feel authentic because the underlying experiences and insights are real. Claude is just helping me articulate them consistently.</p>
+
+<h2>The Limitations</h2>
+
+<p>It's not perfect. Here's what doesn't work:</p>
+
+<p>Claude sometimes gets technical details slightly wrong. I've had to add more specific examples to my prompts to reduce these errors. It's also not great at the kind of deep, personal reflection that makes the best developer writing—but honestly, I wasn't doing much of that anyway.</p>
+
+<p>The system only works because I'm actively feeding it real topics from real work. If I stopped adding to the queue, it would just stop posting. It's automation, not magic content creation.</p>
+
+<p>And sometimes Claude gets a bit too enthusiastic with the marketing speak, even when I explicitly tell it not to. I'm still tweaking the prompts to minimize this.</p>
+
+<h2>Why This Matters</h2>
+
+<p>This isn't just about blogging. It's about using AI to handle the parts of business that are important but tedious. Content consistency, documentation, client communication—all areas where automation can free you up to focus on the actual building.</p>
+
+<p>I'm applying similar approaches with my clients. Property managers who need consistent tenant communication, plumbers who want automated follow-up sequences, landscapers who need weekly service reports. Same principle: identify the repetitive but valuable tasks, then build systems that handle them reliably.</p>
+
+<p>The key is starting with real content, real problems, and real solutions. The AI handles the execution, not the strategy.</p>
+
+<p>Want to build something similar for your business? I'd love to help you figure out what automation could free up your time for the work that actually moves the needle. <a href="/contact" class="text-brand-600 hover:text-brand-700 font-medium">Let's talk about what that could look like</a>.</p>
+        </div>
+    </article>
+
+    <!-- More Posts -->
+    <section class="py-16 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <h3 class="reveal font-bold text-xl text-brand-900 mb-6">More Posts</h3>
+            <div class="reveal reveal-delay-1 space-y-4">
+                <a href="/blog/building-ai-receptionist" class="block bg-white rounded-xl p-5 border border-gray-200/80 hover:border-brand-200 transition-colors">
+                    <span class="text-xs text-gray-400">Mar 2, 2026</span>
+                    <h4 class="font-semibold text-brand-900 mt-1">Building an AI Receptionist That Actually Picks Up the Phone</h4>
+                </a>
+                <a href="/blog/building-taskline" class="block bg-white rounded-xl p-5 border border-gray-200/80 hover:border-brand-200 transition-colors">
+                    <span class="text-xs text-gray-400">Feb 5, 2026</span>
+                    <h4 class="font-semibold text-brand-900 mt-1">Building TaskLine: AI-Powered Freelancer Management</h4>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-14">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <a href="/" class="inline-block mb-4"><img src="../assets/full-logo-png (1).png" alt="Solvr Labs" class="h-10 md:h-14 brightness-0 invert"></a>
+                    <p class="text-brand-300/60 text-sm leading-relaxed max-w-xs">AI automation and custom software for service businesses.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Navigation</h4>
+                    <ul class="space-y-2"><li><a href="/" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home</a></li><li><a href="/services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Services</a></li><li><a href="/about" class="text-brand-300/50 hover:text-white text-sm transition-colors">About</a></li><li><a href="/blog" class="text-brand-300/50 hover:text-white text-sm transition-colors">Blog</a></li><li><a href="/contact" class="text-brand-300/50 hover:text-white text-sm transition-colors">Contact</a></li></ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Services</h4>
+                    <ul class="space-y-2"><li><a href="/ai-automation" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Workflow Automation</a></li><li><a href="/ai-receptionist" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Receptionist</a></li><li><a href="/custom-software" class="text-brand-300/50 hover:text-white text-sm transition-colors">Custom Software</a></li></ul>
+                    <h4 class="font-semibold text-sm mb-3 mt-5 uppercase tracking-wider text-brand-300/80">Industries</h4>
+                    <ul class="space-y-2"><li><a href="/home-services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home Services</a></li><li><a href="/property-management" class="text-brand-300/50 hover:text-white text-sm transition-colors">Property Management</a></li></ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-800 mt-10 pt-6 text-center text-brand-300/40 text-xs">&copy; 2026 Solvr Labs, LLC. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('burger').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('mobile-menu').classList.toggle('hidden'); });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

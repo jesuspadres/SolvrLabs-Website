@@ -1,12 +1,5 @@
 [
   {
-    "slug": "automating-a-blog-with-ai-and-github-actions",
-    "title": "I Automated This Blog With AI and GitHub Actions",
-    "tag": "Build Log",
-    "summary": "How I set up a system that generates a new blog post every week using Claude API, GitHub Actions, and zero manual work.",
-    "context": "Meta post about the blog automation itself. Covers the topics queue, the generation script, the GitHub Action cron schedule, and how Vercel auto-deploys. Honest about what works and what the limitations are. Talks about how the topics come from real client conversations and build sessions."
-  },
-  {
     "slug": "n8n-vs-zapier-for-service-businesses",
     "title": "n8n vs Zapier: Why I Switched and Never Looked Back",
     "tag": "Opinion",
