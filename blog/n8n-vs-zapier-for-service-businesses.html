@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>n8n vs Zapier: Why I Switched and Never Looked Back - Solvr Labs</title>
+    <meta name="description" content="Zapier is easy. n8n is powerful. Here's why I use n8n for every client automation and when Zapier still makes sense.">
+    <link rel="icon" type="image/png" href="../assets/favicon-solvrlabs.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#f0f5ff',100:'#e1ebff',200:'#c8d8fe',300:'#a3bffc',400:'#7da0f8',500:'#5a7de6',600:'#4664d6',700:'#3a53bd',800:'#33469a',900:'#2c3a7c',950:'#1d264e' },
+                        gray: { 50:'#f9fafb',100:'#f2f3f6',200:'#e5e7eb',300:'#d1d5db',400:'#9ca3af',500:'#6b7280',600:'#4b5563',700:'#374151',800:'#1f2937',900:'#1d1e20' },
+                    },
+                    fontFamily: { sans: ['"DM Sans"','system-ui','sans-serif'], display: ['"DM Sans"','system-ui','sans-serif'] },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+        html { overflow-x: clip; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f2f3f6; } ::-webkit-scrollbar-thumb { background: #5a7de6; border-radius: 3px; }
+        .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; }
+        .burger span { display:block; width:22px; height:2px; background:#2c3a7c; transition:all 0.3s ease; }
+        .burger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity:0; }
+        .burger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+        .prose h2 { font-size: 1.5rem; font-weight: 700; color: #2c3a7c; margin-top: 2.5rem; margin-bottom: 1rem; }
+        .prose h3 { font-size: 1.25rem; font-weight: 600; color: #33469a; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .prose p { color: #6b7280; line-height: 1.8; margin-bottom: 1.25rem; }
+        .prose ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; }
+        .prose ul li { color: #6b7280; line-height: 1.8; margin-bottom: 0.5rem; }
+        .prose strong { color: #374151; font-weight: 600; }
+        .prose code { background: #f0f5ff; color: #4664d6; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
+        .prose blockquote { border-left: 3px solid #5a7de6; padding-left: 1.25rem; margin: 1.5rem 0; font-style: italic; color: #9ca3af; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 overflow-x-hidden">
+
+    <!-- Nav -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <a href="/" class="py-3.5">
+                    <img src="../assets/full-logo-png (1).png" alt="Solvr Labs" class="h-[36px] md:h-[50px]">
+                </a>
+                <div class="hidden md:flex items-center gap-10">
+                    <a href="/" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Home</a>
+                    <a href="/services" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Services</a>
+                    <a href="/about" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">About</a>
+                    <a href="/#work" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Work</a>
+                    <a href="/contact" class="px-6 py-2.5 text-base font-semibold rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-colors shadow-sm">Book a Call</a>
+                </div>
+                <button id="burger" class="burger md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
+            <div class="px-6 py-4 space-y-1">
+                <a href="/" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Home</a>
+                <a href="/services" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Services</a>
+                <a href="/about" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">About</a>
+                <a href="/#work" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Work</a>
+                <a href="/contact" class="block mt-3 px-3 py-2.5 text-sm font-semibold text-center text-white rounded-full bg-brand-600">Book a Call</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Article Header -->
+    <section class="pt-32 pb-12 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <a href="/blog" class="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors mb-6">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
+                Back to Blog
+            </a>
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-xs font-semibold text-brand-600 bg-brand-100 px-2.5 py-1 rounded-full">Opinion</span>
+                <span class="text-xs text-gray-400">Mar 16, 2026</span>
+            </div>
+            <h1 class="font-bold text-3xl sm:text-4xl text-brand-900 leading-tight mb-4">n8n vs Zapier: Why I Switched and Never Looked Back</h1>
+            <p class="text-gray-500 text-lg leading-relaxed">Zapier is easy. n8n is powerful. Here's why I use n8n for every client automation and when Zapier still makes sense.</p>
+        </div>
+    </section>
+
+    <!-- Article Body -->
+    <article class="py-16 bg-white">
+        <div class="max-w-3xl mx-auto px-6 prose">
+            <h2>Why I Ditched Zapier for n8n (And You Should Too)</h2>
+
+<p>I used to be a Zapier fanboy. Simple drag-and-drop automation, thousands of app integrations, and that satisfying "it just works" feeling when you connect two services in minutes. Then I got my first client bill for $500/month on automations that were processing maybe 2,000 tasks. That's when I started looking at alternatives.</p>
+
+<p>Fast forward two years, and I've built dozens of automation systems for service businesses using <code>n8n</code>. I haven't touched Zapier since, and my clients are saving thousands while getting more powerful automations. Here's the real story of why I switched and what you need to know.</p>
+
+<h2>The Breaking Point: When Zapier Gets Expensive Fast</h2>
+
+<p>Let me paint you a picture. I was building an automation system for a property management company with 200+ units. They needed:</p>
+
+<ul>
+<li>Tenant inquiry forms to create leads in their CRM</li>
+<li>Maintenance requests to trigger notifications and create work orders</li>
+<li>Rent reminders via SMS and email</li>
+<li>Photo uploads from maintenance staff to sync with property records</li>
+</ul>
+
+<p>Sounds simple, right? In Zapier, this was burning through 15,000+ tasks per month easily. Each form submission, each SMS, each photo sync—all counted as separate tasks. At Zapier's pricing, we were looking at $600+ monthly just for the automation platform. For a small property management company, that's insane.</p>
+
+<p>That's when I discovered <code>n8n</code>. Self-hosted, no per-task pricing, and way more flexible than anything Zapier offered.</p>
+
+<h2>The Power of Self-Hosting (It's Not as Scary as It Sounds)</h2>
+
+<p>The biggest game-changer with <code>n8n</code> is self-hosting. I spin up instances on <code>Vercel</code> or DigitalOcean for about $20-40/month per client, regardless of how many tasks they run. That property management client? Their automation costs dropped from $600/month to $40/month overnight.</p>
+
+<p>Self-hosting also means:</p>
+
+<ul>
+<li><strong>Complete data control</strong> - sensitive customer data never leaves your infrastructure</li>
+<li><strong>No artificial limits</strong> - run 100,000 tasks or 10 tasks, same price</li>
+<li><strong>Custom node development</strong> - build exactly what you need</li>
+<li><strong>Better debugging</strong> - full access to logs and execution data</li>
+</ul>
+
+<p>The setup isn't trivial, but it's not rocket science either. Most of my n8n instances are running on simple Docker containers with <code>Supabase</code> handling the database needs.</p>
+
+<h2>Where n8n Absolutely Destroys Zapier</h2>
+
+<h3>Complex Logic and Branching</h3>
+
+<p>Zapier's "paths" feature is cute, but try building real conditional logic and you'll hit walls fast. In <code>n8n</code>, I can create complex decision trees that would require multiple Zapier workflows.</p>
+
+<p>For a cleaning service client, I built a single workflow that:</p>
+<ul>
+<li>Processes booking requests from their website</li>
+<li>Checks cleaner availability in real-time</li>
+<li>Calculates pricing based on service type, location, and current promotions</li>
+<li>Sends different SMS templates based on whether it's a new or returning customer</li>
+<li>Creates calendar events with different details for cleaners vs. customers</li>
+</ul>
+
+<p>This would have been 4-5 separate Zapier workflows with hacky workarounds. In n8n, it's one clean, logical flow.</p>
+
+<h3>Code Nodes Are a Game Changer</h3>
+
+<p>When you need custom logic, <code>n8n</code>'s JavaScript code nodes are incredible. I regularly use them for:</p>
+
+<ul>
+<li>Complex data transformations</li>
+<li>API calls that need custom headers or authentication</li>
+<li>Business logic that's too specific for pre-built nodes</li>
+<li>Integration with services that don't have dedicated connectors</li>
+</ul>
+
+<p>In Zapier, you're stuck with their "Code by Zapier" which is limited and clunky. With n8n, I can write proper JavaScript functions that handle edge cases and complex transformations.</p>
+
+<h3>Real Error Handling</h3>
+
+<p>Zapier's error handling is basically "retry a few times then give up." In <code>n8n</code>, I can build proper error handling with different paths for different failure types. If a <code>Twilio</code> SMS fails, I can automatically try email. If a <code>Stripe</code> payment webhook fails, I can queue it for manual review instead of just losing the data.</p>
+
+<h2>When Zapier Still Makes Sense</h2>
+
+<p>Look, I'm not completely anti-Zapier. There are still cases where it makes sense:</p>
+
+<ul>
+<li><strong>Quick prototyping</strong> - Testing integration feasibility before building production systems</li>
+<li><strong>Non-technical teams</strong> - If you're not comfortable with self-hosting and debugging</li>
+<li><strong>Low-volume automations</strong> - Under 1,000 tasks/month, Zapier's free tier is hard to beat</li>
+<li><strong>Obscure app integrations</strong> - Zapier has more pre-built connectors</li>
+</ul>
+
+<p>But for any serious automation work—especially for service businesses that process hundreds of leads, work orders, or customer interactions monthly—<code>n8n</code> is the clear winner.</p>
+
+<h2>Real Client Results</h2>
+
+<blockquote>
+"We went from spending $400/month on Zapier to $30/month on hosting, and our automations are way more reliable. Plus Jessy built custom logic that actually fits how our business works instead of forcing us to adapt to Zapier's limitations." - Mike, Local Landscaping Company
+</blockquote>
+
+<p>That landscaping client now processes:</p>
+<ul>
+<li>500+ quote requests monthly through automated lead scoring</li>
+<li>200+ scheduling confirmations with automatic crew assignments</li>
+<li>1,000+ customer communications via <code>Twilio</code> SMS and email</li>
+<li>Photo documentation workflows that sync directly with <code>Supabase</code></li>
+</ul>
+
+<p>All running on a single <code>n8n</code> instance that costs less than what they used to spend on Zapier's "Professional" plan.</p>
+
+<h2>The Bottom Line</h2>
+
+<p>If you're running a service business and your automation costs are creeping up, or you're hitting limitations with Zapier's logic capabilities, <code>n8n</code> is worth the switch. Yes, there's a learning curve. Yes, you need to handle your own hosting and maintenance. But the cost savings and flexibility more than make up for it.</p>
+
+<p>I've never had a client regret making the switch from Zapier to a custom <code>n8n</code> setup. The combination of unlimited task processing, powerful logic capabilities, and full control over your automation infrastructure is game-changing for growing businesses.</p>
+
+<p>Want to see what a custom <code>n8n</code> automation system could do for your service business? I'd love to show you some real examples and discuss how much you could save while getting better functionality. <a href="/contact" class="text-brand-600 hover:text-brand-700 font-medium">Let's chat about your automation needs</a>.</p>
+        </div>
+    </article>
+
+    <!-- More Posts -->
+    <section class="py-16 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <h3 class="reveal font-bold text-xl text-brand-900 mb-6">More Posts</h3>
+            <div class="reveal reveal-delay-1 space-y-4">
+                <a href="/blog/automating-a-blog-with-ai-and-github-actions" class="block bg-white rounded-xl p-5 border border-gray-200/80 hover:border-brand-200 transition-colors">
+                    <span class="text-xs text-gray-400">Mar 9, 2026</span>
+                    <h4 class="font-semibold text-brand-900 mt-1">I Automated This Blog With AI and GitHub Actions</h4>
+                </a>
+                <a href="/blog/building-ai-receptionist" class="block bg-white rounded-xl p-5 border border-gray-200/80 hover:border-brand-200 transition-colors">
+                    <span class="text-xs text-gray-400">Mar 2, 2026</span>
+                    <h4 class="font-semibold text-brand-900 mt-1">Building an AI Receptionist That Actually Picks Up the Phone</h4>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-14">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <a href="/" class="inline-block mb-4"><img src="../assets/full-logo-png (1).png" alt="Solvr Labs" class="h-10 md:h-14 brightness-0 invert"></a>
+                    <p class="text-brand-300/60 text-sm leading-relaxed max-w-xs">AI automation and custom software for service businesses.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Navigation</h4>
+                    <ul class="space-y-2"><li><a href="/" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home</a></li><li><a href="/services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Services</a></li><li><a href="/about" class="text-brand-300/50 hover:text-white text-sm transition-colors">About</a></li><li><a href="/blog" class="text-brand-300/50 hover:text-white text-sm transition-colors">Blog</a></li><li><a href="/contact" class="text-brand-300/50 hover:text-white text-sm transition-colors">Contact</a></li></ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Services</h4>
+                    <ul class="space-y-2"><li><a href="/ai-automation" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Workflow Automation</a></li><li><a href="/ai-receptionist" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Receptionist</a></li><li><a href="/custom-software" class="text-brand-300/50 hover:text-white text-sm transition-colors">Custom Software</a></li></ul>
+                    <h4 class="font-semibold text-sm mb-3 mt-5 uppercase tracking-wider text-brand-300/80">Industries</h4>
+                    <ul class="space-y-2"><li><a href="/home-services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home Services</a></li><li><a href="/property-management" class="text-brand-300/50 hover:text-white text-sm transition-colors">Property Management</a></li></ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-800 mt-10 pt-6 text-center text-brand-300/40 text-xs">&copy; 2026 Solvr Labs, LLC. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('burger').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('mobile-menu').classList.toggle('hidden'); });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

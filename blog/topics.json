@@ -1,12 +1,5 @@
 [
   {
-    "slug": "n8n-vs-zapier-for-service-businesses",
-    "title": "n8n vs Zapier: Why I Switched and Never Looked Back",
-    "tag": "Opinion",
-    "summary": "Zapier is easy. n8n is powerful. Here's why I use n8n for every client automation and when Zapier still makes sense.",
-    "context": "Compare the two from a builder's perspective. n8n is self-hostable, has no per-task pricing, supports complex branching and code nodes. Zapier is simpler but gets expensive fast and has limited logic. For service businesses doing 500+ automations/month, n8n saves thousands. Include real examples from client work."
-  },
-  {
     "slug": "what-ai-cant-do-for-your-business-yet",
     "title": "What AI Can't Do for Your Business (Yet)",
     "tag": "Opinion",
