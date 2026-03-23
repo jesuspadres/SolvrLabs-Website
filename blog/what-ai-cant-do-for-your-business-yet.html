@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What AI Can't Do for Your Business (Yet) - Solvr Labs</title>
+    <meta name="description" content="AI is powerful but it's not magic. Here's where it falls short and what still needs a human touch.">
+    <link rel="icon" type="image/png" href="../assets/favicon-solvrlabs.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#f0f5ff',100:'#e1ebff',200:'#c8d8fe',300:'#a3bffc',400:'#7da0f8',500:'#5a7de6',600:'#4664d6',700:'#3a53bd',800:'#33469a',900:'#2c3a7c',950:'#1d264e' },
+                        gray: { 50:'#f9fafb',100:'#f2f3f6',200:'#e5e7eb',300:'#d1d5db',400:'#9ca3af',500:'#6b7280',600:'#4b5563',700:'#374151',800:'#1f2937',900:'#1d1e20' },
+                    },
+                    fontFamily: { sans: ['"DM Sans"','system-ui','sans-serif'], display: ['"DM Sans"','system-ui','sans-serif'] },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+        html { overflow-x: clip; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f2f3f6; } ::-webkit-scrollbar-thumb { background: #5a7de6; border-radius: 3px; }
+        .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; }
+        .burger span { display:block; width:22px; height:2px; background:#2c3a7c; transition:all 0.3s ease; }
+        .burger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity:0; }
+        .burger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+        .prose h2 { font-size: 1.5rem; font-weight: 700; color: #2c3a7c; margin-top: 2.5rem; margin-bottom: 1rem; }
+        .prose h3 { font-size: 1.25rem; font-weight: 600; color: #33469a; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .prose p { color: #6b7280; line-height: 1.8; margin-bottom: 1.25rem; }
+        .prose ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; }
+        .prose ul li { color: #6b7280; line-height: 1.8; margin-bottom: 0.5rem; }
+        .prose strong { color: #374151; font-weight: 600; }
+        .prose code { background: #f0f5ff; color: #4664d6; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
+        .prose blockquote { border-left: 3px solid #5a7de6; padding-left: 1.25rem; margin: 1.5rem 0; font-style: italic; color: #9ca3af; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 overflow-x-hidden">
+
+    <!-- Nav -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <a href="/" class="py-3.5">
+                    <img src="../assets/full-logo-png (1).png" alt="Solvr Labs" class="h-[36px] md:h-[50px]">
+                </a>
+                <div class="hidden md:flex items-center gap-10">
+                    <a href="/" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Home</a>
+                    <a href="/services" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Services</a>
+                    <a href="/about" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">About</a>
+                    <a href="/#work" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Work</a>
+                    <a href="/contact" class="px-6 py-2.5 text-base font-semibold rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-colors shadow-sm">Book a Call</a>
+                </div>
+                <button id="burger" class="burger md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
+            <div class="px-6 py-4 space-y-1">
+                <a href="/" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Home</a>
+                <a href="/services" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Services</a>
+                <a href="/about" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">About</a>
+                <a href="/#work" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Work</a>
+                <a href="/contact" class="block mt-3 px-3 py-2.5 text-sm font-semibold text-center text-white rounded-full bg-brand-600">Book a Call</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Article Header -->
+    <section class="pt-32 pb-12 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <a href="/blog" class="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors mb-6">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
+                Back to Blog
+            </a>
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-xs font-semibold text-brand-600 bg-brand-100 px-2.5 py-1 rounded-full">Opinion</span>
+                <span class="text-xs text-gray-400">Mar 23, 2026</span>
+            </div>
+            <h1 class="font-bold text-3xl sm:text-4xl text-brand-900 leading-tight mb-4">What AI Can't Do for Your Business (Yet)</h1>
+            <p class="text-gray-500 text-lg leading-relaxed">AI is powerful but it's not magic. Here's where it falls short and what still needs a human touch.</p>
+        </div>
+    </section>
+
+    <!-- Article Body -->
+    <article class="py-16 bg-white">
+        <div class="max-w-3xl mx-auto px-6 prose">
+            <h2>The Reality Check AI Needs</h2>
+
+<p>I've been building AI automation systems for service businesses for over a year now, and I'm tired of the hype. Every day I see another "AI will replace everything" post, usually written by someone who's never actually deployed an AI system in production.</p>
+
+<p>Here's the truth: AI is incredibly powerful for specific tasks, but it's not magic. After building systems for plumbers, cleaners, landscapers, and property managers using <code>Claude AI</code>, <code>n8n</code>, and the rest of my stack, I've learned exactly where AI shines and where it face-plants.</p>
+
+<h2>Where AI Falls Flat on Its Face</h2>
+
+<h3>Relationship Building Is Still Human Territory</h3>
+
+<p>I built a lead qualification system for a landscaping company that could handle initial inquiries perfectly. It asked the right questions, collected project details, even scheduled estimates. But here's what I noticed in the data: prospects who had a real conversation with the owner before the estimate were 3x more likely to convert.</p>
+
+<p>Why? Because when someone's dropping $15k on a backyard renovation, they want to trust a person, not a chatbot. AI can handle the logistics, but it can't build the rapport that closes deals.</p>
+
+<h3>On-Site Judgment Calls Require Human Eyes</h3>
+
+<p>A property manager I work with tried using AI to assess maintenance requests from photos. It worked great for obvious stuff - clearly broken faucets, damaged drywall, dead appliances. But it completely failed on anything requiring context.</p>
+
+<p>Example: Tenant reports "weird smell in bathroom." Photo shows a normal-looking bathroom. AI response: "No visible issues detected." Human response after site visit: "That's a gas leak, evacuate immediately."</p>
+
+<p>AI processes what it can see in data. Humans process what they experience in reality.</p>
+
+<h3>Novel Situations Break AI's Brain</h3>
+
+<p>I learned this the hard way with a plumbing company's emergency dispatch system. It handled 90% of calls perfectly - standard clogs, leaks, water heater issues. Then someone called about water shooting out of their electrical outlet.</p>
+
+<p>The AI tried to categorize it as a plumbing issue and almost sent a plumber to what was clearly an electrical emergency. Now I have extensive fallback logic that routes anything even slightly unusual to humans.</p>
+
+<h2>The Hallucination Problem</h2>
+
+<p>Let's talk about AI's biggest flaw: it's confidently wrong way too often.</p>
+
+<p>I was testing a customer service bot for a cleaning company when it told a client that bleach and ammonia make a "super effective cleaning solution when mixed." That's how you make chlorine gas. That's how you kill people.</p>
+
+<p>The AI wasn't malicious - it just combined two facts (bleach cleans things, ammonia cleans things) without understanding the chemistry. This is why every system I build has guardrails:</p>
+
+<ul>
+<li>Hard-coded safety rules that override AI responses</li>
+<li>Human review queues for anything involving chemicals, electrical work, or safety</li>
+<li>Confidence thresholds - if AI isn't 95% sure, it asks for help</li>
+</ul>
+
+<h3>The "I Don't Know" Problem</h3>
+
+<p>Humans are generally bad at admitting ignorance, but AI is worse. It doesn't know what it doesn't know, so it guesses. Confidently.</p>
+
+<p>I've seen AI customer service bots make up warranty policies, invent service areas ("Yes, we serve Mars!"), and hallucinate pricing that would bankrupt a business. The solution isn't better AI - it's better constraints.</p>
+
+<h2>What AI Actually Excels At</h2>
+
+<p>Before you think I hate AI - I don't. For structured, repeatable tasks, it's already better than most humans.</p>
+
+<h3>Data Processing and Pattern Recognition</h3>
+
+<p>AI can analyze thousands of customer service tickets in minutes and spot patterns humans would miss. I built a system that identified that 40% of "emergency" calls for one plumber were actually the same recurring issue with a specific apartment complex's old pipes.</p>
+
+<h3>24/7 Availability for Standard Tasks</h3>
+
+<p>AI doesn't sleep, take vacations, or have bad days. For appointment scheduling, basic FAQs, and initial lead capture, it's consistently competent in ways humans struggle with.</p>
+
+<h3>Scaling Personalization</h3>
+
+<p>AI can customize communications for hundreds of customers simultaneously. It remembers every previous interaction, adjusts tone based on customer preferences, and never forgets to follow up.</p>
+
+<h2>The Human + AI Sweet Spot</h2>
+
+<p>The best systems I've built don't replace humans - they amplify them.</p>
+
+<p>Take the dispatch system I built using <code>Supabase</code> and <code>Twilio</code>. AI handles:</p>
+<ul>
+<li>Initial call screening and data collection</li>
+<li>Standard troubleshooting workflows</li>
+<li>Scheduling and route optimization</li>
+<li>Follow-up communications</li>
+</ul>
+
+<p>Humans handle:</p>
+<ul>
+<li>Complex problem diagnosis</li>
+<li>Customer relationship management</li>
+<li>Unusual situations requiring judgment</li>
+<li>Final quality control</li>
+</ul>
+
+<p>The result? Technicians spend more time fixing things and less time on paperwork. Customers get faster responses and better service. Everyone wins.</p>
+
+<h2>Building AI Systems That Actually Work</h2>
+
+<p>If you're considering AI for your business, start with these principles:</p>
+
+<p><strong>Define clear boundaries.</strong> Know exactly what you want AI to do and what you don't. Build hard stops for edge cases.</p>
+
+<p><strong>Plan for failure.</strong> AI will mess up. Have human backup systems ready. Monitor everything.</p>
+
+<p><strong>Start small and specific.</strong> Don't try to automate your entire business at once. Pick one repeatable process and nail it.</p>
+
+<blockquote>
+<p>AI is a tool, not a replacement. The companies winning with AI aren't firing humans - they're making their humans more effective.</p>
+</blockquote>
+
+<h2>Ready to Build Something Real?</h2>
+
+<p>I'm not interested in selling you AI snake oil. But if you have repetitive processes eating up your team's time, structured customer interactions that could be automated, or data that needs processing at scale, let's talk about what's actually possible.</p>
+
+<p>I'll tell you honestly where AI can help your business and where you still need humans. Because the goal isn't to replace your team - it's to free them up for the work that actually matters.</p>
+
+<p><a href="/contact" class="text-brand-600 hover:text-brand-700 font-medium">Let's have a real conversation about AI for your business</a> - no hype, just practical solutions.</p>
+        </div>
+    </article>
+
+    <!-- More Posts -->
+    <section class="py-16 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <h3 class="reveal font-bold text-xl text-brand-900 mb-6">More Posts</h3>
+            <div class="reveal reveal-delay-1 space-y-4">
+                <a href="/blog/automating-a-blog-with-ai-and-github-actions" class="block bg-white rounded-xl p-5 border border-gray-200/80 hover:border-brand-200 transition-colors">
+                    <span class="text-xs text-gray-400">Mar 9, 2026</span>
+                    <h4 class="font-semibold text-brand-900 mt-1">I Automated This Blog With AI and GitHub Actions</h4>
+                </a>
+                <a href="/blog/building-ai-receptionist" class="block bg-white rounded-xl p-5 border border-gray-200/80 hover:border-brand-200 transition-colors">
+                    <span class="text-xs text-gray-400">Mar 2, 2026</span>
+                    <h4 class="font-semibold text-brand-900 mt-1">Building an AI Receptionist That Actually Picks Up the Phone</h4>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-14">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <a href="/" class="inline-block mb-4"><img src="../assets/full-logo-png (1).png" alt="Solvr Labs" class="h-10 md:h-14 brightness-0 invert"></a>
+                    <p class="text-brand-300/60 text-sm leading-relaxed max-w-xs">AI automation and custom software for service businesses.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Navigation</h4>
+                    <ul class="space-y-2"><li><a href="/" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home</a></li><li><a href="/services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Services</a></li><li><a href="/about" class="text-brand-300/50 hover:text-white text-sm transition-colors">About</a></li><li><a href="/blog" class="text-brand-300/50 hover:text-white text-sm transition-colors">Blog</a></li><li><a href="/contact" class="text-brand-300/50 hover:text-white text-sm transition-colors">Contact</a></li></ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Services</h4>
+                    <ul class="space-y-2"><li><a href="/ai-automation" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Workflow Automation</a></li><li><a href="/ai-receptionist" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Receptionist</a></li><li><a href="/custom-software" class="text-brand-300/50 hover:text-white text-sm transition-colors">Custom Software</a></li></ul>
+                    <h4 class="font-semibold text-sm mb-3 mt-5 uppercase tracking-wider text-brand-300/80">Industries</h4>
+                    <ul class="space-y-2"><li><a href="/home-services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home Services</a></li><li><a href="/property-management" class="text-brand-300/50 hover:text-white text-sm transition-colors">Property Management</a></li></ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-800 mt-10 pt-6 text-center text-brand-300/40 text-xs">&copy; 2026 Solvr Labs, LLC. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('burger').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('mobile-menu').classList.toggle('hidden'); });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

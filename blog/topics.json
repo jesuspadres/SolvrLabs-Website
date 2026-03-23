@@ -1,12 +1,5 @@
 [
   {
-    "slug": "what-ai-cant-do-for-your-business-yet",
-    "title": "What AI Can't Do for Your Business (Yet)",
-    "tag": "Opinion",
-    "summary": "AI is powerful but it's not magic. Here's where it falls short and what still needs a human touch.",
-    "context": "Honest post about limitations. AI can't replace relationship-building, on-site judgment calls, or handle truly novel situations. It hallucinates. It needs guardrails. It's bad at knowing what it doesn't know. But for repeatable, structured tasks — it's already better than most humans. The goal is human + AI, not AI replacing humans."
-  },
-  {
     "slug": "how-a-plumber-saves-10-hours-a-week-with-ai",
     "title": "How a Plumber Saves 10 Hours a Week With AI",
     "tag": "Case Study",
