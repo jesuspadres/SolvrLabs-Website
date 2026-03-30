@@ -1,12 +1,5 @@
 [
   {
-    "slug": "how-a-plumber-saves-10-hours-a-week-with-ai",
-    "title": "How a Plumber Saves 10 Hours a Week With AI",
-    "tag": "Case Study",
-    "summary": "A real breakdown of the automations I built for a plumbing company — missed call handling, proposal generation, and invoice follow-ups.",
-    "context": "Composite case study based on real client patterns. Walk through each automation: missed call → AI text-back → booking link → calendar event → Discord notification. Proposal flow: job details → Claude drafts proposal → owner reviews → sends via SMS. Invoice flow: job marked complete → Stripe invoice generated → sent → auto follow-up at 3, 7, 14 days. Include rough time savings and cost numbers."
-  },
-  {
     "slug": "building-in-public-why-i-share-everything",
     "title": "Building in Public: Why I Share Everything",
     "tag": "Opinion",
