@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Receptionist for your Business - Solvr Labs</title>
-    <meta name="description" content="AI-powered phone receptionist that answers every call 24/7, books appointments on Google Calendar, notifies your team via Discord, and handles emergencies instantly. Plans starting at $149/mo.">
+    <title>Radar by Solvr Labs — Your 24/7 AI Front Desk</title>
+    <meta name="description" content="Radar is the always-on AI receptionist &amp; dispatcher for tradespeople. Answers calls, books jobs, and dispatches 24/7 so no lead slips through. Name your AI, train it, and never miss a job again. Starting at $149/mo.">
     <link rel="icon" type="image/png" href="assets/favicon-solvrlabs.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -90,6 +90,21 @@
                 </a>
                 <div class="hidden md:flex items-center gap-10">
                     <a href="/" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Home</a>
+                    <div class="relative group">
+                        <button class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors inline-flex items-center gap-1">Products <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <div class="w-64 bg-white rounded-xl border border-gray-200/80 shadow-xl shadow-gray-200/50 overflow-hidden">
+                                <a href="/radar" class="flex items-center gap-3 px-4 py-3 hover:bg-brand-50 transition-colors">
+                                    <div class="w-9 h-9 rounded-lg bg-brand-100 flex items-center justify-center flex-shrink-0"><svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg></div>
+                                    <div><p class="text-sm font-semibold text-brand-900">Radar</p><p class="text-xs text-gray-400">AI receptionist &amp; dispatcher</p></div>
+                                </a>
+                                <a href="https://taskline.solvrlabs.com" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 hover:bg-brand-50 transition-colors border-t border-gray-100">
+                                    <div class="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0"><img src="/assets/TaskLine-Logo.png" alt="Taskline" class="w-full h-full object-cover"></div>
+                                    <div><p class="text-sm font-semibold text-brand-900">Taskline</p><p class="text-xs text-gray-400">AI-powered job management</p></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                     <a href="/services" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Services</a>
                     <a href="/about" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">About</a>
                     <a href="/#work" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Work</a>
@@ -101,6 +116,13 @@
         <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
             <div class="px-6 py-4 space-y-1">
                 <a href="/" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Home</a>
+                <div>
+                    <button onclick="document.getElementById('mobile-products').classList.toggle('hidden')" class="flex items-center justify-between w-full px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Products <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+                    <div id="mobile-products" class="hidden pl-4 space-y-1 mt-1">
+                        <a href="/radar" class="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50"><span class="w-6 h-6 rounded-md bg-brand-100 flex items-center justify-center flex-shrink-0"><svg class="w-3.5 h-3.5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg></span> Radar</a>
+                        <a href="https://taskline.solvrlabs.com" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50"><span class="w-6 h-6 rounded-md overflow-hidden flex-shrink-0"><img src="/assets/TaskLine-Logo.png" alt="Taskline" class="w-full h-full object-cover"></span> Taskline</a>
+                    </div>
+                </div>
                 <a href="/services" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Services</a>
                 <a href="/about" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">About</a>
                 <a href="/#work" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Work</a>
@@ -118,16 +140,16 @@
                 <div class="lg:col-span-2">
                     <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 bg-brand-100/60 border border-brand-200/50 rounded-full text-sm text-brand-600 font-medium mb-6">
                         <span class="w-1.5 h-1.5 bg-brand-500 rounded-full animate-pulse"></span>
-                        AI Receptionist for your Business
+                        Radar by Solvr Labs
                     </div>
                     <h1 class="reveal reveal-delay-1 font-extrabold text-4xl sm:text-5xl lg:text-[4.25rem] text-brand-900 mb-6 sm:mb-8 tracking-tight" style="line-height:1.05">
-                        <span class="block text-[1.5rem] sm:text-[2rem] lg:text-[3rem] font-bold mb-1">Every missed call is now</span><span class="bg-gradient-to-r from-brand-600 via-brand-500 to-emerald-500 bg-clip-text text-transparent" style="padding-bottom:2px">money in your pocket.</span>
+                        <span class="block text-[1.5rem] sm:text-[2rem] lg:text-[3rem] font-bold mb-1">Nothing gets past</span><span class="bg-gradient-to-r from-brand-600 via-brand-500 to-emerald-500 bg-clip-text text-transparent" style="padding-bottom:2px">your Radar.</span>
                     </h1>
                     <p class="reveal reveal-delay-2 text-base sm:text-lg lg:text-[1.2rem] text-gray-500 leading-relaxed mb-4">
-                        Our AI doesn't just take messages &mdash; it <span class="text-brand-900 font-medium">books jobs, dispatches emergencies, and syncs to your tools.</span> While you're on the job site, it's running your front desk.
+                        Radar is your always-on AI front desk &mdash; it <span class="text-brand-900 font-medium">answers calls, books jobs, dispatches emergencies, and syncs to your tools</span> 24/7.
                     </p>
                     <p class="reveal reveal-delay-2 text-sm text-gray-400 mb-8">
-                        Other AI answering services take a message and call it a day. This one actually runs your front office.
+                        Your 24/7 front desk. Not a bot that takes messages &mdash; a sidekick that runs your front office.
                     </p>
                     <div class="reveal reveal-delay-3 flex flex-wrap gap-4">
                         <a href="#call-simulator" class="inline-flex items-center gap-2 px-7 py-3 sm:gap-2.5 sm:px-9 sm:py-4 bg-brand-600 hover:bg-brand-700 rounded-full text-white text-base sm:text-lg font-semibold transition-colors shadow-md shadow-brand-600/20">
@@ -149,7 +171,7 @@
                             <div class="w-3 h-3 rounded-full bg-red-300"></div>
                             <div class="w-3 h-3 rounded-full bg-yellow-300"></div>
                             <div class="w-3 h-3 rounded-full bg-green-300"></div>
-                            <div class="ml-3 flex-1 bg-white rounded-md px-3 py-1.5 border border-gray-200 text-[11px] text-gray-400 font-mono">receptionist.solvrlabs.com</div>
+                            <div class="ml-3 flex-1 bg-white rounded-md px-3 py-1.5 border border-gray-200 text-[11px] text-gray-400 font-mono">radar.solvrlabs.com</div>
                         </div>
 
                         <!-- Dashboard content -->
@@ -157,8 +179,8 @@
                             <!-- Header -->
                             <div class="flex items-center justify-between mb-5">
                                 <div>
-                                    <div class="text-xs font-semibold text-brand-600 uppercase tracking-wider">Calls Dashboard</div>
-                                    <div class="text-sm sm:text-base font-bold text-gray-900 mt-1">Premier Plumbing &mdash; AI Receptionist</div>
+                                    <div class="text-xs font-semibold text-brand-600 uppercase tracking-wider">Radar Dashboard</div>
+                                    <div class="text-sm sm:text-base font-bold text-gray-900 mt-1">Premier Plumbing &mdash; Emma</div>
                                 </div>
                                 <div class="flex items-center gap-1.5 px-2.5 py-1 bg-green-50 border border-green-200 rounded-full">
                                     <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
@@ -252,7 +274,7 @@
             <div class="text-center mb-6">
                 <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">How It Works</span>
                 <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">Call to booked job. Under 90 seconds.</h2>
-                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Watch the AI handle a real emergency plumbing call and automatically sync to every connected system.</p>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Watch Radar handle a real emergency plumbing call and automatically sync to every connected system.</p>
             </div>
 
             <!-- 3-step summary -->
@@ -286,7 +308,7 @@
                                 <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span></span>
                                 <span class="text-xs font-medium text-green-300">Interactive Demo</span>
                             </div>
-                            <h3 class="text-2xl sm:text-3xl font-bold text-white mb-4 leading-tight">Watch the AI handle a real emergency call</h3>
+                            <h3 class="text-2xl sm:text-3xl font-bold text-white mb-4 leading-tight">Watch Radar handle a real emergency call</h3>
                             <p class="text-brand-200/80 mb-6 leading-relaxed">See it answer, triage an emergency, create a job in ServiceTitan, find the nearest tech, and transfer the call live &mdash; all under 90 seconds.</p>
 
                             <div class="flex flex-wrap gap-2 mb-8">
@@ -312,12 +334,12 @@
                                 <div class="bg-white/10 backdrop-blur-sm rounded-xl border border-white/10 p-5 shadow-2xl">
                                     <div class="flex items-center gap-2 mb-4 pb-3 border-b border-white/10">
                                         <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-                                        <span class="text-xs font-medium text-white/70">Incoming Call &mdash; Premier Plumbing</span>
+                                        <span class="text-xs font-medium text-white/70">Radar &mdash; Premier Plumbing</span>
                                     </div>
                                     <div class="space-y-3">
-                                        <div class="flex justify-start"><div class="bg-brand-500/30 border border-brand-400/20 rounded-xl px-3.5 py-2 max-w-[85%]"><p class="text-[10px] text-brand-300 mb-0.5">Emma (AI)</p><p class="text-sm text-white/90">Hey, thanks for calling Premier Plumbing! This is Emma, how can I help you today?</p></div></div>
+                                        <div class="flex justify-start"><div class="bg-brand-500/30 border border-brand-400/20 rounded-xl px-3.5 py-2 max-w-[85%]"><p class="text-[10px] text-brand-300 mb-0.5">Emma (Radar)</p><p class="text-sm text-white/90">Hey, thanks for calling Premier Plumbing! This is Emma, how can I help you today?</p></div></div>
                                         <div class="flex justify-end"><div class="bg-white/10 border border-white/5 rounded-xl px-3.5 py-2 max-w-[85%]"><p class="text-[10px] text-white/40 mb-0.5 text-right">John</p><p class="text-sm text-white/80">I've got water coming through the basement ceiling. I think a pipe burst upstairs.</p></div></div>
-                                        <div class="flex justify-start"><div class="bg-brand-500/30 border border-brand-400/20 rounded-xl px-3.5 py-2 max-w-[85%]"><p class="text-[10px] text-brand-300 mb-0.5">Emma (AI)</p><p class="text-sm text-white/90">That sounds really stressful &mdash; that's definitely something we want to look at right away.</p></div></div>
+                                        <div class="flex justify-start"><div class="bg-brand-500/30 border border-brand-400/20 rounded-xl px-3.5 py-2 max-w-[85%]"><p class="text-[10px] text-brand-300 mb-0.5">Emma (Radar)</p><p class="text-sm text-white/90">That sounds really stressful &mdash; that's definitely something we want to look at right away.</p></div></div>
                                         <div class="flex justify-start items-center gap-1 pl-2 pt-1">
                                             <span class="w-1.5 h-1.5 rounded-full bg-white/40 animate-pulse"></span>
                                             <span class="w-1.5 h-1.5 rounded-full bg-white/40 animate-pulse" style="animation-delay:0.2s"></span>
@@ -401,13 +423,109 @@
         </div>
     </section>
 
+    <!-- Copilot Mode -->
+    <section class="py-16 sm:py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="reveal grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                <!-- Left: copy -->
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-50 border border-purple-100 rounded-full text-sm text-purple-700 font-medium mb-5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Copilot Mode
+                    </div>
+                    <h2 class="font-bold text-2xl sm:text-3xl text-brand-900 mb-4 leading-tight">Your receptionist answers.<br><span class="text-brand-600">Radar does the rest.</span></h2>
+                    <p class="text-gray-500 leading-relaxed mb-6">Not ready to hand the phone to AI? Copilot mode lets your receptionist handle the conversation while Radar works behind the scenes &mdash; extracting caller info, surfacing answers from your knowledge base, and queuing up every integration. When the call ends, one click fires it all. <strong class="text-brand-900">Half the cost of full AI mode</strong> &mdash; and your receptionist handles twice the calls.</p>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3">
+                            <div class="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+                            <div><p class="text-sm font-medium text-brand-900">Live data extraction</p><p class="text-xs text-gray-400">Name, address, service type, urgency &mdash; pulled from the conversation in real time</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                            <div><p class="text-sm font-medium text-brand-900">Smart prompts</p><p class="text-xs text-gray-400">Radar tells your receptionist what to ask next &mdash; missing address? Urgency? It tracks the gaps live</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></div>
+                            <div><p class="text-sm font-medium text-brand-900">One-click confirm</p><p class="text-xs text-gray-400">Review, edit if needed, then confirm &mdash; Radar books the calendar, creates the job, and alerts the team</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: mock copilot dashboard -->
+                <div class="reveal reveal-delay-2">
+                    <div class="bg-white rounded-2xl border border-gray-200/80 shadow-xl overflow-hidden">
+                        <!-- Header -->
+                        <div class="flex items-center justify-between px-5 py-3 bg-gray-50 border-b border-gray-100">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                                <span class="text-[11px] font-semibold text-gray-700">Copilot &mdash; Live Call</span>
+                            </div>
+                            <span class="text-[10px] text-gray-400 font-mono">02:14</span>
+                        </div>
+                        <div class="grid sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+                            <!-- Left panel: extracted info -->
+                            <div class="p-4 space-y-3">
+                                <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Extracted Info</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-[11px] text-gray-500">Name</span><span class="text-[11px] font-medium text-gray-800 flex items-center gap-1">Sarah Mitchell <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span></span></div>
+                                    <div class="flex items-center justify-between"><span class="text-[11px] text-gray-500">Service</span><span class="text-[11px] font-medium text-gray-800 flex items-center gap-1">Burst pipe <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span></span></div>
+                                    <div class="flex items-center justify-between"><span class="text-[11px] text-gray-500">Address</span><span class="text-[11px] font-medium text-gray-800 flex items-center gap-1">742 Elm St <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span></span></div>
+                                    <div class="flex items-center justify-between"><span class="text-[11px] text-gray-500">Urgency</span><span class="text-[11px] font-semibold text-red-600 flex items-center gap-1">Emergency <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span></span></div>
+                                    <div class="flex items-center justify-between"><span class="text-[11px] text-gray-500">Time</span><span class="text-[11px] text-yellow-600 flex items-center gap-1 italic">Ask caller <span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span></span></div>
+                                </div>
+                                <div class="bg-purple-50 border border-purple-100 rounded-lg px-3 py-2 mt-2">
+                                    <p class="text-[10px] font-semibold text-purple-700 mb-1">Ask about:</p>
+                                    <p class="text-[10px] text-purple-600">&bull; Preferred time for appointment</p>
+                                </div>
+                            </div>
+                            <!-- Right panel: pending actions -->
+                            <div class="p-4 space-y-3">
+                                <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Pending Actions</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center gap-2 px-2.5 py-2 bg-blue-50/50 rounded-lg border border-blue-100/50">
+                                        <span class="text-xs">&#128197;</span>
+                                        <div class="flex-1 min-w-0"><p class="text-[10px] font-semibold text-gray-700 truncate">Google Calendar</p><p class="text-[9px] text-gray-400 truncate">Emergency slot &middot; Mike</p></div>
+                                        <div class="w-3.5 h-3.5 rounded border border-brand-500 bg-brand-500 flex items-center justify-center"><svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+                                    </div>
+                                    <div class="flex items-center gap-2 px-2.5 py-2 bg-orange-50/50 rounded-lg border border-orange-100/50">
+                                        <span class="text-xs">&#128295;</span>
+                                        <div class="flex-1 min-w-0"><p class="text-[10px] font-semibold text-gray-700 truncate">ServiceTitan</p><p class="text-[9px] text-gray-400 truncate">Create job &middot; Emergency</p></div>
+                                        <div class="w-3.5 h-3.5 rounded border border-brand-500 bg-brand-500 flex items-center justify-center"><svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+                                    </div>
+                                    <div class="flex items-center gap-2 px-2.5 py-2 bg-purple-50/50 rounded-lg border border-purple-100/50">
+                                        <span class="text-xs">&#128227;</span>
+                                        <div class="flex-1 min-w-0"><p class="text-[10px] font-semibold text-gray-700 truncate">Discord</p><p class="text-[9px] text-gray-400 truncate">Alert team &middot; #emergencies</p></div>
+                                        <div class="w-3.5 h-3.5 rounded border border-brand-500 bg-brand-500 flex items-center justify-center"><svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+                                    </div>
+                                    <div class="flex items-center gap-2 px-2.5 py-2 bg-red-50/50 rounded-lg border border-red-100/50">
+                                        <span class="text-xs">&#128680;</span>
+                                        <div class="flex-1 min-w-0"><p class="text-[10px] font-semibold text-gray-700 truncate">SMS Alert</p><p class="text-[9px] text-gray-400 truncate">On-call tech &middot; Dave M.</p></div>
+                                        <div class="w-3.5 h-3.5 rounded border border-brand-500 bg-brand-500 flex items-center justify-center"><svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Confirm bar -->
+                        <div class="flex items-center justify-between px-5 py-3 bg-gray-50 border-t border-gray-100">
+                            <span class="text-[10px] text-gray-400">4 integrations ready</span>
+                            <div class="flex gap-2">
+                                <span class="px-3 py-1.5 text-[10px] font-medium text-gray-500 bg-white border border-gray-200 rounded-full">Dismiss</span>
+                                <span class="px-3 py-1.5 text-[10px] font-semibold text-white bg-brand-600 rounded-full">Confirm &amp; Execute</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Integration Showcase (Carousel) -->
     <section class="py-20 bg-brand-900 overflow-hidden">
         <div class="max-w-6xl mx-auto px-6">
             <div class="text-center mb-14">
                 <span class="reveal text-sm font-semibold text-brand-300 uppercase tracking-wider">Integrations</span>
                 <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-white mt-3 mb-4">Plugs Into Your Existing Software</h2>
-                <p class="reveal reveal-delay-2 text-brand-200/70 text-lg max-w-2xl mx-auto leading-relaxed">Most AI answering services just send you a text. We actually create jobs, book appointments, and notify your team inside the tools you already use.</p>
+                <p class="reveal reveal-delay-2 text-brand-200/70 text-lg max-w-2xl mx-auto leading-relaxed">Most AI answering services just send you a text. Radar actually creates jobs, books appointments, and notifies your team inside the tools you already use.</p>
                 <p class="reveal reveal-delay-3 text-brand-300/50 text-sm mt-2">Custom-configured for your business during setup.</p>
             </div>
 
@@ -509,7 +627,7 @@
         <div class="max-w-5xl mx-auto px-6">
             <div class="text-center mb-10">
                 <h2 class="reveal text-2xl sm:text-3xl font-bold text-brand-900 mb-3">Built for businesses like yours</h2>
-                <p class="reveal text-gray-500 max-w-xl mx-auto">Select your trade. See exactly how the AI works for you.</p>
+                <p class="reveal text-gray-500 max-w-xl mx-auto">Select your trade. See exactly how Radar works for you.</p>
             </div>
 
             <!-- Trade selector buttons -->
@@ -532,8 +650,8 @@
                                 <div class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
                                 <span class="text-[11px] font-semibold text-red-700">Emergency Call &mdash; 11:47 PM</span>
                             </div>
-                            <h3 class="font-bold text-xl text-brand-900 mb-2">Burst pipe. Midnight. AI handles it.</h3>
-                            <p class="text-sm text-gray-500 leading-relaxed mb-5">Customer calls about a flooded basement. AI identifies it as an emergency, captures the address, creates the job, and texts your on-call plumber &mdash; before the customer hangs up.</p>
+                            <h3 class="font-bold text-xl text-brand-900 mb-2">Burst pipe. Midnight. Radar handles it.</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed mb-5">Customer calls about a flooded basement. Radar identifies it as an emergency, captures the address, creates the job, and texts your on-call plumber &mdash; before the customer hangs up.</p>
                             <div class="flex flex-wrap gap-1.5">
                                 <span class="px-2.5 py-1 rounded-full bg-brand-50 text-[11px] font-medium text-brand-700">Emergency triage</span>
                                 <span class="px-2.5 py-1 rounded-full bg-brand-50 text-[11px] font-medium text-brand-700">On-call dispatch</span>
@@ -574,8 +692,8 @@
                             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-100 mb-4 w-fit">
                                 <span class="text-[11px] font-semibold text-orange-700">Peak Season &mdash; 47 calls today</span>
                             </div>
-                            <h3 class="font-bold text-xl text-brand-900 mb-2">First heat wave. Phones explode. AI keeps booking.</h3>
-                            <p class="text-sm text-gray-500 leading-relaxed mb-5">50 calls in a day. AI handles them all simultaneously &mdash; books tune-ups, answers pricing questions, and fills your schedule without a single hold time.</p>
+                            <h3 class="font-bold text-xl text-brand-900 mb-2">First heat wave. Phones explode. Radar keeps booking.</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed mb-5">50 calls in a day. Radar handles them all simultaneously &mdash; books tune-ups, answers pricing questions, and fills your schedule without a single hold time.</p>
                             <div class="flex flex-wrap gap-1.5">
                                 <span class="px-2.5 py-1 rounded-full bg-brand-50 text-[11px] font-medium text-brand-700">Surge handling</span>
                                 <span class="px-2.5 py-1 rounded-full bg-brand-50 text-[11px] font-medium text-brand-700">Auto-scheduling</span>
@@ -587,33 +705,33 @@
                             <div class="rounded-xl border border-gray-200 bg-white overflow-hidden">
                                 <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
                                     <span class="text-[11px] font-semibold text-gray-700">Today's Bookings</span>
-                                    <span class="text-[10px] font-medium text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full">12 booked via AI</span>
+                                    <span class="text-[10px] font-medium text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full">12 booked via Radar</span>
                                 </div>
                                 <div class="p-3 space-y-1.5">
                                     <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-50/50 border border-blue-100/50">
                                         <span class="text-[10px] font-mono text-gray-400 w-12">9:00</span>
                                         <div class="w-1 h-6 rounded-full bg-blue-400"></div>
-                                        <div><p class="text-[11px] font-medium text-gray-800">AC Tune-Up &mdash; Sarah K.</p><p class="text-[10px] text-gray-400">1847 Elm Dr &middot; Booked by AI</p></div>
+                                        <div><p class="text-[11px] font-medium text-gray-800">AC Tune-Up &mdash; Sarah K.</p><p class="text-[10px] text-gray-400">1847 Elm Dr &middot; Booked by Radar</p></div>
                                     </div>
                                     <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-50/50 border border-blue-100/50">
                                         <span class="text-[10px] font-mono text-gray-400 w-12">10:30</span>
                                         <div class="w-1 h-6 rounded-full bg-blue-400"></div>
-                                        <div><p class="text-[11px] font-medium text-gray-800">AC Tune-Up &mdash; James P.</p><p class="text-[10px] text-gray-400">302 Pine St &middot; Booked by AI</p></div>
+                                        <div><p class="text-[11px] font-medium text-gray-800">AC Tune-Up &mdash; James P.</p><p class="text-[10px] text-gray-400">302 Pine St &middot; Booked by Radar</p></div>
                                     </div>
                                     <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-orange-50/50 border border-orange-100/50">
                                         <span class="text-[10px] font-mono text-gray-400 w-12">12:00</span>
                                         <div class="w-1 h-6 rounded-full bg-orange-400"></div>
-                                        <div><p class="text-[11px] font-medium text-gray-800">No Cool &mdash; Maria G.</p><p class="text-[10px] text-gray-400">Priority &middot; 5200 Oak Ave &middot; Booked by AI</p></div>
+                                        <div><p class="text-[11px] font-medium text-gray-800">No Cool &mdash; Maria G.</p><p class="text-[10px] text-gray-400">Priority &middot; 5200 Oak Ave &middot; Booked by Radar</p></div>
                                     </div>
                                     <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-50/50 border border-blue-100/50">
                                         <span class="text-[10px] font-mono text-gray-400 w-12">1:30</span>
                                         <div class="w-1 h-6 rounded-full bg-blue-400"></div>
-                                        <div><p class="text-[11px] font-medium text-gray-800">AC Tune-Up &mdash; Tom B.</p><p class="text-[10px] text-gray-400">88 Birch Ln &middot; Booked by AI</p></div>
+                                        <div><p class="text-[11px] font-medium text-gray-800">AC Tune-Up &mdash; Tom B.</p><p class="text-[10px] text-gray-400">88 Birch Ln &middot; Booked by Radar</p></div>
                                     </div>
                                     <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-50/50 border border-blue-100/50">
                                         <span class="text-[10px] font-mono text-gray-400 w-12">3:00</span>
                                         <div class="w-1 h-6 rounded-full bg-blue-400"></div>
-                                        <div><p class="text-[11px] font-medium text-gray-800">AC Tune-Up &mdash; Rachel W.</p><p class="text-[10px] text-gray-400">410 Maple Ct &middot; Booked by AI</p></div>
+                                        <div><p class="text-[11px] font-medium text-gray-800">AC Tune-Up &mdash; Rachel W.</p><p class="text-[10px] text-gray-400">410 Maple Ct &middot; Booked by Radar</p></div>
                                     </div>
                                 </div>
                             </div>
@@ -628,8 +746,8 @@
                             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-50 border border-yellow-100 mb-4 w-fit">
                                 <span class="text-[11px] font-semibold text-yellow-800">After Hours &mdash; 9:14 PM</span>
                             </div>
-                            <h3 class="font-bold text-xl text-brand-900 mb-2">Power out. Panel sparking. AI knows the difference.</h3>
-                            <p class="text-sm text-gray-500 leading-relaxed mb-5">AI distinguishes a sparking panel (emergency &mdash; dispatch now) from a quote for recessed lighting (queue for morning). Right response, every time.</p>
+                            <h3 class="font-bold text-xl text-brand-900 mb-2">Power out. Panel sparking. Radar knows the difference.</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed mb-5">Radar distinguishes a sparking panel (emergency &mdash; dispatch now) from a quote for recessed lighting (queue for morning). Right response, every time.</p>
                             <div class="flex flex-wrap gap-1.5">
                                 <span class="px-2.5 py-1 rounded-full bg-brand-50 text-[11px] font-medium text-brand-700">Smart triage</span>
                                 <span class="px-2.5 py-1 rounded-full bg-brand-50 text-[11px] font-medium text-brand-700">Quote capture</span>
@@ -640,7 +758,7 @@
                         <div class="bg-gray-50/50 p-5 sm:p-6 border-t md:border-t-0 md:border-l border-gray-100 space-y-3">
                             <div class="rounded-xl border border-gray-200 bg-white overflow-hidden">
                                 <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-100">
-                                    <span class="text-[11px] font-semibold text-gray-700">AI Triage Decision</span>
+                                    <span class="text-[11px] font-semibold text-gray-700">Radar Triage Decision</span>
                                 </div>
                                 <div class="p-4">
                                     <div class="flex items-center gap-3 mb-4">
@@ -674,8 +792,8 @@
                             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 mb-4 w-fit">
                                 <span class="text-[11px] font-semibold text-indigo-700">24/7 Tenant Line</span>
                             </div>
-                            <h3 class="font-bold text-xl text-brand-900 mb-2">200 units. One AI. Zero voicemails.</h3>
-                            <p class="text-sm text-gray-500 leading-relaxed mb-5">Tenants call about lockouts, leaks, noise complaints. AI logs every request, dispatches vendors for emergencies, and gives you a clean morning report.</p>
+                            <h3 class="font-bold text-xl text-brand-900 mb-2">200 units. One Radar. Zero voicemails.</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed mb-5">Tenants call about lockouts, leaks, noise complaints. Radar logs every request, dispatches vendors for emergencies, and gives you a clean morning report.</p>
                             <div class="flex flex-wrap gap-1.5">
                                 <span class="px-2.5 py-1 rounded-full bg-brand-50 text-[11px] font-medium text-brand-700">Maintenance logging</span>
                                 <span class="px-2.5 py-1 rounded-full bg-brand-50 text-[11px] font-medium text-brand-700">Vendor dispatch</span>
@@ -818,7 +936,7 @@
                         <p class="text-sm text-red-400 mt-1" id="roi-yearly-loss">$72,240 per year in missed revenue</p>
                     </div>
                     <div class="bg-brand-50 border border-brand-100 rounded-2xl p-6">
-                        <p class="text-xs text-brand-600 uppercase tracking-wider font-semibold mb-1">With Solvr Labs</p>
+                        <p class="text-xs text-brand-600 uppercase tracking-wider font-semibold mb-1">With Radar by Solvr Labs</p>
                         <p class="text-3xl font-bold text-brand-700" id="roi-recovered">$6,020<span class="text-lg text-brand-400"> recovered</span></p>
                         <p class="text-sm text-brand-400 mt-1" id="roi-multiplier">For just $149/mo &mdash; 23x ROI</p>
                     </div>
@@ -844,7 +962,7 @@
         <div class="max-w-5xl mx-auto px-6">
             <div class="text-center mb-10">
                 <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">The Difference</span>
-                <h2 class="reveal reveal-delay-1 font-bold text-2xl sm:text-3xl lg:text-4xl text-brand-900 mt-3 mb-4">Your Current Setup <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-brand-600 text-white text-xs font-bold align-middle mx-1">vs</span> Solvr Labs</h2>
+                <h2 class="reveal reveal-delay-1 font-bold text-2xl sm:text-3xl lg:text-4xl text-brand-900 mt-3 mb-4">Your Current Setup <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-brand-600 text-white text-xs font-bold align-middle mx-1">vs</span> Radar</h2>
                 <p class="reveal reveal-delay-2 text-gray-500 max-w-2xl mx-auto">See what changes when you stop relying on voicemail and start running a real front office.</p>
             </div>
 
@@ -866,7 +984,7 @@
                         <div class="rounded-2xl border-2 border-red-100 bg-red-50/30 p-6">
                             <div class="flex items-center gap-2 mb-5">
                                 <div class="w-7 h-7 rounded-full bg-red-100 flex items-center justify-center"><svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>
-                                <h3 class="font-bold text-gray-900">Without Solvr Labs</h3>
+                                <h3 class="font-bold text-gray-900">Without Radar</h3>
                             </div>
                             <div class="space-y-4">
                                 <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg></div><p class="text-sm text-gray-600">Calls go to voicemail when you're on a job. Customers hang up and call your competitor.</p></div>
@@ -879,13 +997,13 @@
                         <div class="rounded-2xl border-2 border-green-100 bg-green-50/30 p-6">
                             <div class="flex items-center gap-2 mb-5">
                                 <div class="w-7 h-7 rounded-full bg-green-100 flex items-center justify-center"><svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div>
-                                <h3 class="font-bold text-gray-900">With Solvr Labs</h3>
+                                <h3 class="font-bold text-gray-900">With Radar</h3>
                             </div>
                             <div class="space-y-4">
                                 <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">Every call answered instantly, 24/7. No more lost customers while you're on a ladder.</p></div>
                                 <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">Jobs are booked on your calendar automatically. No phone tag, no back-and-forth.</p></div>
                                 <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">Full job details captured: name, address, issue, urgency. Sent to your dashboard and Discord.</p></div>
-                                <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">Nights, weekends, holidays &mdash; our AI handles it all. Wake up to a full schedule.</p></div>
+                                <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">Nights, weekends, holidays &mdash; Radar handles it all. Wake up to a full schedule.</p></div>
                             </div>
                         </div>
                     </div>
@@ -897,7 +1015,7 @@
                         <div class="rounded-2xl border-2 border-red-100 bg-red-50/30 p-6">
                             <div class="flex items-center gap-2 mb-5">
                                 <div class="w-7 h-7 rounded-full bg-red-100 flex items-center justify-center"><svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>
-                                <h3 class="font-bold text-gray-900">Without Solvr Labs</h3>
+                                <h3 class="font-bold text-gray-900">Without Radar</h3>
                             </div>
                             <div class="space-y-4">
                                 <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg></div><p class="text-sm text-gray-600">Your office person juggles calls, walk-ins, and paperwork. Half the calls still get missed.</p></div>
@@ -909,10 +1027,10 @@
                         <div class="rounded-2xl border-2 border-green-100 bg-green-50/30 p-6">
                             <div class="flex items-center gap-2 mb-5">
                                 <div class="w-7 h-7 rounded-full bg-green-100 flex items-center justify-center"><svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div>
-                                <h3 class="font-bold text-gray-900">With Solvr Labs</h3>
+                                <h3 class="font-bold text-gray-900">With Radar</h3>
                             </div>
                             <div class="space-y-4">
-                                <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">AI handles overflow and after-hours. Your office person focuses on what matters.</p></div>
+                                <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">Radar handles overflow and after-hours. Your office person focuses on what matters.</p></div>
                                 <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">Jobs auto-created in ServiceTitan/Jobber with full details. Techs dispatched instantly.</p></div>
                                 <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">Emergency calls trigger instant alerts with triage. No more "we'll pass along the message."</p></div>
                                 <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">Dashboard shows every call, booking, and missed opportunity. Full visibility.</p></div>
@@ -927,7 +1045,7 @@
                         <div class="rounded-2xl border-2 border-red-100 bg-red-50/30 p-6">
                             <div class="flex items-center gap-2 mb-5">
                                 <div class="w-7 h-7 rounded-full bg-red-100 flex items-center justify-center"><svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>
-                                <h3 class="font-bold text-gray-900">Without Solvr Labs</h3>
+                                <h3 class="font-bold text-gray-900">Without Radar</h3>
                             </div>
                             <div class="space-y-4">
                                 <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg></div><p class="text-sm text-gray-600">Hiring a full-time receptionist costs $35-50K/year and they still can't work nights or weekends.</p></div>
@@ -939,11 +1057,11 @@
                         <div class="rounded-2xl border-2 border-green-100 bg-green-50/30 p-6">
                             <div class="flex items-center gap-2 mb-5">
                                 <div class="w-7 h-7 rounded-full bg-green-100 flex items-center justify-center"><svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div>
-                                <h3 class="font-bold text-gray-900">With Solvr Labs</h3>
+                                <h3 class="font-bold text-gray-900">With Radar</h3>
                             </div>
                             <div class="space-y-4">
                                 <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">$149/mo replaces a $45K salary. Works 24/7/365, handles 10+ calls simultaneously.</p></div>
-                                <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">Peak season? No problem. AI scales instantly &mdash; book 50+ jobs in a day, zero hold time.</p></div>
+                                <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">Peak season? No problem. Radar scales instantly &mdash; book 50+ jobs in a day, zero hold time.</p></div>
                                 <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">One call triggers updates everywhere &mdash; CRM, calendar, dispatch, invoicing. Zero double entry.</p></div>
                                 <div class="flex gap-3"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-gray-600">Scale without headcount. Add more lines, more integrations &mdash; same flat rate.</p></div>
                             </div>
@@ -1005,7 +1123,7 @@
             <div class="text-center mb-14">
                 <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">Pricing</span>
                 <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-4">Cheaper Than One Missed Job</h2>
-                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Everything to run your front office on autopilot.<br>Setup, training, integrations, and ongoing support.</p>
+                <p class="reveal reveal-delay-2 text-gray-500 text-lg max-w-xl mx-auto">Everything to get your Radar up and running.<br>Setup, training, integrations, and ongoing support.</p>
             </div>
 
             <div class="reveal rounded-2xl shadow-lg overflow-hidden max-w-3xl mx-auto">
@@ -1021,13 +1139,20 @@
                         <span class="text-brand-200 text-lg">/month</span>
                     </div>
                     <p class="text-sm text-brand-100/80">+ one-time setup fee &middot; Exact pricing quoted during your free consultation</p>
+                    <div class="mt-4 mx-auto max-w-sm">
+                        <a href="https://taskline.solvrlabs.com" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-2.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-5 py-2 hover:bg-white/20 transition-all">
+                            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-yellow-400/20 text-yellow-300 text-xs">&#9889;</span>
+                            <span class="text-sm font-semibold text-white"><span class="line-through text-white/50 font-normal">Setup fee</span> &nbsp;Waived for Taskline users</span>
+                            <svg class="w-4 h-4 text-white/60 group-hover:text-white group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </a>
+                    </div>
                 </div>
 
                 <!-- What we offer -->
                 <div class="bg-white border-2 border-t-0 border-brand-600 rounded-b-2xl p-8">
                     <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-5">What we offer</p>
                     <div class="grid sm:grid-cols-2 gap-x-8 gap-y-3 text-sm">
-                        <div class="flex items-center gap-2.5"><svg class="w-4 h-4 text-brand-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-600">AI receptionist, 24/7/365</span></div>
+                        <div class="flex items-center gap-2.5"><svg class="w-4 h-4 text-brand-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-600">Your named AI receptionist, 24/7/365</span></div>
                         <div class="flex items-center gap-2.5"><svg class="w-4 h-4 text-brand-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-600">Phone number setup &amp; call routing</span></div>
                         <div class="flex items-center gap-2.5"><svg class="w-4 h-4 text-brand-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-600">Custom-trained on your business</span></div>
                         <div class="flex items-center gap-2.5"><svg class="w-4 h-4 text-brand-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-600">SMS, email &amp; team notifications</span></div>
@@ -1063,11 +1188,11 @@
             <div class="grid md:grid-cols-2 gap-3">
                 <div class="reveal faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
                     <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">Can callers tell it's AI?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
-                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Most can't. Our AI uses a natural-sounding voice with realistic pacing, pauses, and conversational flow &mdash; powered by ElevenLabs, the industry leader in voice AI. You can even give it a custom name and clone a real voice. During your free consultation, you'll hear it yourself and judge.</p></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Most can't. During onboarding, you name your Radar receptionist &mdash; Emma, Sarah, whatever fits your brand. She answers calls using that name with natural pacing, pauses, and conversational flow powered by ElevenLabs. Callers think they're talking to a real hire, not a bot. During your free consultation, you'll hear her yourself and judge.</p></div>
                 </div>
                 <div class="reveal reveal-delay-1 faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
-                    <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">What if the AI says something wrong?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
-                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Our AI is custom-trained on your business &mdash; your services, pricing, service area, and availability. It doesn't make things up. If a caller asks something outside its training, it takes a message and flags it for your review. You approve the knowledge base before it goes live.</p></div>
+                    <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">What if my Radar says something wrong?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Your Radar receptionist is custom-trained on your business &mdash; your services, pricing, service area, and availability. She doesn't make things up. If a caller asks something outside her training, she takes a message and flags it for your review. You approve the knowledge base before she goes live.</p></div>
                 </div>
                 <div class="reveal reveal-delay-2 faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
                     <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">What software does it integrate with?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
@@ -1075,15 +1200,15 @@
                 </div>
                 <div class="reveal reveal-delay-3 faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
                     <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">What happens after hours or on weekends?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
-                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Our AI answers 24/7/365 &mdash; nights, weekends, holidays. Emergency calls trigger instant alerts to you via Discord, SMS, or webhook. Non-urgent calls get a job created and an appointment booked on your calendar. You wake up to a full schedule, not a pile of voicemails.</p></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Your Radar receptionist answers 24/7/365 &mdash; nights, weekends, holidays. Emergency calls trigger instant alerts to you via Discord, SMS, or webhook. Non-urgent calls get a job created and an appointment booked on your calendar. You wake up to a full schedule, not a pile of voicemails.</p></div>
                 </div>
                 <div class="reveal faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
                     <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">How long does setup take?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
-                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Most businesses are live within 3-5 business days. We handle everything: AI training, software integration, phone routing, and testing. You just answer a few questions about your business and give us access to your tools.</p></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Most businesses are live within 3-5 business days. We handle everything: naming your receptionist, training her on your business, software integration, phone routing, and testing. You just answer a few questions about your business and give us access to your tools.</p></div>
                 </div>
                 <div class="reveal reveal-delay-1 faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
                     <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">Can I still answer calls myself?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
-                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Absolutely. You can set our AI to answer only when you're unavailable &mdash; after hours, during jobs, or when your line is busy. Or let it handle everything so you can focus on the work. It's fully configurable.</p></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Absolutely. You can set Radar to answer only when you're unavailable &mdash; after hours, during jobs, or when your line is busy. Or let her handle everything so you can focus on the work. It's fully configurable.</p></div>
                 </div>
                 <div class="reveal reveal-delay-2 faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
                     <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">What if I want to cancel?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
@@ -1091,15 +1216,15 @@
                 </div>
                 <div class="reveal reveal-delay-3 faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
                     <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">What languages do you support?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
-                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Over 30 languages including English, Spanish, French, German, Portuguese, Hindi, Japanese, Italian, Dutch, Russian, and more. Our AI can auto-detect the caller's language and switch mid-conversation. No separate setup or extra cost.</p></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Over 30 languages including English, Spanish, French, German, Portuguese, Hindi, Japanese, Italian, Dutch, Russian, and more. Radar can auto-detect the caller's language and switch mid-conversation. No separate setup or extra cost.</p></div>
                 </div>
                 <div class="reveal faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
                     <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">How is this different from other AI answering services?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
-                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Most AI phone services are generic platforms &mdash; same bot, different logo. We custom-build your AI on your business data, integrate with your actual tools (not just CRM buzzwords on a landing page), and you talk directly to the person who built it. No call centers, no ticket queues, no "contact sales" to find out what it costs.</p></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">Most AI phone services are generic platforms &mdash; same bot, different logo. With Radar, you get a named receptionist custom-built on your business data, integrated with your actual tools (not just CRM buzzwords on a landing page), and you talk directly to the person who built it. No call centers, no ticket queues, no "contact sales" to find out what it costs.</p></div>
                 </div>
                 <div class="reveal reveal-delay-1 faq-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="this.classList.toggle('open')">
                     <div class="flex items-center justify-between p-5"><span class="font-medium text-brand-900 pr-4 text-sm">Do you offer a free trial?</span><span class="faq-icon text-brand-600 text-lg flex-shrink-0">+</span></div>
-                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">We offer a free consultation with a live demo customized to your business. You'll hear the AI handle a call for your specific trade before committing to anything. No credit card, no obligation. If it's not a fit, you walk away with zero cost.</p></div>
+                    <div class="faq-answer px-5"><p class="text-gray-500 pb-5 text-sm leading-relaxed">We offer a free consultation with a live Radar demo customized to your business. You'll hear your named receptionist handle a call for your specific trade before committing to anything. No credit card, no obligation. If it's not a fit, you walk away with zero cost.</p></div>
                 </div>
             </div>
         </div>
@@ -1115,8 +1240,8 @@
                         <span class="w-1.5 h-1.5 bg-brand-500 rounded-full animate-pulse"></span>
                         Free &mdash; no obligation
                     </div>
-                    <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mb-4 leading-tight">Get a Free Consultation + Live Demo</h2>
-                    <p class="reveal reveal-delay-2 text-gray-500 leading-relaxed mb-8">We'll walk you through a live demo customized for your trade. See exactly how calls get handled, how jobs get created in your software, and how your techs get notified &mdash; all in real time.</p>
+                    <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mb-4 leading-tight">Meet Your Radar &mdash; Free Demo</h2>
+                    <p class="reveal reveal-delay-2 text-gray-500 leading-relaxed mb-8">We'll walk you through a live Radar demo customized for your trade. Name your receptionist, hear her handle a call, and see how jobs get created and techs get notified &mdash; all in real time.</p>
                     <div class="reveal reveal-delay-3 space-y-4">
                         <div class="flex items-start gap-3">
                             <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -1124,7 +1249,7 @@
                         </div>
                         <div class="flex items-start gap-3">
                             <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                            <div><p class="text-sm font-medium text-brand-900">Live AI demo</p><p class="text-xs text-gray-400">Hear the AI handle a call for your specific trade</p></div>
+                            <div><p class="text-sm font-medium text-brand-900">Live Radar demo</p><p class="text-xs text-gray-400">Hear your receptionist handle a call for your trade</p></div>
                         </div>
                         <div class="flex items-start gap-3">
                             <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -1136,7 +1261,7 @@
                 <!-- Form -->
                 <div class="reveal bg-white rounded-2xl border border-gray-100 shadow-lg p-7">
                     <form id="contact-form" action="https://formsubmit.co/jessy@solvrlabs.com" method="POST">
-                        <input type="hidden" name="_subject" value="AI Receptionist — Free Consultation Request">
+                        <input type="hidden" name="_subject" value="Radar — Free Consultation Request">
                         <input type="hidden" name="_captcha" value="false">
                         <input type="text" name="_honey" style="display:none">
                         <div class="space-y-4">
@@ -1175,8 +1300,8 @@
                 <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 border border-white/20 rounded-full text-xs text-brand-100 mb-6">
                     Limited setup slots available this month
                 </div>
-                <h2 class="font-bold text-3xl sm:text-4xl text-white mb-4">Ready to Stop Missing Calls?</h2>
-                <p class="text-brand-200 text-lg max-w-xl mx-auto mb-8">Get a free consultation and live demo customized for your business. See exactly what your callers will experience.</p>
+                <h2 class="font-bold text-3xl sm:text-4xl text-white mb-4">Ready to Get Your Radar?</h2>
+                <p class="text-brand-200 text-lg max-w-xl mx-auto mb-8">Name her, train her, never miss a job again. Get a free demo customized for your trade and hear exactly what your callers will experience.</p>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <a href="#contact" class="inline-flex items-center gap-2 px-7 py-3 bg-white text-brand-600 hover:bg-brand-50 rounded-full font-semibold transition-colors shadow-lg shadow-brand-700/30">
                         Book Free Consultation
@@ -1204,7 +1329,7 @@
                 </div>
                 <div>
                     <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Services</h4>
-                    <ul class="space-y-2"><li><a href="/ai-automation" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Workflow Automation</a></li><li><a href="/ai-receptionist" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Receptionist</a></li><li><a href="/custom-software" class="text-brand-300/50 hover:text-white text-sm transition-colors">Custom Software</a></li></ul>
+                    <ul class="space-y-2"><li><a href="/ai-automation" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Workflow Automation</a></li><li><a href="/radar" class="text-brand-300/50 hover:text-white text-sm transition-colors">Radar</a></li><li><a href="/custom-software" class="text-brand-300/50 hover:text-white text-sm transition-colors">Custom Software</a></li></ul>
                     <h4 class="font-semibold text-sm mb-3 mt-5 uppercase tracking-wider text-brand-300/80">Industries</h4>
                     <ul class="space-y-2"><li><a href="/home-services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home Services</a></li><li><a href="/property-management" class="text-brand-300/50 hover:text-white text-sm transition-colors">Property Management</a></li><li><a href="/cleaning-services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Cleaning Services</a></li><li><a href="/landscaping" class="text-brand-300/50 hover:text-white text-sm transition-colors">Landscaping</a></li></ul>
                 </div>
@@ -1350,7 +1475,7 @@
 
                     const div = document.createElement('div');
                     div.className = `sim-msg flex ${msg.speaker === 'ai' ? 'justify-start' : 'justify-end'}`;
-                    const label = msg.speaker === 'ai' ? 'Emma (AI)' : 'John';
+                    const label = msg.speaker === 'ai' ? 'Emma (Radar)' : 'John';
                     const bubbleColor = msg.speaker === 'ai' ? 'bg-brand-50 text-brand-900' : 'bg-gray-100 text-gray-700';
                     div.innerHTML = `<div class="max-w-[85%]">
                         <p class="text-[10px] ${msg.speaker === 'ai' ? 'text-brand-500' : 'text-gray-400'} mb-1 ${msg.speaker === 'ai' ? '' : 'text-right'}">${label}</p>

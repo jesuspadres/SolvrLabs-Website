@@ -8,7 +8,8 @@
       "mcp__claude_ai_Vercel__deploy_to_vercel",
       "Bash(npx vercel --version)",
       "Bash(npx vercel deploy --prod --yes)",
-      "WebFetch(domain:www.zyratalk.com)"
+      "WebFetch(domain:www.zyratalk.com)",
+      "Bash(xargs sed:*)"
     ]
   }
 }

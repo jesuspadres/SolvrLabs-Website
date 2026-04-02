@@ -1,23 +1,107 @@
 [
   {
+    "slug": "ai-receptionist-copilot-mode-human-and-ai-working-together",
+    "title": "Why We Built Copilot Mode: Human Receptionists + AI, Working Together",
+    "tag": "Build Log",
+    "summary": "Most AI phone systems make you choose: human or AI. Radar's copilot mode gives you both. Here's how it works and why we built it.",
+    "context": "Deep dive into Radar's copilot mode. The problem: some businesses love what AI can do (scheduling, CRM sync, dispatch) but want a human on the phone for the personal touch. Competitors force an either/or choice. Copilot mode puts the human receptionist on the call while Radar works behind the scenes — extracting caller info in real time with confidence scores, surfacing knowledge base answers when callers ask questions, suggesting follow-up questions when data is missing, looking up caller history, and queuing up all integrations (calendar booking, ServiceTitan job creation, Discord alerts, SMS to on-call tech). After the call, the receptionist reviews everything on a dashboard, edits anything the AI got wrong, enables/disables specific integrations, and clicks 'Confirm & Execute' — one click fires everything. No manual data entry, no forgetting to create the job, no sticky notes. Copilot mode costs half the price of full AI mode — a great entry point for businesses not ready to go full AI. And it dramatically boosts receptionist productivity: no more manual data entry, no more forgetting to create the job, no more post-call paperwork. Your receptionist can handle twice the call volume because Radar does all the backend work. This is a massive differentiator against Smith.ai, Ruby, AnswerConnect, and every AI-only platform. Position it as: your receptionist brings the relationship, Radar brings the automation. Link to /radar."
+  },
+  {
+    "slug": "smith-ai-vs-radar-ai-receptionist-for-plumbers",
+    "title": "Smith.ai vs Radar: Which AI Receptionist Is Better for Plumbers?",
+    "tag": "Comparison",
+    "summary": "Smith.ai is a popular virtual receptionist — but it wasn't built for tradespeople. Here's how Radar compares for plumbing businesses.",
+    "context": "Smith.ai is a hybrid human+AI answering service charging $240-700+/mo with per-call overage fees. They're general-purpose — law firms, real estate, etc. Compare directly: Smith.ai takes messages and transfers calls. Radar actually books jobs, dispatches emergencies to on-call techs, creates ServiceTitan/Jobber entries, and handles 30+ languages. Radar is custom-trained on each business — not a script reader. Price comparison: Radar starts at $149/mo flat vs Smith.ai's per-call pricing that adds up fast for busy plumbers. Name Smith.ai in headings for SEO."
+  },
+  {
+    "slug": "ruby-receptionists-alternative-for-service-businesses",
+    "title": "Looking for a Ruby Receptionists Alternative? Meet Radar.",
+    "tag": "Comparison",
+    "summary": "Ruby is great for law firms. But for HVAC, plumbing, and electrical businesses? There's a better option built specifically for you.",
+    "context": "Ruby Receptionists (now just Ruby) charges $235-1640/mo for human receptionists. They're polished but general-purpose and expensive. They don't integrate with field service tools like ServiceTitan or Jobber. They can't dispatch emergencies at 2 AM. They don't book jobs on your calendar automatically. Radar does all of this at $149/mo. The key angle: Ruby is a luxury for white-collar businesses. Radar is purpose-built for blue-collar businesses that need their phone system to actually DO things, not just answer politely. Also mention: Ruby charges per minute which punishes busy businesses. Radar handles simultaneous calls."
+  },
+  {
+    "slug": "best-ai-answering-service-for-hvac-companies",
+    "title": "Best AI Answering Service for HVAC Companies in 2026",
+    "tag": "Opinion",
+    "summary": "HVAC companies get slammed during peak season. Here's what to look for in an AI answering service — and why most of them fall short.",
+    "context": "Listicle-style post targeting 'best AI answering service HVAC' searches. Cover the landscape: AnswerConnect, MAP Communications, PATLive, Dialzara, Goodcall, Smith.ai — and Radar. For each, mention what they do and their key limitation for HVAC specifically. Most answering services just take messages. HVAC needs: emergency triage (no cool vs refrigerant leak), peak season surge handling (50+ calls/day simultaneously), auto-scheduling tune-ups on the calendar, ServiceTitan/Jobber integration. Position Radar as the only one built specifically for trades that actually dispatches and books jobs. End with Radar as the clear pick."
+  },
+  {
+    "slug": "dialzara-vs-radar-ai-phone-systems-compared",
+    "title": "Dialzara vs Radar: AI Phone Systems for Small Businesses Compared",
+    "tag": "Comparison",
+    "summary": "Dialzara is an AI receptionist for small businesses. Radar is an AI receptionist built specifically for tradespeople. Here's how they stack up.",
+    "context": "Dialzara is a newer AI phone platform targeting SMBs broadly. Compare on: industry specificity (Dialzara is generic, Radar is trades-focused), integrations (does Dialzara connect to ServiceTitan/Jobber?), emergency handling (does it triage and dispatch?), customization (Radar lets you name your receptionist and trains on your specific business), pricing, and the human support model (Dialzara is self-serve, Solvr Labs provides a dedicated tech team). Be fair about what Dialzara does well — it's easy to set up and works for basic call answering. But for a plumber who needs emergency dispatch at midnight, Radar is in a different league."
+  },
+  {
+    "slug": "why-answering-services-dont-work-for-trades",
+    "title": "Why Traditional Answering Services Don't Work for Tradespeople",
+    "tag": "Opinion",
+    "summary": "You're paying $300/month for someone to take a message and email it to you. Here's why that model is broken — and what actually works.",
+    "context": "Tear down the traditional answering service model (AnswerConnect, PATLive, MAP Communications): they charge per minute, use scripts, can't access your calendar or CRM, can't dispatch, and create a game of phone tag. Every message is a delay. For a plumber with a burst pipe call at midnight, 'we'll pass along the message' means a lost customer. Compare this to Radar: AI answers instantly, books the job, dispatches the on-call tech, and alerts the owner — all before the caller hangs up. The message-taking model was built for offices, not field service. Position Radar as the modern replacement."
+  },
+  {
+    "slug": "goodcall-vs-radar-ai-receptionist-comparison",
+    "title": "Goodcall vs Radar: Which AI Receptionist Actually Books Jobs?",
+    "tag": "Comparison",
+    "summary": "Goodcall is a popular AI phone agent. But can it dispatch your on-call tech at 2 AM? Let's compare.",
+    "context": "Goodcall is an AI receptionist platform that's gotten traction with SMBs. Compare on: what happens after the call (Goodcall captures leads — but does it create jobs in ServiceTitan?), emergency handling, integration depth with field service tools, customization (naming your AI receptionist, training on your specific services/pricing/service area), simultaneous call handling during peak season, and pricing. Be fair — Goodcall is solid for basic businesses. But for a 5-person electrical company that needs dispatch, emergency triage, and CRM integration, Radar was built for exactly this."
+  },
+  {
+    "slug": "servicetitan-phone-integration-with-ai",
+    "title": "How to Connect an AI Receptionist to ServiceTitan (Without the Headache)",
+    "tag": "Build Log",
+    "summary": "ServiceTitan is the gold standard for field service software. Here's how Radar plugs into it — and why most AI phone systems can't.",
+    "context": "Technical but accessible post about integrating AI phone systems with ServiceTitan. Most AI answering services claim 'CRM integration' but it's just pushing a lead into a spreadsheet. Radar actually creates jobs, looks up customer records, checks technician availability, and dispatches — all through the ServiceTitan API during the call. Walk through the architecture: ElevenLabs voice -> Claude AI reasoning -> ServiceTitan API calls -> real-time dispatch. This is a unique technical moat. People searching 'ServiceTitan AI integration' or 'ServiceTitan phone system' should land here."
+  },
+  {
+    "slug": "jobber-vs-servicetitan-vs-housecall-pro-with-ai",
+    "title": "Jobber vs ServiceTitan vs Housecall Pro: Which Works Best with AI?",
+    "tag": "Comparison",
+    "summary": "All three are great field service platforms. But when you add an AI receptionist, the differences really matter.",
+    "context": "Compare the big three field service platforms from the angle of AI integration. Which has the best API for real-time job creation? Which supports automated dispatch? How does Radar connect to each one? This post targets people already using these platforms who are searching for AI add-ons. Give a fair comparison of each platform's strengths, then show how Radar enhances all three. Position Solvr Labs as platform-agnostic — we integrate with whatever you already use. Mention Taskline as our own job management platform for businesses that want an all-in-one solution."
+  },
+  {
+    "slug": "how-much-does-a-missed-call-cost-your-plumbing-business",
+    "title": "How Much Does a Missed Call Actually Cost Your Plumbing Business?",
+    "tag": "Case Study",
+    "summary": "We ran the numbers. For most plumbers, every missed call is $200-800 walking out the door. Here's the real math.",
+    "context": "Data-driven post targeting 'missed calls plumbing business' and 'how much do missed calls cost'. Use real industry averages: plumbing avg ticket $350, 30-60% of inbound calls go unanswered, 85% of callers who reach voicemail don't leave a message, 75% of callers who can't reach you call a competitor. Walk through the ROI math: 10 missed calls/week × 40% conversion × $350 = $6,020/mo in lost revenue. Compare that to Radar at $149/mo. This is the rational business case. End with a link to the ROI calculator on the Radar page."
+  },
+  {
+    "slug": "rosie-ai-vs-radar-for-home-service-businesses",
+    "title": "Rosie AI vs Radar: AI Receptionists for Home Service Businesses",
+    "tag": "Comparison",
+    "summary": "Rosie AI is making waves in the AI phone space. Here's how it compares to Radar for plumbers, electricians, and HVAC techs.",
+    "context": "Rosie AI is a newer AI receptionist specifically targeting home services — so this is a direct competitor comparison. Compare on: voice quality, integration depth (ServiceTitan, Jobber, Housecall Pro), emergency triage and dispatch capability, custom training on specific business data, pricing model, and the support model (self-serve platform vs dedicated tech team at Solvr Labs). Be fair — acknowledge Rosie is in the same space and doing interesting work. Then differentiate on: Radar's named receptionist concept (callers think they're talking to a real hire), deeper ServiceTitan integration that actually dispatches, and the fact that Solvr Labs custom-configures everything for you rather than making you DIY it."
+  },
+  {
     "slug": "building-in-public-why-i-share-everything",
     "title": "Building in Public: Why I Share Everything",
     "tag": "Opinion",
     "summary": "Most agencies hide their process. I share mine. Here's why transparency is my best marketing strategy.",
-    "context": "Post about the philosophy behind the blog and building in public. As a solo founder, trust is everything. Sharing the actual tools, code approaches, and real results builds credibility faster than any sales page. Talk about how the blog itself is proof of the systems — it's automated, AI-generated from real work, and ships without manual intervention."
+    "context": "Post about the philosophy behind the blog and building in public. As a solo founder, trust is everything. Sharing the actual tools, code approaches, and real results builds credibility faster than any sales page. Talk about how the blog itself is proof of the systems — it's automated, AI-generated from real work, and ships without manual intervention. Mention both Radar and Taskline as products born from this approach."
   },
   {
     "slug": "voice-ai-in-2026-whats-actually-good",
     "title": "Voice AI in 2026: What's Actually Good Now",
     "tag": "Opinion",
     "summary": "Voice AI has improved dramatically. Here's what's production-ready, what's still rough, and what I'm using for client projects.",
-    "context": "Cover the current state of voice AI platforms. Latency has dropped to near-real-time. Voices sound natural. But interruption handling is still tricky, multilingual support varies, and some platforms charge per minute which adds up. Compare from a builder's perspective — what matters for service business phone systems specifically."
+    "context": "Cover the current state of voice AI platforms — ElevenLabs, Play.ht, Deepgram, etc. Latency has dropped to near-real-time. Voices sound natural. But interruption handling is still tricky, multilingual support varies, and some platforms charge per minute. Compare from a builder's perspective. Mention that Radar uses ElevenLabs and why. Position Solvr Labs as having deep expertise in voice AI for service businesses."
+  },
+  {
+    "slug": "zapier-vs-n8n-for-service-business-automation",
+    "title": "Zapier vs n8n: Which Is Better for Service Business Automation?",
+    "tag": "Comparison",
+    "summary": "Zapier is easier. n8n is more powerful. Here's which one makes sense for your service business — and when to skip both.",
+    "context": "Compare Zapier and n8n specifically for service business use cases: call routing, job creation, emergency alerts, calendar booking, CRM syncing. Zapier is great for simple workflows but gets expensive fast ($50-100+/mo) and has limits on complex logic. n8n is self-hosted, free, and handles complex branching — but requires technical setup. The real angle: for most tradespeople, you shouldn't be building automations at all. Radar and Taskline handle the complex stuff out of the box. Position Solvr Labs as the done-for-you alternative to DIY automation."
   },
   {
     "slug": "supabase-for-everything-my-go-to-backend",
     "title": "Supabase for Everything: Why It's My Go-To Backend",
     "tag": "Build Log",
-    "summary": "PostgreSQL, auth, real-time, storage, edge functions — all in one platform. Here's how I use Supabase for client projects and TaskLine.",
-    "context": "Technical but accessible post about why Supabase is the best backend for solo developers and small teams. Row-level security for multi-tenant apps, real-time subscriptions for live dashboards, edge functions for webhooks. Compare to Firebase and raw Postgres setups. Include specific patterns from TaskLine like the proposal storage and feedback loop."
+    "summary": "PostgreSQL, auth, real-time, storage, edge functions — all in one platform. Here's how I use Supabase for client projects and Taskline.",
+    "context": "Technical but accessible post about why Supabase is the best backend for solo developers and small teams. Row-level security for multi-tenant apps, real-time subscriptions for live dashboards, edge functions for webhooks. Compare to Firebase and raw Postgres setups. Include specific patterns from Taskline like the proposal storage and feedback loop. This post shows the technical depth behind Solvr Labs products."
   }
 ]
