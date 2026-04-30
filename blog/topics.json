@@ -1,33 +1,5 @@
 [
   {
-    "slug": "ai-receptionist-copilot-mode-human-and-ai-working-together",
-    "title": "Why We Built Copilot Mode: Human Receptionists + AI, Working Together",
-    "tag": "Build Log",
-    "summary": "Most AI phone systems make you choose: human or AI. Radar's copilot mode gives you both. Here's how it works and why we built it.",
-    "context": "Deep dive into Radar's copilot mode. The problem: some businesses love what AI can do (scheduling, CRM sync, dispatch) but want a human on the phone for the personal touch. Competitors force an either/or choice. Copilot mode puts the human receptionist on the call while Radar works behind the scenes — extracting caller info in real time with confidence scores, surfacing knowledge base answers when callers ask questions, suggesting follow-up questions when data is missing, looking up caller history, and queuing up all integrations (calendar booking, ServiceTitan job creation, Discord alerts, SMS to on-call tech). After the call, the receptionist reviews everything on a dashboard, edits anything the AI got wrong, enables/disables specific integrations, and clicks 'Confirm & Execute' — one click fires everything. No manual data entry, no forgetting to create the job, no sticky notes. Copilot mode costs half the price of full AI mode — a great entry point for businesses not ready to go full AI. And it dramatically boosts receptionist productivity: no more manual data entry, no more forgetting to create the job, no more post-call paperwork. Your receptionist can handle twice the call volume because Radar does all the backend work. This is a massive differentiator against Smith.ai, Ruby, AnswerConnect, and every AI-only platform. Position it as: your receptionist brings the relationship, Radar brings the automation. Link to /radar."
-  },
-  {
-    "slug": "smith-ai-vs-radar-ai-receptionist-for-plumbers",
-    "title": "Smith.ai vs Radar: Which AI Receptionist Is Better for Plumbers?",
-    "tag": "Comparison",
-    "summary": "Smith.ai is a popular virtual receptionist — but it wasn't built for tradespeople. Here's how Radar compares for plumbing businesses.",
-    "context": "Smith.ai is a hybrid human+AI answering service charging $240-700+/mo with per-call overage fees. They're general-purpose — law firms, real estate, etc. Compare directly: Smith.ai takes messages and transfers calls. Radar actually books jobs, dispatches emergencies to on-call techs, creates ServiceTitan/Jobber entries, and handles 30+ languages. Radar is custom-trained on each business — not a script reader. Price comparison: Radar starts at $149/mo flat vs Smith.ai's per-call pricing that adds up fast for busy plumbers. Name Smith.ai in headings for SEO."
-  },
-  {
-    "slug": "ruby-receptionists-alternative-for-service-businesses",
-    "title": "Looking for a Ruby Receptionists Alternative? Meet Radar.",
-    "tag": "Comparison",
-    "summary": "Ruby is great for law firms. But for HVAC, plumbing, and electrical businesses? There's a better option built specifically for you.",
-    "context": "Ruby Receptionists (now just Ruby) charges $235-1640/mo for human receptionists. They're polished but general-purpose and expensive. They don't integrate with field service tools like ServiceTitan or Jobber. They can't dispatch emergencies at 2 AM. They don't book jobs on your calendar automatically. Radar does all of this at $149/mo. The key angle: Ruby is a luxury for white-collar businesses. Radar is purpose-built for blue-collar businesses that need their phone system to actually DO things, not just answer politely. Also mention: Ruby charges per minute which punishes busy businesses. Radar handles simultaneous calls."
-  },
-  {
-    "slug": "best-ai-answering-service-for-hvac-companies",
-    "title": "Best AI Answering Service for HVAC Companies in 2026",
-    "tag": "Opinion",
-    "summary": "HVAC companies get slammed during peak season. Here's what to look for in an AI answering service — and why most of them fall short.",
-    "context": "Listicle-style post targeting 'best AI answering service HVAC' searches. Cover the landscape: AnswerConnect, MAP Communications, PATLive, Dialzara, Goodcall, Smith.ai — and Radar. For each, mention what they do and their key limitation for HVAC specifically. Most answering services just take messages. HVAC needs: emergency triage (no cool vs refrigerant leak), peak season surge handling (50+ calls/day simultaneously), auto-scheduling tune-ups on the calendar, ServiceTitan/Jobber integration. Position Radar as the only one built specifically for trades that actually dispatches and books jobs. End with Radar as the clear pick."
-  },
-  {
     "slug": "dialzara-vs-radar-ai-phone-systems-compared",
     "title": "Dialzara vs Radar: AI Phone Systems for Small Businesses Compared",
     "tag": "Comparison",
