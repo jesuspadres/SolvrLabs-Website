@@ -624,7 +624,7 @@
 
   <!-- ===================== BOOK NOW (Calendly inline embed) ===================== -->
   <section class="py-20 bg-gradient-to-b from-brand-50/40 to-white">
-    <div class="max-w-4xl mx-auto px-6">
+    <div class="max-w-6xl mx-auto px-6">
       <div class="text-center mb-8">
         <h2 class="font-bold text-3xl sm:text-4xl text-brand-900 mb-3">
           <span class="lang-en">Ready when you are.</span>
@@ -638,20 +638,26 @@
 
       <!-- EN: inline Calendly embed -->
       <div class="lang-en">
-        <div class="calendly-inline-widget rounded-2xl overflow-hidden shadow-lg border border-gray-200"
-             data-url="https://calendly.com/jesuspadres/assessment"
-             style="min-width:320px;height:700px;"></div>
+        <div class="calendly-inline-widget rounded-2xl overflow-hidden shadow-lg border border-gray-200 w-full"
+             data-url="https://calendly.com/jesuspadres/assessment?hide_gdpr_banner=1"
+             style="min-width:320px;height:1050px;"></div>
       </div>
 
       <!-- ES: inline Calendly embed -->
       <div class="lang-es">
-        <div class="calendly-inline-widget rounded-2xl overflow-hidden shadow-lg border border-gray-200"
-             data-url="https://calendly.com/jesuspadres/assessment-es"
-             style="min-width:320px;height:700px;"></div>
+        <div class="calendly-inline-widget rounded-2xl overflow-hidden shadow-lg border border-gray-200 w-full"
+             data-url="https://calendly.com/jesuspadres/assessment-es?hide_gdpr_banner=1"
+             style="min-width:320px;height:1050px;"></div>
       </div>
     </div>
   </section>
   <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+  <style>
+    /* Desktop: wider Calendly embeds need more height to avoid internal scroll */
+    @media (min-width: 1024px) {
+      .calendly-inline-widget { height: 750px !important; }
+    }
+  </style>
 
 </main>
 
