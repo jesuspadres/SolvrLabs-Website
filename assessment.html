@@ -157,6 +157,30 @@
         .video-wrap { position: relative; padding-top: 56.25%; height: 0; }
         .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
     </style>
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Free Operations Assessment",
+  "description": "A free 30-minute operations assessment and written report for small businesses in Arizona. No sales pitch. Available in English and Spanish.",
+  "provider": {
+    "@type": "Organization",
+    "name": "Solvr Labs",
+    "url": "https://solvrlabs.com"
+  },
+  "areaServed": {
+    "@type": "State",
+    "name": "Arizona"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "availableLanguage": ["en", "es"]
+}
+    </script>
 </head>
 <body data-lang="en" class="bg-white text-gray-900 overflow-x-hidden">
 
@@ -670,13 +694,30 @@
     </footer>
 
 <script>
-  // Mobile menu
+  // ============================================================
+  // Analytics helper — stub today, swap to real provider later.
+  // ============================================================
+  window.trackEvent = function (name, props) {
+    if (typeof console !== 'undefined' && console.debug) {
+      console.debug('[trackEvent]', name, props || {});
+    }
+    // When Plausible is installed sitewide:
+    //   if (window.plausible) window.plausible(name, { props: props });
+    // When GA4 is installed sitewide:
+    //   if (window.gtag) window.gtag('event', name, props);
+  };
+
+  // ============================================================
+  // Mobile menu (same as index.html)
+  // ============================================================
   document.getElementById('burger').addEventListener('click', function () {
     this.classList.toggle('active');
     document.getElementById('mobile-menu').classList.toggle('hidden');
   });
 
-  // Reveal on scroll
+  // ============================================================
+  // Reveal on scroll (same as index.html)
+  // ============================================================
   var revealObserver = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) entry.target.classList.add('visible');
@@ -685,6 +726,126 @@
   document.querySelectorAll('.reveal').forEach(function (el) {
     revealObserver.observe(el);
   });
+
+  // ============================================================
+  // Language toggle (EN <-> ES)
+  // ============================================================
+  var META = {
+    en: {
+      title: "Free Operations Assessment for AZ Small Businesses | Solvr Labs",
+      desc: "Get a free 30-minute operations assessment and a written report in 48 hours. No sales pitch. Available in English and Spanish across Arizona.",
+      htmlLang: "en",
+      toggleLabel: "En español"
+    },
+    es: {
+      title: "Evaluación Gratuita de Operaciones para Pequeños Negocios en AZ | Solvr Labs",
+      desc: "Recibe una evaluación gratuita de operaciones de 30 minutos y un informe escrito en 48 horas. Sin presión de venta. Disponible en inglés y español en todo Arizona.",
+      htmlLang: "es",
+      toggleLabel: "In English"
+    }
+  };
+
+  function getVimeoPlayers() {
+    var en = document.getElementById('vimeo-en');
+    var es = document.getElementById('vimeo-es');
+    return {
+      en: en && window.Vimeo ? new Vimeo.Player(en) : null,
+      es: es && window.Vimeo ? new Vimeo.Player(es) : null
+    };
+  }
+  var vimeoPlayers = null; // initialized on first use
+
+  function applyLang(lang) {
+    document.body.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', META[lang].htmlLang);
+    document.title = META[lang].title;
+    var descEl = document.querySelector('meta[name="description"]');
+    if (descEl) descEl.setAttribute('content', META[lang].desc);
+
+    // Update URL hash so the choice persists on refresh.
+    if (lang === 'es' && location.hash !== '#es') {
+      history.replaceState(null, '', '#es');
+    } else if (lang === 'en' && location.hash === '#es') {
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+
+    // Pause hidden video, play visible video.
+    if (!vimeoPlayers) vimeoPlayers = getVimeoPlayers();
+    var active = vimeoPlayers[lang];
+    var inactive = vimeoPlayers[lang === 'en' ? 'es' : 'en'];
+    if (inactive) {
+      try { inactive.pause(); } catch (e) { /* ignore */ }
+    }
+    if (active) {
+      try { active.play(); } catch (e) { /* ignore — user gesture may be required */ }
+    }
+  }
+
+  function detectInitialLang() {
+    if (location.hash === '#es') return 'es';
+    if (navigator.language && navigator.language.toLowerCase().indexOf('es') === 0) return 'es';
+    return 'en';
+  }
+
+  document.getElementById('lang-toggle').addEventListener('click', function () {
+    var current = document.body.getAttribute('data-lang') || 'en';
+    var next = current === 'en' ? 'es' : 'en';
+    applyLang(next);
+    window.trackEvent('assessment_click_lang_toggle', { to: next });
+  });
+
+  // Apply detected language on load (the page renders as EN initially via the data-lang attribute set in markup).
+  var initialLang = detectInitialLang();
+  if (initialLang !== 'en') applyLang(initialLang);
+
+  // ============================================================
+  // Click events for buttons / links with data-event attributes.
+  // Adds the current page language as a 'lang' prop so events can be
+  // grouped by language without needing a separate data attribute.
+  // ============================================================
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-event]');
+    if (!el) return;
+    var name = el.getAttribute('data-event');
+    var props = { lang: document.body.getAttribute('data-lang') || 'en' };
+    if (el.hasAttribute('data-event-location')) {
+      props.location = el.getAttribute('data-event-location');
+    }
+    window.trackEvent(name, props);
+  }, true);
+
+  // ============================================================
+  // Vimeo video events (play, 50%, 90%)
+  // ============================================================
+  function wireVimeoEvents() {
+    if (!window.Vimeo) return;
+    if (!vimeoPlayers) vimeoPlayers = getVimeoPlayers();
+    ['en', 'es'].forEach(function (lang) {
+      var player = vimeoPlayers[lang];
+      if (!player) return;
+      var fired50 = false, fired90 = false;
+      player.on('play', function () {
+        window.trackEvent('assessment_video_play', { lang: lang });
+      });
+      player.on('timeupdate', function (data) {
+        if (!data || !data.percent) return;
+        if (!fired50 && data.percent >= 0.5) {
+          fired50 = true;
+          window.trackEvent('assessment_video_50', { lang: lang });
+        }
+        if (!fired90 && data.percent >= 0.9) {
+          fired90 = true;
+          window.trackEvent('assessment_video_90', { lang: lang });
+        }
+      });
+    });
+  }
+  wireVimeoEvents();
+
+  // ============================================================
+  // Page view event
+  // ============================================================
+  window.trackEvent('assessment_page_view', { lang: document.body.getAttribute('data-lang') });
 </script>
 </body>
 </html>
