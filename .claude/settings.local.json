@@ -9,7 +9,9 @@
       "Bash(npx vercel --version)",
       "Bash(npx vercel deploy --prod --yes)",
       "WebFetch(domain:www.zyratalk.com)",
-      "Bash(xargs sed:*)"
+      "Bash(xargs sed:*)",
+      "Skill(superpowers:brainstorming)",
+      "Skill(superpowers:brainstorming:*)"
     ]
   }
 }
