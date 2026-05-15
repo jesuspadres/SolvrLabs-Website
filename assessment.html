@@ -818,7 +818,10 @@
   // Vimeo video events (play, 50%, 90%)
   // ============================================================
   function wireVimeoEvents() {
-    if (!window.Vimeo) return;
+    if (!window.Vimeo) {
+      console.warn('[wireVimeoEvents] Vimeo Player API not loaded — video tracking disabled.');
+      return;
+    }
     if (!vimeoPlayers) vimeoPlayers = getVimeoPlayers();
     ['en', 'es'].forEach(function (lang) {
       var player = vimeoPlayers[lang];
