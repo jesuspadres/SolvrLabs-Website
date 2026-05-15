@@ -240,16 +240,30 @@
     </nav>
 
 <!-- ==========================================================
-     CONFIG — replace these placeholders before going live:
-       VIMEO_ID_EN          numeric Vimeo video ID, English video
-       VIMEO_ID_ES          numeric Vimeo video ID, Spanish video
-       CALENDLY_URL_EN      full URL, e.g. https://calendly.com/jessy-solvr/assessment
-       CALENDLY_URL_ES      full URL, Spanish event
-       PHONE_PHOENIX        E.164 for tel:, e.g. +16025550000
-       PHONE_PHOENIX_LABEL  display, e.g. "(602) 555-0000"
-       PHONE_TUCSON         E.164 for tel:, e.g. +15205550000
-       PHONE_TUCSON_LABEL   display, e.g. "(520) 555-0000"
-       /assets/og-assessment.png  social-share image (1200x630)
+     ░░░  LIVE CONFIG VALUES  ░░░
+     This block is a record of what's currently baked into the
+     markup below. To change a value, do find/replace on the
+     OLD value across this whole file (Ctrl+H in VS Code), or
+     paste a new value after the `=` and ask Claude to "swap
+     in <NAME>".
+
+       VIMEO_ID_EN          =                                         [not set — iframe will 404]
+       VIMEO_ID_ES          =                                         [not set — iframe will 404]
+       CALENDLY_URL_EN      = https://calendly.com/jesuspadres/assessment
+       CALENDLY_URL_ES      = https://calendly.com/jesuspadres/assessment-es
+       PHONE_PHOENIX        =                                         [not set — tel: link will fail]
+       PHONE_PHOENIX_LABEL  =                                         [not set]
+       PHONE_TUCSON         = +15209948449
+       PHONE_TUCSON_LABEL   = (520) 994-8449
+
+     Still missing the social-share image:
+       /assets/og-assessment.png   (1200x630 PNG, video still + text overlay)
+
+     Format hints for future fills:
+       VIMEO_ID_*           numeric only, e.g.  987654321
+       CALENDLY_URL_*       full URL,    e.g.  https://calendly.com/jessy-solvr/assessment
+       PHONE_*              E.164,       e.g.  +16025550000
+       PHONE_*_LABEL        display,     e.g.  (602) 555-0000
      ========================================================== -->
 
 <main class="pt-20">
@@ -300,13 +314,13 @@
       <!-- CTA buttons -->
       <div class="max-w-2xl mx-auto">
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="CALENDLY_URL_EN" target="_blank" rel="noopener noreferrer"
+          <a href="https://calendly.com/jesuspadres/assessment" target="_blank" rel="noopener noreferrer"
              data-event="assessment_click_book_calendly"
              class="lang-en inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-brand-600 hover:bg-brand-700 rounded-full text-white text-base font-semibold transition-colors shadow-md shadow-brand-600/20">
             Book a call with Jessy
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
           </a>
-          <a href="CALENDLY_URL_ES" target="_blank" rel="noopener noreferrer"
+          <a href="https://calendly.com/jesuspadres/assessment-es" target="_blank" rel="noopener noreferrer"
              data-event="assessment_click_book_calendly"
              class="lang-es inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-brand-600 hover:bg-brand-700 rounded-full text-white text-base font-semibold transition-colors shadow-md shadow-brand-600/20">
             Reserva una llamada con Jessy
@@ -322,8 +336,8 @@
           </a>
         </div>
         <p class="text-center text-sm text-gray-400 mt-4">
-          <span class="lang-en">Phoenix line shown above · Tucson: <a href="tel:PHONE_TUCSON" data-event="assessment_click_phone" data-event-location="tucson" class="underline hover:text-brand-600">PHONE_TUCSON_LABEL</a></span>
-          <span class="lang-es">Línea de Phoenix arriba · Tucson: <a href="tel:PHONE_TUCSON" data-event="assessment_click_phone" data-event-location="tucson" class="underline hover:text-brand-600">PHONE_TUCSON_LABEL</a></span>
+          <span class="lang-en">Phoenix line shown above · Tucson: <a href="tel:+15209948449" data-event="assessment_click_phone" data-event-location="tucson" class="underline hover:text-brand-600">(520) 994-8449</a></span>
+          <span class="lang-es">Línea de Phoenix arriba · Tucson: <a href="tel:+15209948449" data-event="assessment_click_phone" data-event-location="tucson" class="underline hover:text-brand-600">(520) 994-8449</a></span>
         </p>
       </div>
     </div>
@@ -435,13 +449,13 @@
               <span><span class="lang-en">Available in English or Spanish</span><span class="lang-es">Disponible en inglés o español</span></span>
             </li>
           </ul>
-          <a href="CALENDLY_URL_EN" target="_blank" rel="noopener noreferrer"
+          <a href="https://calendly.com/jesuspadres/assessment" target="_blank" rel="noopener noreferrer"
              data-event="assessment_click_book_calendly"
              class="lang-en inline-flex items-center justify-center w-full gap-2 px-6 py-3 bg-brand-600 hover:bg-brand-700 rounded-full text-white text-sm font-semibold transition-colors">
             Book a time
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
           </a>
-          <a href="CALENDLY_URL_ES" target="_blank" rel="noopener noreferrer"
+          <a href="https://calendly.com/jesuspadres/assessment-es" target="_blank" rel="noopener noreferrer"
              data-event="assessment_click_book_calendly"
              class="lang-es inline-flex items-center justify-center w-full gap-2 px-6 py-3 bg-brand-600 hover:bg-brand-700 rounded-full text-white text-sm font-semibold transition-colors">
             Reserva un horario
@@ -480,11 +494,11 @@
               <span class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Phoenix</span>
               <span class="text-sm font-semibold text-brand-900">PHONE_PHOENIX_LABEL</span>
             </a>
-            <a href="tel:PHONE_TUCSON"
+            <a href="tel:+15209948449"
                data-event="assessment_click_phone" data-event-location="tucson"
                class="inline-flex flex-col items-center justify-center gap-0.5 px-4 py-3 border border-gray-200 hover:border-brand-300 hover:bg-brand-50 rounded-full transition-colors">
               <span class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Tucson</span>
-              <span class="text-sm font-semibold text-brand-900">PHONE_TUCSON_LABEL</span>
+              <span class="text-sm font-semibold text-brand-900">(520) 994-8449</span>
             </a>
           </div>
         </div>
@@ -634,13 +648,13 @@
         <span class="lang-en">30 minutes with Jessy. A written report in 48 hours. No sales pitch.</span>
         <span class="lang-es">30 minutos con Jessy. Un informe escrito en 48 horas. Sin presión de venta.</span>
       </p>
-      <a href="CALENDLY_URL_EN" target="_blank" rel="noopener noreferrer"
+      <a href="https://calendly.com/jesuspadres/assessment" target="_blank" rel="noopener noreferrer"
          data-event="assessment_click_book_calendly"
          class="lang-en inline-flex items-center gap-2 px-8 py-4 bg-white hover:bg-gray-50 rounded-full text-brand-700 text-base font-semibold transition-colors shadow-md">
         Book your free assessment
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
       </a>
-      <a href="CALENDLY_URL_ES" target="_blank" rel="noopener noreferrer"
+      <a href="https://calendly.com/jesuspadres/assessment-es" target="_blank" rel="noopener noreferrer"
          data-event="assessment_click_book_calendly"
          class="lang-es inline-flex items-center gap-2 px-8 py-4 bg-white hover:bg-gray-50 rounded-full text-brand-700 text-base font-semibold transition-colors shadow-md">
         Reserva tu evaluación gratuita
