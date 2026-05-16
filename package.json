@@ -1,0 +1,16 @@
+{
+  "name": "solvr-labs-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Solvr Labs marketing site (static HTML) + Vercel Functions for inbound webhooks.",
+  "scripts": {
+    "build": "echo \"static site; nothing to build\" && exit 0"
+  },
+  "dependencies": {
+    "resend": "^6.6.0"
+  },
+  "devDependencies": {
+    "@vercel/node": "^3.2.0",
+    "typescript": "^5.4.0"
+  }
+}

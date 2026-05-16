@@ -6,5 +6,7 @@
       "destination": "/radar",
       "permanent": true
     }
-  ]
+  ],
+  "buildCommand": "echo skip",
+  "outputDirectory": "."
 }
