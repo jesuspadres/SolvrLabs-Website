@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { createHmac, timingSafeEqual } from 'node:crypto'
 import { Resend } from 'resend'
+import Retell from 'retell-sdk'
 
 // Solvr Labs — Retell call-ended notification webhook (v0)
 //
@@ -16,21 +16,22 @@ const RETELL_DASHBOARD_CALL_URL = (callId: string) =>
 
 // ----- HMAC verification ------------------------------------------------
 //
-// Retell signs each webhook body with HMAC-SHA256 keyed by the API key
-// itself — there is no separate webhook secret. The signature comes in the
-// `x-retell-signature` header as a hex string. Use timingSafeEqual to avoid
-// leaking comparison-time information.
-function verifyRetellSignature(rawBody: string, signature: string | null, apiKey: string): boolean {
+// Retell signs each webhook body with the API key itself — there is no
+// separate webhook secret. Use the official SDK's `Retell.verify` rather
+// than hand-rolling the HMAC, because the exact scheme (header format,
+// encoding, prefix) is not always documented and changes between SDK
+// versions. In v5.x this is async; do not omit `await` or the call returns
+// a Promise (truthy) and silently fails-open.
+async function verifyRetellSignature(
+  rawBody: string,
+  signature: string | null,
+  apiKey: string,
+): Promise<boolean> {
   if (!signature) return false
-  const expected = createHmac('sha256', apiKey).update(rawBody).digest('hex')
-  // Use Uint8Array views so timingSafeEqual's strict typing (which excludes
-  // SharedArrayBuffer-backed Buffers) is satisfied.
-  const a = new Uint8Array(Buffer.from(expected, 'hex'))
-  const b = new Uint8Array(Buffer.from(signature, 'hex'))
-  if (a.length !== b.length) return false
   try {
-    return timingSafeEqual(a, b)
-  } catch {
+    return await Retell.verify(rawBody, apiKey, signature)
+  } catch (err) {
+    console.error('[retell-webhook] signature verification threw', err)
     return false
   }
 }
@@ -101,7 +102,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const rawBody = await readRawBody(req)
 
   const signature = (req.headers['x-retell-signature'] as string | undefined) ?? null
-  if (!verifyRetellSignature(rawBody, signature, apiKey)) {
+  if (!(await verifyRetellSignature(rawBody, signature, apiKey))) {
     return res.status(401).json({ error: 'invalid_signature' })
   }
 
