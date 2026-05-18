@@ -1,12 +1,5 @@
 [
   {
-    "slug": "goodcall-vs-radar-ai-receptionist-comparison",
-    "title": "Goodcall vs Radar: Which AI Receptionist Actually Books Jobs?",
-    "tag": "Comparison",
-    "summary": "Goodcall is a popular AI phone agent. But can it dispatch your on-call tech at 2 AM? Let's compare.",
-    "context": "Goodcall is an AI receptionist platform that's gotten traction with SMBs. Compare on: what happens after the call (Goodcall captures leads — but does it create jobs in ServiceTitan?), emergency handling, integration depth with field service tools, customization (naming your AI receptionist, training on your specific services/pricing/service area), simultaneous call handling during peak season, and pricing. Be fair — Goodcall is solid for basic businesses. But for a 5-person electrical company that needs dispatch, emergency triage, and CRM integration, Radar was built for exactly this."
-  },
-  {
     "slug": "servicetitan-phone-integration-with-ai",
     "title": "How to Connect an AI Receptionist to ServiceTitan (Without the Headache)",
     "tag": "Build Log",
