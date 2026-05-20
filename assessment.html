@@ -157,7 +157,7 @@
         .video-wrap { position: relative; padding-top: 56.25%; height: 0; }
         .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
     </style>
-    <script src="https://player.vimeo.com/api/player.js"></script>
+    <script src="https://www.youtube.com/iframe_api" async></script>
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -247,8 +247,8 @@
      paste a new value after the `=` and ask Claude to "swap
      in <NAME>".
 
-       VIMEO_ID_EN          =                                         [not set — iframe will 404]
-       VIMEO_ID_ES          =                                         [not set — iframe will 404]
+       YT_ID_EN             = rjicncPgLWo   (https://youtu.be/rjicncPgLWo)
+       YT_ID_ES             = XGXOoHZ8N-U   (https://youtu.be/XGXOoHZ8N-U)
        CALENDLY_URL_EN      = https://calendly.com/jesuspadres/assessment
        CALENDLY_URL_ES      = https://calendly.com/jesuspadres/assessment-es
        PHONE                = +15209948449
@@ -258,7 +258,7 @@
        /assets/og-assessment.png   (1200x630 PNG, video still + text overlay)
 
      Format hints for future fills:
-       VIMEO_ID_*           numeric only, e.g.  987654321
+       YT_ID_*              11-char YouTube ID, e.g.  rjicncPgLWo
        CALENDLY_URL_*       full URL,    e.g.  https://calendly.com/jessy-solvr/assessment
        PHONE                E.164,       e.g.  +15209948449
        PHONE_LABEL          display,     e.g.  (520) 994-8449
@@ -293,17 +293,17 @@
         </p>
       </div>
 
-      <!-- Vimeo embed -->
+      <!-- YouTube embed -->
       <div class="relative max-w-3xl mx-auto mb-10">
         <div class="video-wrap rounded-2xl overflow-hidden shadow-2xl shadow-gray-300/50 border border-gray-200/80 bg-gray-100">
-          <iframe id="vimeo-en" class="lang-en" loading="lazy"
-                  src="https://player.vimeo.com/video/VIMEO_ID_EN?autoplay=0&amp;muted=1&amp;loop=0&amp;controls=1&amp;texttrack=en&amp;dnt=1"
-                  allow="autoplay; fullscreen; picture-in-picture"
+          <iframe id="yt-en" class="lang-en" loading="lazy"
+                  src="https://www.youtube-nocookie.com/embed/rjicncPgLWo?enablejsapi=1&amp;rel=0&amp;modestbranding=1&amp;playsinline=1&amp;cc_load_policy=1&amp;hl=en"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowfullscreen
                   title="Solvr Labs Free Operations Assessment — Introduction"></iframe>
-          <iframe id="vimeo-es" class="lang-es" loading="lazy"
-                  src="https://player.vimeo.com/video/VIMEO_ID_ES?autoplay=0&amp;muted=1&amp;loop=0&amp;controls=1&amp;texttrack=es&amp;dnt=1"
-                  allow="autoplay; fullscreen; picture-in-picture"
+          <iframe id="yt-es" class="lang-es" loading="lazy"
+                  src="https://www.youtube-nocookie.com/embed/XGXOoHZ8N-U?enablejsapi=1&amp;rel=0&amp;modestbranding=1&amp;playsinline=1&amp;cc_load_policy=1&amp;hl=es"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowfullscreen
                   title="Solvr Labs Evaluación Gratuita de Operaciones — Introducción"></iframe>
         </div>
@@ -755,15 +755,11 @@
     }
   };
 
-  function getVimeoPlayers() {
-    var en = document.getElementById('vimeo-en');
-    var es = document.getElementById('vimeo-es');
-    return {
-      en: en && window.Vimeo ? new Vimeo.Player(en) : null,
-      es: es && window.Vimeo ? new Vimeo.Player(es) : null
-    };
-  }
-  var vimeoPlayers = null; // initialized on first use
+  // YouTube IFrame API players. Created in onYouTubeIframeAPIReady (below)
+  // because YT.Player is only defined once the IFrame API script finishes
+  // loading. ytReady is set to true once both players have emitted onReady.
+  var ytPlayers = { en: null, es: null };
+  var ytReady = false;
 
   function applyLang(lang) {
     document.body.setAttribute('data-lang', lang);
@@ -779,15 +775,16 @@
       history.replaceState(null, '', location.pathname + location.search);
     }
 
-    // Pause hidden video, play visible video.
-    if (!vimeoPlayers) vimeoPlayers = getVimeoPlayers();
-    var active = vimeoPlayers[lang];
-    var inactive = vimeoPlayers[lang === 'en' ? 'es' : 'en'];
-    if (inactive) {
-      try { inactive.pause(); } catch (e) { /* ignore */ }
+    // Pause hidden video, play visible video. The API is async, so guard
+    // against calling methods before the players are ready.
+    if (!ytReady) return;
+    var active = ytPlayers[lang];
+    var inactive = ytPlayers[lang === 'en' ? 'es' : 'en'];
+    if (inactive && typeof inactive.pauseVideo === 'function') {
+      try { inactive.pauseVideo(); } catch (e) { /* ignore */ }
     }
-    if (active) {
-      try { active.play(); } catch (e) { /* ignore — user gesture may be required */ }
+    if (active && typeof active.playVideo === 'function') {
+      try { active.playVideo(); } catch (e) { /* ignore — user gesture may be required */ }
     }
   }
 
@@ -825,35 +822,70 @@
   }, true);
 
   // ============================================================
-  // Vimeo video events (play, 50%, 90%)
+  // YouTube IFrame API setup + video events (play, 50%, 90%)
+  //
+  // YouTube emits no native progress event, so we poll getCurrentTime()
+  // once per second per player to detect 50% / 90% milestones.
   // ============================================================
-  function wireVimeoEvents() {
-    if (!window.Vimeo) {
-      console.warn('[wireVimeoEvents] Vimeo Player API not loaded — video tracking disabled.');
-      return;
+  var readyCount = 0;
+
+  function wireYouTubePlayer(lang) {
+    var iframeId = lang === 'en' ? 'yt-en' : 'yt-es';
+    if (!document.getElementById(iframeId)) return null;
+
+    var fired50 = false, fired90 = false, firedPlay = false, pollTimer = null;
+
+    function poll() {
+      var p = ytPlayers[lang];
+      if (!p || typeof p.getCurrentTime !== 'function') return;
+      var t = p.getCurrentTime();
+      var d = p.getDuration();
+      if (!d || d <= 0) return;
+      var pct = t / d;
+      if (!fired50 && pct >= 0.5) {
+        fired50 = true;
+        window.trackEvent('assessment_video_50', { lang: lang });
+      }
+      if (!fired90 && pct >= 0.9) {
+        fired90 = true;
+        window.trackEvent('assessment_video_90', { lang: lang });
+      }
     }
-    if (!vimeoPlayers) vimeoPlayers = getVimeoPlayers();
-    ['en', 'es'].forEach(function (lang) {
-      var player = vimeoPlayers[lang];
-      if (!player) return;
-      var fired50 = false, fired90 = false;
-      player.on('play', function () {
-        window.trackEvent('assessment_video_play', { lang: lang });
-      });
-      player.on('timeupdate', function (data) {
-        if (!data || !data.percent) return;
-        if (!fired50 && data.percent >= 0.5) {
-          fired50 = true;
-          window.trackEvent('assessment_video_50', { lang: lang });
+
+    return new YT.Player(iframeId, {
+      events: {
+        onReady: function () {
+          readyCount++;
+          if (readyCount >= 2) ytReady = true;
+        },
+        onStateChange: function (e) {
+          if (e.data === YT.PlayerState.PLAYING) {
+            if (!firedPlay) {
+              firedPlay = true;
+              window.trackEvent('assessment_video_play', { lang: lang });
+            }
+            if (!pollTimer) pollTimer = setInterval(poll, 1000);
+          } else if (e.data === YT.PlayerState.PAUSED ||
+                     e.data === YT.PlayerState.ENDED) {
+            if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+          }
         }
-        if (!fired90 && data.percent >= 0.9) {
-          fired90 = true;
-          window.trackEvent('assessment_video_90', { lang: lang });
-        }
-      });
+      }
     });
   }
-  wireVimeoEvents();
+
+  window.onYouTubeIframeAPIReady = function () {
+    ytPlayers.en = wireYouTubePlayer('en');
+    ytPlayers.es = wireYouTubePlayer('es');
+  };
+
+  // Fallback: if the IFrame API never loads (CDN blocked, ad blocker), warn
+  // after a generous timeout so the rest of the page still works.
+  setTimeout(function () {
+    if (!window.YT || typeof window.YT.Player !== 'function') {
+      console.warn('[YouTube IFrame API] not loaded — video tracking disabled.');
+    }
+  }, 5000);
 
   // ============================================================
   // Page view event
