@@ -1,12 +1,5 @@
 [
   {
-    "slug": "servicetitan-phone-integration-with-ai",
-    "title": "How to Connect an AI Receptionist to ServiceTitan (Without the Headache)",
-    "tag": "Build Log",
-    "summary": "ServiceTitan is the gold standard for field service software. Here's how Radar plugs into it — and why most AI phone systems can't.",
-    "context": "Technical but accessible post about integrating AI phone systems with ServiceTitan. Most AI answering services claim 'CRM integration' but it's just pushing a lead into a spreadsheet. Radar actually creates jobs, looks up customer records, checks technician availability, and dispatches — all through the ServiceTitan API during the call. Walk through the architecture: ElevenLabs voice -> Claude AI reasoning -> ServiceTitan API calls -> real-time dispatch. This is a unique technical moat. People searching 'ServiceTitan AI integration' or 'ServiceTitan phone system' should land here."
-  },
-  {
     "slug": "jobber-vs-servicetitan-vs-housecall-pro-with-ai",
     "title": "Jobber vs ServiceTitan vs Housecall Pro: Which Works Best with AI?",
     "tag": "Comparison",
