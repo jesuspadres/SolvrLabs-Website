@@ -32,8 +32,8 @@ function callClaude(prompt) {
     }
 
     const body = JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 8000,
+      model: "claude-sonnet-5",
+      max_tokens: 16000,
       messages: [{ role: "user", content: prompt }],
     });
 
@@ -58,7 +58,16 @@ function callClaude(prompt) {
             reject(new Error(parsed.error.message));
             return;
           }
-          resolve(parsed.content[0].text);
+          if (parsed.stop_reason !== "end_turn") {
+            reject(new Error(`Unexpected stop_reason: ${parsed.stop_reason}`));
+            return;
+          }
+          // Response may include thinking blocks — take only the text.
+          const text = parsed.content
+            .filter((b) => b.type === "text")
+            .map((b) => b.text)
+            .join("");
+          resolve(text);
         } catch (e) {
           reject(new Error(`Failed to parse API response: ${data.slice(0, 500)}`));
         }
