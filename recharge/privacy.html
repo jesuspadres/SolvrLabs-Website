@@ -106,7 +106,7 @@
 
 <h2>What we collect</h2>
 <h3>Your account</h3>
-<p>If you sign in with Apple, we store the account identifier Apple gives us. We never receive your Apple ID password. If you use Apple&rsquo;s Hide My Email, we never see your real address. Signing in is optional; it is only needed to sync between devices and to restore your setup after a reinstall.</p>
+<p>If you sign in with Apple, we store the account identifier Apple gives us, plus the <strong>name</strong> and <strong>email address</strong> you choose to share. We use them to identify your account, show which account you are signed in to, and let you get back in after a reinstall. We never receive your Apple ID password. If you use Apple&rsquo;s Hide My Email, we only ever see the private relay address, never your real one. Signing in is optional; it is only needed to sync between devices and to restore your setup after a reinstall.</p>
 <h3>Your batteries</h3>
 <p>The names, emoji, colours, limits, schedules and warning preferences you set. This is what makes your setup appear on your other devices and survive a reinstall.</p>
 <h3>Your sessions</h3>
@@ -118,18 +118,22 @@
 <h3>Your app selection, as a sealed token</h3>
 <p>When you choose which apps a battery covers, iOS does not tell Recharge what you picked. It hands the app a sealed token instead. We store that token, along with a count of how many apps and categories you selected, so your setup can be restored. <strong>We cannot open that token, and neither can anyone else.</strong> Only Apple&rsquo;s system can, and only on the device that created it. So we know <em>how many</em> apps a battery covers, but not <em>which</em>.</p>
 
+<h3>Diagnostics from Apple</h3>
+<p>Recharge does not include any crash-reporting or analytics software of its own. If you have chosen to share iPhone analytics with app developers in iOS Settings, Apple may give us anonymous, aggregated crash and performance reports through App Store Connect. That data comes from Apple, is not tied to your account, and we cannot identify you from it.</p>
+
 <h2>What we do not collect</h2>
 <ul>
 <li>The names of the apps you limit</li>
 <li>The contents of any app you use, or anything you type, see or do inside them</li>
 <li>Your Screen Time reports or per-app usage totals</li>
+<li>Third-party analytics, crash-reporting or advertising data</li>
 <li>Your location, contacts, photos, calendar, health data or files</li>
 <li>Any advertising identifier</li>
 </ul>
 <p>Recharge does not show the App Tracking Transparency prompt because it does not track you.</p>
 
 <h2>How your data is used</h2>
-<p>Only to run the features you can see: syncing your setup across devices, restoring it after a reinstall, showing your history and progress, delivering the notifications and Live Activities you enabled, and notifying an accountability partner if you set one up. We do not use your data to build advertising profiles, and we do not sell it or share it with third parties for their own purposes.</p>
+<p>Only to run the features you can see: syncing your setup across devices, restoring it after a reinstall, showing your history and progress (your own streaks, goals and yearly Wrap), delivering the notifications and Live Activities you enabled, and notifying an accountability partner if you set one up. We do not use your data to build advertising profiles, and we do not sell it or share it with third parties for their own purposes.</p>
 
 <h2>Where your data is stored</h2>
 <p>On infrastructure provided by <strong>Supabase</strong>, hosted in the United States, and by <strong>Apple</strong> for push notification delivery. Both act as processors on our behalf. Data is encrypted in transit, and access is restricted so that your rows can only be read by your own account.</p>
