@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Use - Recharge</title>
+    <meta name="description" content="Terms of Use for the Recharge iPhone app, including Recharge Plus subscription terms.">
+    <link rel="canonical" href="https://solvrlabs.com/recharge/terms">
+    <meta property="og:title" content="Terms of Use - Recharge">
+    <meta property="og:description" content="Terms of Use for the Recharge iPhone app, including Recharge Plus subscription terms.">
+    <meta property="og:image" content="https://solvrlabs.com/assets/recharge-icon.png">
+    <link rel="icon" type="image/png" href="/assets/favicon-recharge.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#f0f5ff',100:'#e1ebff',200:'#c8d8fe',300:'#a3bffc',400:'#7da0f8',500:'#5a7de6',600:'#4664d6',700:'#3a53bd',800:'#33469a',900:'#2c3a7c',950:'#1d264e' },
+                        gray: { 50:'#f9fafb',100:'#f2f3f6',200:'#e5e7eb',300:'#d1d5db',400:'#9ca3af',500:'#6b7280',600:'#4b5563',700:'#374151',800:'#1f2937',900:'#1d1e20' },
+                        charge: { 400:'#4ade80', 500:'#34C759', 600:'#28a745' },
+                    },
+                    fontFamily: { sans: ['"DM Sans"','system-ui','sans-serif'], display: ['"DM Sans"','system-ui','sans-serif'] },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+        html { overflow-x: clip; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f2f3f6; } ::-webkit-scrollbar-thumb { background: #5a7de6; border-radius: 3px; }
+        .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; }
+        .burger span { display:block; width:22px; height:2px; background:#2c3a7c; transition:all 0.3s ease; }
+        .burger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity:0; }
+        .burger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+        .faq-answer { max-height:0; overflow:hidden; transition:max-height 0.4s ease-out; }
+        .faq-item.open .faq-answer { max-height:400px; }
+        .faq-item.open .faq-icon { transform:rotate(45deg); }
+        .faq-icon { transition:transform 0.3s ease; }
+        .legal h2 { font-size:1.35rem; font-weight:700; color:#2c3a7c; margin:2.25rem 0 0.75rem; }
+        .legal h3 { font-size:1.05rem; font-weight:600; color:#1d1e20; margin:1.5rem 0 0.5rem; }
+        .legal p { color:#4b5563; line-height:1.75; margin:0.75rem 0; }
+        .legal ul { list-style:disc; padding-left:1.4rem; margin:0.75rem 0; color:#4b5563; line-height:1.75; }
+        .legal li { margin:0.35rem 0; }
+        .legal a { color:#4664d6; text-decoration:underline; text-underline-offset:2px; }
+        .legal strong { color:#1d1e20; }
+        .battery-bar { background:linear-gradient(90deg,#34C759,#4ade80); }
+    </style>
+</head>
+<body class="bg-white text-gray-900 overflow-x-hidden">
+
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <a href="/recharge" class="flex items-center gap-3 py-3.5">
+                    <img src="/assets/recharge-icon.png" alt="Recharge" class="h-9 w-9 rounded-[10px] shadow-sm">
+                    <span class="font-bold text-xl text-brand-900">Recharge</span>
+                </a>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="/recharge#features" class="text-base font-medium text-gray-500 hover:text-brand-600 transition-colors">Features</a>
+                    <a href="/recharge#how" class="text-base font-medium text-gray-500 hover:text-brand-600 transition-colors">How it works</a>
+                    <a href="/recharge#faq" class="text-base font-medium text-gray-500 hover:text-brand-600 transition-colors">FAQ</a>
+                    <a href="/recharge/support" class="text-base font-medium text-gray-500 hover:text-brand-600 transition-colors">Support</a>
+                    <a href="/" class="text-sm font-medium text-gray-400 hover:text-brand-600 transition-colors">Solvr Labs &rarr;</a>
+                </div>
+                <button id="burger" class="burger md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
+            <div class="px-6 py-4 space-y-1">
+                <a href="/recharge#features" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Features</a>
+                <a href="/recharge#how" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">How it works</a>
+                <a href="/recharge#faq" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">FAQ</a>
+                <a href="/recharge/support" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Support</a>
+                <a href="/" class="block px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50">Solvr Labs &rarr;</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-32 pb-12 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <span class="text-sm font-semibold text-brand-600 uppercase tracking-wider">Legal</span>
+            <h1 class="font-bold text-4xl sm:text-5xl text-brand-900 mt-3 mb-4">Terms of Use</h1>
+            <p class="text-gray-500">The rules for using Recharge, including subscriptions.</p>
+        </div>
+    </section>
+    <main class="py-12 bg-white">
+        <div class="max-w-3xl mx-auto px-6 legal">
+
+<p><strong>Last updated: September 26, 2026</strong></p>
+<p>These terms govern your use of Recharge, an iOS app made by Solvr Labs, LLC (&ldquo;Solvr Labs&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;). By downloading or using Recharge you agree to them. If you do not agree, do not use the app.</p>
+
+<h2>1. The app</h2>
+<p>Recharge lets you group apps into &ldquo;batteries&rdquo;. A battery drains while you use its apps and recharges while you are away. At 0% the apps are shielded using Apple&rsquo;s Screen Time technology. Recharge is a self-management tool: you choose what to limit, and you can change or remove your limits.</p>
+<p>These terms sit alongside Apple&rsquo;s standard Licensed Application End User License Agreement (the &ldquo;Apple EULA&rdquo;). If they conflict, the Apple EULA controls for anything it covers.</p>
+
+<h2>2. Screen Time permission</h2>
+<p>Recharge needs your permission to use Apple&rsquo;s Screen Time (Family Controls) features. You can revoke it at any time in iOS Settings, after which Recharge can no longer shield your apps. iOS, not Recharge, decides what a shield can and cannot do.</p>
+
+<h2>3. Not a guarantee</h2>
+<ul>
+<li>Recharge is <strong>not</strong> a security product, a medical device, or a substitute for professional help. It is not designed to treat or diagnose any condition.</li>
+<li>Limits can be bypassed &mdash; for example by removing the app, revoking permission, or using the emergency unlock you set up. Recharge does not promise that an app will always be shielded.</li>
+<li>Timing depends on iOS delivering events to the app. Delays, gaps and rounding can occur, and battery levels may differ slightly from your real usage.</li>
+<li>Do not rely on Recharge to block access to anything in an emergency or where safety is at stake.</li>
+</ul>
+
+<h2>4. Accounts</h2>
+<p>You can use Recharge without an account. If you sign in with Apple to sync, you are responsible for activity on your account. You can delete your account at any time from within the app (see our <a href="/recharge/privacy">Privacy Policy</a>).</p>
+
+<h2>5. Recharge Plus, billing and renewal</h2>
+<p>Recharge is free to download and includes a free tier. <strong>Recharge Plus</strong> is an optional paid upgrade that unlocks additional features.</p>
+<ul>
+<li>Plus is sold as an auto-renewing subscription through the Apple App Store. The price and billing period are shown in the app before you subscribe.</li>
+<li>Payment is charged to your Apple ID account at confirmation of purchase.</li>
+<li>Your subscription renews automatically unless you cancel at least 24 hours before the end of the current period. Your account is charged for renewal within 24 hours before the period ends.</li>
+<li>You can manage or cancel your subscription in your Apple ID account settings (Settings &rarr; your name &rarr; Subscriptions). Deleting the app does not cancel it.</li>
+<li>Any unused portion of a free trial, if offered, is forfeited when you buy a subscription.</li>
+<li>Refunds are handled by Apple under its own policies; request one at <a href="https://reportaproblem.apple.com" rel="noopener">reportaproblem.apple.com</a>. We cannot issue refunds for App Store purchases directly.</li>
+<li>Use <strong>Restore purchases</strong> in Settings to recover Plus on a new device.</li>
+</ul>
+<p>We may change prices or features of Plus. Price changes for existing subscribers follow Apple&rsquo;s rules and, where required, your consent.</p>
+
+<h2>6. Acceptable use</h2>
+<p>Do not reverse engineer, decompile or attempt to extract source code from the app except where the law allows; interfere with our servers or other users; use the accountability-partner feature to harass anyone; or use the app to break the law.</p>
+
+<h2>7. Intellectual property</h2>
+<p>Recharge, its name, icon, design and code belong to Solvr Labs and are protected by copyright and trademark law. We grant you a limited, personal, non-transferable, revocable licence to use the app on Apple devices you own or control. See our <a href="/recharge/copyright">Copyright page</a> for more, including how to report an infringement.</p>
+
+<h2>8. Feedback</h2>
+<p>If you send us ideas or suggestions, we may use them without obligation to you.</p>
+
+<h2>9. Disclaimer of warranties</h2>
+<p>To the fullest extent permitted by law, Recharge is provided &ldquo;as is&rdquo; and &ldquo;as available&rdquo;, without warranties of any kind, express or implied, including merchantability, fitness for a particular purpose and non-infringement. We do not warrant that the app will be uninterrupted or error-free.</p>
+
+<h2>10. Limitation of liability</h2>
+<p>To the fullest extent permitted by law, Solvr Labs will not be liable for any indirect, incidental, special, consequential or punitive damages, or for lost profits, lost data or lost opportunity, arising from your use of Recharge. Our total liability for any claim relating to the app is limited to the greater of the amount you paid us through the App Store in the 12 months before the claim, or US$50. Some places do not allow these limits, so they may not apply to you.</p>
+
+<h2>11. Ending</h2>
+<p>You can stop using Recharge at any time by deleting the app. We may suspend or end access if you breach these terms. Sections that by their nature should survive (intellectual property, disclaimers, limits of liability, governing law) do.</p>
+
+<h2>12. Changes</h2>
+<p>We may update these terms. We will change the date above and, for material changes, tell you in the app. Continuing to use Recharge after a change means you accept it.</p>
+
+<h2>13. Governing law</h2>
+<p>These terms are governed by the laws of the State of Arizona, USA, without regard to conflict-of-law rules, except where your local consumer law requires otherwise. Courts located in Arizona have jurisdiction, again subject to any mandatory rights you have where you live.</p>
+
+<h2>14. Contact</h2>
+<p>Solvr Labs, LLC &mdash; <a href="mailto:jessy@solvrlabs.com">jessy@solvrlabs.com</a></p>
+
+        </div>
+    </main>
+
+    <footer class="bg-brand-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-14">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <a href="/recharge" class="inline-flex items-center gap-3 mb-4"><img src="/assets/recharge-icon.png" alt="Recharge" class="h-10 w-10 rounded-[11px]"><span class="font-bold text-xl">Recharge</span></a>
+                    <p class="text-brand-300/60 text-sm leading-relaxed max-w-xs">Screen Time, as a battery. Made by <a href="/" class="underline underline-offset-2 hover:text-white">Solvr Labs</a>.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">App</h4>
+                    <ul class="space-y-2"><li><a href="/recharge" class="text-brand-300/50 hover:text-white text-sm transition-colors">Overview</a></li><li><a href="/recharge#faq" class="text-brand-300/50 hover:text-white text-sm transition-colors">FAQ</a></li><li><a href="/recharge/support" class="text-brand-300/50 hover:text-white text-sm transition-colors">Support</a></li></ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Legal</h4>
+                    <ul class="space-y-2"><li><a href="/recharge/privacy" class="text-brand-300/50 hover:text-white text-sm transition-colors">Privacy Policy</a></li><li><a href="/recharge/terms" class="text-brand-300/50 hover:text-white text-sm transition-colors">Terms of Use</a></li><li><a href="/recharge/copyright" class="text-brand-300/50 hover:text-white text-sm transition-colors">Copyright</a></li></ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-800 mt-10 pt-6 text-center text-brand-300/40 text-xs">&copy; 2026 Solvr Labs, LLC. All rights reserved. Recharge is a trademark of Solvr Labs, LLC. Apple, iPhone, Screen Time and App Store are trademarks of Apple Inc.</div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('burger').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('mobile-menu').classList.toggle('hidden'); });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        document.querySelectorAll('.faq-item button').forEach(b => b.addEventListener('click', () => b.parentElement.classList.toggle('open')));
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

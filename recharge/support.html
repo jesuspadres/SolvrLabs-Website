@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - Recharge</title>
+    <meta name="description" content="Get help with Recharge: shields, Live Activities, sync, Plus subscriptions, refunds and deleting your account.">
+    <link rel="canonical" href="https://solvrlabs.com/recharge/support">
+    <meta property="og:title" content="Support - Recharge">
+    <meta property="og:description" content="Get help with Recharge: shields, Live Activities, sync, Plus subscriptions, refunds and deleting your account.">
+    <meta property="og:image" content="https://solvrlabs.com/assets/recharge-icon.png">
+    <link rel="icon" type="image/png" href="/assets/favicon-recharge.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#f0f5ff',100:'#e1ebff',200:'#c8d8fe',300:'#a3bffc',400:'#7da0f8',500:'#5a7de6',600:'#4664d6',700:'#3a53bd',800:'#33469a',900:'#2c3a7c',950:'#1d264e' },
+                        gray: { 50:'#f9fafb',100:'#f2f3f6',200:'#e5e7eb',300:'#d1d5db',400:'#9ca3af',500:'#6b7280',600:'#4b5563',700:'#374151',800:'#1f2937',900:'#1d1e20' },
+                        charge: { 400:'#4ade80', 500:'#34C759', 600:'#28a745' },
+                    },
+                    fontFamily: { sans: ['"DM Sans"','system-ui','sans-serif'], display: ['"DM Sans"','system-ui','sans-serif'] },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+        html { overflow-x: clip; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f2f3f6; } ::-webkit-scrollbar-thumb { background: #5a7de6; border-radius: 3px; }
+        .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; }
+        .burger span { display:block; width:22px; height:2px; background:#2c3a7c; transition:all 0.3s ease; }
+        .burger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity:0; }
+        .burger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+        .faq-answer { max-height:0; overflow:hidden; transition:max-height 0.4s ease-out; }
+        .faq-item.open .faq-answer { max-height:400px; }
+        .faq-item.open .faq-icon { transform:rotate(45deg); }
+        .faq-icon { transition:transform 0.3s ease; }
+        .legal h2 { font-size:1.35rem; font-weight:700; color:#2c3a7c; margin:2.25rem 0 0.75rem; }
+        .legal h3 { font-size:1.05rem; font-weight:600; color:#1d1e20; margin:1.5rem 0 0.5rem; }
+        .legal p { color:#4b5563; line-height:1.75; margin:0.75rem 0; }
+        .legal ul { list-style:disc; padding-left:1.4rem; margin:0.75rem 0; color:#4b5563; line-height:1.75; }
+        .legal li { margin:0.35rem 0; }
+        .legal a { color:#4664d6; text-decoration:underline; text-underline-offset:2px; }
+        .legal strong { color:#1d1e20; }
+        .battery-bar { background:linear-gradient(90deg,#34C759,#4ade80); }
+    </style>
+</head>
+<body class="bg-white text-gray-900 overflow-x-hidden">
+
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <a href="/recharge" class="flex items-center gap-3 py-3.5">
+                    <img src="/assets/recharge-icon.png" alt="Recharge" class="h-9 w-9 rounded-[10px] shadow-sm">
+                    <span class="font-bold text-xl text-brand-900">Recharge</span>
+                </a>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="/recharge#features" class="text-base font-medium text-gray-500 hover:text-brand-600 transition-colors">Features</a>
+                    <a href="/recharge#how" class="text-base font-medium text-gray-500 hover:text-brand-600 transition-colors">How it works</a>
+                    <a href="/recharge#faq" class="text-base font-medium text-gray-500 hover:text-brand-600 transition-colors">FAQ</a>
+                    <a href="/recharge/support" class="text-base font-medium text-gray-500 hover:text-brand-600 transition-colors">Support</a>
+                    <a href="/" class="text-sm font-medium text-gray-400 hover:text-brand-600 transition-colors">Solvr Labs &rarr;</a>
+                </div>
+                <button id="burger" class="burger md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
+            <div class="px-6 py-4 space-y-1">
+                <a href="/recharge#features" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Features</a>
+                <a href="/recharge#how" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">How it works</a>
+                <a href="/recharge#faq" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">FAQ</a>
+                <a href="/recharge/support" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Support</a>
+                <a href="/" class="block px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50">Solvr Labs &rarr;</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-32 pb-14 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6 text-center">
+            <span class="text-sm font-semibold text-brand-600 uppercase tracking-wider">Support</span>
+            <h1 class="font-bold text-4xl sm:text-5xl text-brand-900 mt-3 mb-4">How can we help?</h1>
+            <p class="text-gray-500 text-lg leading-relaxed">Most answers are below. If yours isn&rsquo;t, email us &mdash; a real person replies, usually within one business day.</p>
+            <a href="mailto:jessy@solvrlabs.com?subject=Recharge%20support" class="inline-flex mt-7 px-7 py-3 text-base font-semibold rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-colors shadow-sm">Email jessy@solvrlabs.com</a>
+        </div>
+    </section>
+
+    <section class="py-16 bg-white">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="font-bold text-2xl text-brand-900 mb-6">Common questions</h2>
+            <div class="space-y-3">
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">An app is shielded and I need it right now.</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">Open the shield and use the emergency unlock. It costs whatever you chose under <strong>Settings &rarr; Emergency unlock &rarr; Default cost</strong> (for example a countdown before access returns). You can also wait: batteries recharge while you are away from their apps.</p></div>
+                </div>
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">The shield doesn&rsquo;t show up, or an app isn&rsquo;t blocked at 0%.</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">Check that Screen Time permission is still granted (iOS Settings &rarr; Screen Time &rarr; Apps with Screen Time Access &rarr; Recharge), that the battery has apps chosen under <strong>Choose apps</strong>, and that Low Power Mode or a Focus isn&rsquo;t delaying background work. If you reinstalled or changed devices, re-choose the apps: iOS only lets a selection be re-applied on the device that made it.</p></div>
+                </div>
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">The Live Activity or Start button doesn&rsquo;t appear.</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">Live Activities need to be on in iOS Settings &rarr; Recharge (and Face ID &amp; Passcode &rarr; Live Activities if you want them on the Lock Screen). Notifications must be allowed for the Start alert. iOS also limits how many Live Activities an app may start in a short window.</p></div>
+                </div>
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">Why didn&rsquo;t my battery drain by exactly what I used?</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">iOS reports usage to apps in batches and sometimes late. Recharge bills the measured time between reports, so levels can lag a little and catch up. It is a budget, not a stopwatch.</p></div>
+                </div>
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">My apps didn&rsquo;t sync to my other device.</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">Your batteries, schedules and history sync when you are signed in with the same Apple ID. The list of apps in each battery does not: iOS makes that selection private to the device, so choose the apps once on each device.</p></div>
+                </div>
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">How do I restore Plus after reinstalling or on a new phone?</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">Go to <strong>Settings &rarr; Restore purchases</strong>. Make sure you are signed in to the same Apple ID that bought it.</p></div>
+                </div>
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">How do I cancel Plus?</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">Subscriptions are managed by Apple, not by us. On your iPhone open <strong>Settings &rarr; your name &rarr; Subscriptions &rarr; Recharge</strong> and tap Cancel. Deleting the app does not cancel it.</p></div>
+                </div>
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">How do I get a refund?</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">Refunds for App Store purchases are handled by Apple. Visit <a href="https://reportaproblem.apple.com" class="text-brand-600 underline" rel="noopener">reportaproblem.apple.com</a> and choose the Recharge purchase.</p></div>
+                </div>
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">How do I delete my account and data?</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">In the app: <strong>Settings &rarr; Account &amp; sync &rarr; Delete my account</strong>. This removes your synced batteries, history and settings and cannot be undone. Can&rsquo;t open the app? Email us from your Apple ID address and we&rsquo;ll do it for you.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-brand-50/30 border-t border-gray-100">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="font-bold text-2xl text-brand-900 mb-3">When you write to us</h2>
+            <p class="text-gray-500 leading-relaxed mb-4">A few details get you an answer faster:</p>
+            <ul class="list-disc pl-6 text-gray-600 leading-relaxed space-y-1.5">
+                <li>Your iPhone model and iOS version (Settings &rarr; General &rarr; About).</li>
+                <li>What you expected, and what happened instead.</li>
+                <li>Which battery it happened on, and roughly when.</li>
+                <li>A screenshot if you have one. Please don&rsquo;t send passwords or personal information.</li>
+            </ul>
+            <div class="grid sm:grid-cols-3 gap-4 mt-10">
+                <a href="/recharge/privacy" class="block rounded-2xl bg-white border border-gray-200 px-5 py-4 hover:border-brand-300 transition-colors"><p class="font-semibold text-brand-900">Privacy Policy</p><p class="text-sm text-gray-400">What we collect and don&rsquo;t</p></a>
+                <a href="/recharge/terms" class="block rounded-2xl bg-white border border-gray-200 px-5 py-4 hover:border-brand-300 transition-colors"><p class="font-semibold text-brand-900">Terms of Use</p><p class="text-sm text-gray-400">Including subscriptions</p></a>
+                <a href="/recharge/copyright" class="block rounded-2xl bg-white border border-gray-200 px-5 py-4 hover:border-brand-300 transition-colors"><p class="font-semibold text-brand-900">Copyright</p><p class="text-sm text-gray-400">Ownership &amp; notices</p></a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-brand-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-14">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <a href="/recharge" class="inline-flex items-center gap-3 mb-4"><img src="/assets/recharge-icon.png" alt="Recharge" class="h-10 w-10 rounded-[11px]"><span class="font-bold text-xl">Recharge</span></a>
+                    <p class="text-brand-300/60 text-sm leading-relaxed max-w-xs">Screen Time, as a battery. Made by <a href="/" class="underline underline-offset-2 hover:text-white">Solvr Labs</a>.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">App</h4>
+                    <ul class="space-y-2"><li><a href="/recharge" class="text-brand-300/50 hover:text-white text-sm transition-colors">Overview</a></li><li><a href="/recharge#faq" class="text-brand-300/50 hover:text-white text-sm transition-colors">FAQ</a></li><li><a href="/recharge/support" class="text-brand-300/50 hover:text-white text-sm transition-colors">Support</a></li></ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Legal</h4>
+                    <ul class="space-y-2"><li><a href="/recharge/privacy" class="text-brand-300/50 hover:text-white text-sm transition-colors">Privacy Policy</a></li><li><a href="/recharge/terms" class="text-brand-300/50 hover:text-white text-sm transition-colors">Terms of Use</a></li><li><a href="/recharge/copyright" class="text-brand-300/50 hover:text-white text-sm transition-colors">Copyright</a></li></ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-800 mt-10 pt-6 text-center text-brand-300/40 text-xs">&copy; 2026 Solvr Labs, LLC. All rights reserved. Recharge is a trademark of Solvr Labs, LLC. Apple, iPhone, Screen Time and App Store are trademarks of Apple Inc.</div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('burger').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('mobile-menu').classList.toggle('hidden'); });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        document.querySelectorAll('.faq-item button').forEach(b => b.addEventListener('click', () => b.parentElement.classList.toggle('open')));
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

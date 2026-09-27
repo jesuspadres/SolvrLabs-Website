@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recharge: Screen Time as a battery - iPhone app</title>
+    <meta name="description" content="Recharge turns Screen Time into a battery. Group your apps, watch them drain as you use them and recharge while you're away. Not a blocker: a budget.">
+    <link rel="canonical" href="https://solvrlabs.com/recharge">
+    <meta property="og:title" content="Recharge: Screen Time as a battery - iPhone app">
+    <meta property="og:description" content="Recharge turns Screen Time into a battery. Group your apps, watch them drain as you use them and recharge while you're away. Not a blocker: a budget.">
+    <meta property="og:image" content="https://solvrlabs.com/assets/recharge-icon.png">
+    <link rel="icon" type="image/png" href="/assets/favicon-recharge.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#f0f5ff',100:'#e1ebff',200:'#c8d8fe',300:'#a3bffc',400:'#7da0f8',500:'#5a7de6',600:'#4664d6',700:'#3a53bd',800:'#33469a',900:'#2c3a7c',950:'#1d264e' },
+                        gray: { 50:'#f9fafb',100:'#f2f3f6',200:'#e5e7eb',300:'#d1d5db',400:'#9ca3af',500:'#6b7280',600:'#4b5563',700:'#374151',800:'#1f2937',900:'#1d1e20' },
+                        charge: { 400:'#4ade80', 500:'#34C759', 600:'#28a745' },
+                    },
+                    fontFamily: { sans: ['"DM Sans"','system-ui','sans-serif'], display: ['"DM Sans"','system-ui','sans-serif'] },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+        html { overflow-x: clip; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f2f3f6; } ::-webkit-scrollbar-thumb { background: #5a7de6; border-radius: 3px; }
+        .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; }
+        .burger span { display:block; width:22px; height:2px; background:#2c3a7c; transition:all 0.3s ease; }
+        .burger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity:0; }
+        .burger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+        .faq-answer { max-height:0; overflow:hidden; transition:max-height 0.4s ease-out; }
+        .faq-item.open .faq-answer { max-height:400px; }
+        .faq-item.open .faq-icon { transform:rotate(45deg); }
+        .faq-icon { transition:transform 0.3s ease; }
+        .legal h2 { font-size:1.35rem; font-weight:700; color:#2c3a7c; margin:2.25rem 0 0.75rem; }
+        .legal h3 { font-size:1.05rem; font-weight:600; color:#1d1e20; margin:1.5rem 0 0.5rem; }
+        .legal p { color:#4b5563; line-height:1.75; margin:0.75rem 0; }
+        .legal ul { list-style:disc; padding-left:1.4rem; margin:0.75rem 0; color:#4b5563; line-height:1.75; }
+        .legal li { margin:0.35rem 0; }
+        .legal a { color:#4664d6; text-decoration:underline; text-underline-offset:2px; }
+        .legal strong { color:#1d1e20; }
+        .battery-bar { background:linear-gradient(90deg,#34C759,#4ade80); }
+    </style>
+</head>
+<body class="bg-white text-gray-900 overflow-x-hidden">
+
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <a href="/recharge" class="flex items-center gap-3 py-3.5">
+                    <img src="/assets/recharge-icon.png" alt="Recharge" class="h-9 w-9 rounded-[10px] shadow-sm">
+                    <span class="font-bold text-xl text-brand-900">Recharge</span>
+                </a>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="/recharge#features" class="text-base font-medium text-gray-500 hover:text-brand-600 transition-colors">Features</a>
+                    <a href="/recharge#how" class="text-base font-medium text-gray-500 hover:text-brand-600 transition-colors">How it works</a>
+                    <a href="/recharge#faq" class="text-base font-medium text-gray-500 hover:text-brand-600 transition-colors">FAQ</a>
+                    <a href="/recharge/support" class="text-base font-medium text-gray-500 hover:text-brand-600 transition-colors">Support</a>
+                    <a href="/" class="text-sm font-medium text-gray-400 hover:text-brand-600 transition-colors">Solvr Labs &rarr;</a>
+                </div>
+                <button id="burger" class="burger md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
+            <div class="px-6 py-4 space-y-1">
+                <a href="/recharge#features" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Features</a>
+                <a href="/recharge#how" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">How it works</a>
+                <a href="/recharge#faq" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">FAQ</a>
+                <a href="/recharge/support" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Support</a>
+                <a href="/" class="block px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50">Solvr Labs &rarr;</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-32 pb-20 bg-gradient-to-b from-brand-50/70 to-white overflow-hidden">
+        <div class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-14 items-center">
+            <div class="text-center lg:text-left">
+                <img src="/assets/recharge-icon.png" alt="Recharge app icon" class="h-20 w-20 rounded-[22px] shadow-lg shadow-brand-200/60 mx-auto lg:mx-0 mb-6">
+                <h1 class="font-bold text-4xl sm:text-5xl lg:text-6xl text-brand-900 leading-[1.05]">Your apps run on a&nbsp;battery.</h1>
+                <p class="text-gray-500 text-lg sm:text-xl mt-6 leading-relaxed max-w-xl mx-auto lg:mx-0">Group the apps you want to use less. Each group gets a battery that drains as you use it and recharges while you&rsquo;re away. Not a blocker &mdash; a budget.</p>
+                <div class="flex flex-wrap gap-3 justify-center lg:justify-start mt-8">
+                    <a href="https://apps.apple.com/search?term=Recharge%20Screen%20Time" rel="noopener" class="inline-flex items-center gap-2 px-7 py-3.5 text-base font-semibold rounded-full bg-brand-900 text-white hover:bg-brand-800 transition-colors shadow-sm"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M16.365 1.43c0 1.14-.42 2.2-1.13 2.96-.76.82-2 1.45-3.02 1.37-.13-1.12.42-2.28 1.1-3 .76-.8 2.06-1.4 3.05-1.33zM20.5 17.2c-.55 1.27-.82 1.84-1.53 2.96-.99 1.57-2.39 3.52-4.12 3.53-1.54.02-1.94-1-4.03-.99-2.09.01-2.53 1.01-4.07.99-1.73-.02-3.05-1.78-4.04-3.35C.05 16.15-.24 11.06 1.5 8.42c1.24-1.88 3.2-2.98 5.04-2.98 1.87 0 3.05 1.02 4.6 1.02 1.5 0 2.41-1.02 4.57-1.02 1.63 0 3.36.89 4.6 2.42-4.04 2.21-3.39 7.98.19 9.34z"/></svg>Download on the App Store</a>
+                    <a href="#how" class="inline-flex items-center px-7 py-3.5 text-base font-semibold rounded-full border border-gray-200 text-brand-900 hover:border-brand-300 hover:bg-white transition-colors">How it works</a>
+                </div>
+                <p class="text-xs text-gray-400 mt-4">Free for iPhone &middot; iOS 17 or later</p>
+            </div>
+
+            <div class="relative mx-auto w-full max-w-sm">
+                <div class="absolute -inset-8 bg-brand-200/30 blur-3xl rounded-full"></div>
+                <div class="relative rounded-[2.5rem] bg-gray-900 p-3 shadow-2xl shadow-brand-900/20">
+                    <div class="rounded-[2rem] bg-gray-800 px-5 pt-8 pb-6 space-y-3.5">
+                        <p class="text-white/90 font-bold text-2xl">Batteries</p>
+                        <div class="rounded-2xl bg-gray-700/60 p-4">
+                            <div class="flex items-center justify-between mb-2.5"><span class="text-white font-semibold">💬 Social</span><span class="text-charge-400 font-bold">72%</span></div>
+                            <div class="h-2.5 rounded-full bg-gray-600 overflow-hidden"><div class="battery-bar h-full rounded-full" style="width:72%"></div></div>
+                            <p class="text-xs text-gray-400 mt-2">32 min left &middot; recharging</p>
+                        </div>
+                        <div class="rounded-2xl bg-gray-700/60 p-4">
+                            <div class="flex items-center justify-between mb-2.5"><span class="text-white font-semibold">🎯 Focus</span><span class="text-orange-400 font-bold">31%</span></div>
+                            <div class="h-2.5 rounded-full bg-gray-600 overflow-hidden"><div class="h-full rounded-full bg-orange-400" style="width:31%"></div></div>
+                            <p class="text-xs text-gray-400 mt-2">In use &middot; draining</p>
+                        </div>
+                        <div class="rounded-2xl bg-gray-700/60 p-4">
+                            <div class="flex items-center justify-between mb-2.5"><span class="text-white font-semibold">🎮 Games</span><span class="text-red-400 font-bold">0%</span></div>
+                            <div class="h-2.5 rounded-full bg-gray-600 overflow-hidden"><div class="h-full rounded-full bg-red-400" style="width:2%"></div></div>
+                            <p class="text-xs text-gray-400 mt-2">Shielded 🔒 &middot; full in 2h 10m</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how" class="py-20 bg-white">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">How it works</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3">Spend your attention on purpose</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-10">
+                <div class="reveal text-center">
+                    <div class="w-12 h-12 rounded-full bg-brand-600 text-white font-bold text-lg flex items-center justify-center mx-auto mb-4">1</div>
+                    <h3 class="font-semibold text-brand-900 mb-2">Make a battery</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto">Pick the apps you want to use less &mdash; social, games, video &mdash; and choose a preset: Saver, Standard or Extended.</p>
+                </div>
+                <div class="reveal text-center">
+                    <div class="w-12 h-12 rounded-full bg-brand-600 text-white font-bold text-lg flex items-center justify-center mx-auto mb-4">2</div>
+                    <h3 class="font-semibold text-brand-900 mb-2">Use them, watch it drain</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto">Open one of those apps and its battery starts draining. Warnings give you a nudge before you run low.</p>
+                </div>
+                <div class="reveal text-center">
+                    <div class="w-12 h-12 rounded-full bg-brand-600 text-white font-bold text-lg flex items-center justify-center mx-auto mb-4">3</div>
+                    <h3 class="font-semibold text-brand-900 mb-2">Recharge by stepping away</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto">Time away refills the battery. Hit 0% and the apps shield until it recovers &mdash; or use your emergency unlock.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-20 bg-brand-50/40 border-y border-gray-100">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">Features</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3 mb-3">Gentler than a wall, firmer than willpower</h2>
+                <p class="reveal reveal-delay-2 text-gray-500 max-w-2xl mx-auto">Everything is built around one idea: a limit you can feel filling and emptying is one you&rsquo;ll actually keep.</p>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="reveal rounded-2xl bg-white border border-gray-200/80 p-6 hover:shadow-lg hover:shadow-brand-100/60 transition-shadow">
+                    <div class="w-11 h-11 rounded-xl bg-brand-100 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg></div>
+                    <h3 class="font-semibold text-brand-900 mb-1.5">One battery per habit</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Give each group of apps its own battery, size and recharge speed. Start from a preset and tune from there.</p>
+                </div>
+                <div class="reveal rounded-2xl bg-white border border-gray-200/80 p-6 hover:shadow-lg hover:shadow-brand-100/60 transition-shadow">
+                    <div class="w-11 h-11 rounded-xl bg-brand-100 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg></div>
+                    <h3 class="font-semibold text-brand-900 mb-1.5">Shields at 0%</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">When a battery empties, its apps shield using Apple&rsquo;s Screen Time. Start again when you&rsquo;ve recharged.</p>
+                </div>
+                <div class="reveal rounded-2xl bg-white border border-gray-200/80 p-6 hover:shadow-lg hover:shadow-brand-100/60 transition-shadow">
+                    <div class="w-11 h-11 rounded-xl bg-brand-100 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg></div>
+                    <h3 class="font-semibold text-brand-900 mb-1.5">Emergency unlock</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Need in anyway? Take it &mdash; at a cost you set, like a short countdown. A speed bump, not a wall.</p>
+                </div>
+                <div class="reveal rounded-2xl bg-white border border-gray-200/80 p-6 hover:shadow-lg hover:shadow-brand-100/60 transition-shadow">
+                    <div class="w-11 h-11 rounded-xl bg-brand-100 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                    <h3 class="font-semibold text-brand-900 mb-1.5">Schedules &amp; days off</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Lock or fast-drain a battery at certain times, and take a day off when you need one.</p>
+                </div>
+                <div class="reveal rounded-2xl bg-white border border-gray-200/80 p-6 hover:shadow-lg hover:shadow-brand-100/60 transition-shadow">
+                    <div class="w-11 h-11 rounded-xl bg-brand-100 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/></svg></div>
+                    <h3 class="font-semibold text-brand-900 mb-1.5">Widgets &amp; Live Activities</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">See your battery on the Lock Screen and Dynamic Island, and start a session right from the shield.</p>
+                </div>
+                <div class="reveal rounded-2xl bg-white border border-gray-200/80 p-6 hover:shadow-lg hover:shadow-brand-100/60 transition-shadow">
+                    <div class="w-11 h-11 rounded-xl bg-brand-100 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg></div>
+                    <h3 class="font-semibold text-brand-900 mb-1.5">Progress that&rsquo;s honest</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Streaks, goal-vs-actual and a yearly Wrap, built from your own sessions &mdash; nothing else.</p>
+                </div>
+                <div class="reveal rounded-2xl bg-white border border-gray-200/80 p-6 hover:shadow-lg hover:shadow-brand-100/60 transition-shadow">
+                    <div class="w-11 h-11 rounded-xl bg-brand-100 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg></div>
+                    <h3 class="font-semibold text-brand-900 mb-1.5">Accountability partner</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Let one friend know when you run out or take an emergency unlock. Optional, and only if you set it up.</p>
+                </div>
+                <div class="reveal rounded-2xl bg-white border border-gray-200/80 p-6 hover:shadow-lg hover:shadow-brand-100/60 transition-shadow">
+                    <div class="w-11 h-11 rounded-xl bg-brand-100 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg></div>
+                    <h3 class="font-semibold text-brand-900 mb-1.5">Private by design</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">iOS never tells Recharge which apps you picked. No ads, no trackers, no selling data.</p>
+                </div>
+                <div class="reveal rounded-2xl bg-white border border-gray-200/80 p-6 hover:shadow-lg hover:shadow-brand-100/60 transition-shadow">
+                    <div class="w-11 h-11 rounded-xl bg-brand-100 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg></div>
+                    <h3 class="font-semibold text-brand-900 mb-1.5">Podcast mode</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Shielding an app stops its audio. Podcast mode lets your chosen apps play, on your terms.</p>
+                </div>
+            </div>
+            <p class="reveal text-center text-sm text-gray-400 mt-8">Recharge is free with one battery. <strong class="text-gray-500">Recharge Plus</strong> adds unlimited batteries, tuning, widgets &amp; Live Activities, Podcast mode, Days off and themes.</p>
+        </div>
+    </section>
+
+    <section id="faq" class="py-20 bg-white">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="text-center mb-10">
+                <span class="reveal text-sm font-semibold text-brand-600 uppercase tracking-wider">FAQ</span>
+                <h2 class="reveal reveal-delay-1 font-bold text-3xl sm:text-4xl text-brand-900 mt-3">Questions, answered</h2>
+            </div>
+            <div class="space-y-3">
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">Is Recharge a blocker?</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">No &mdash; it&rsquo;s a budget. A blocker says no all day. Recharge gives each group of apps an amount of use and lets you spend it however you like. Only when a battery hits 0% do its apps shield, until you recharge by staying away or use your emergency unlock.</p></div>
+                </div>
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">Can you see which apps I use?</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">No. iOS never tells Recharge the names of the apps you pick &mdash; it only hands over a sealed token we can&rsquo;t open. We don&rsquo;t track you, run ads, or sell data. Read the <a href="/recharge/privacy" class="text-brand-600 underline">Privacy Policy</a>.</p></div>
+                </div>
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">What does it cost?</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">Recharge is free to start with one battery. <strong>Recharge Plus</strong> is an optional subscription that adds unlimited batteries, tuning, widgets and Live Activities, Podcast mode, Days off and more. The price is shown in the app before you subscribe, and you can cancel any time in your App Store subscriptions.</p></div>
+                </div>
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">Can I still get into an app in an emergency?</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">Yes. Every shield has an emergency unlock. You choose what it costs &mdash; a short countdown, for instance &mdash; so it&rsquo;s a speed bump, not a wall.</p></div>
+                </div>
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">What do I need?</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">An iPhone running iOS 17 or later. Recharge uses Apple&rsquo;s Screen Time technology, so you&rsquo;ll be asked to grant that permission the first time.</p></div>
+                </div>
+                <div class="faq-item bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <button class="w-full flex items-center justify-between gap-4 text-left px-6 py-5">
+                        <span class="font-semibold text-brand-900">Does it work across my devices?</span>
+                        <svg class="faq-icon w-5 h-5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                    <div class="faq-answer"><p class="px-6 pb-5 text-gray-500 leading-relaxed">Your batteries, schedules and history sync when you sign in with Apple. The list of apps in a battery can&rsquo;t sync &mdash; iOS keeps that selection private to each device &mdash; so you pick them once per device.</p></div>
+                </div>
+            </div>
+            <p class="text-center text-gray-500 mt-8">Something else? <a href="/recharge/support" class="text-brand-600 font-semibold underline underline-offset-2">Visit support</a>.</p>
+        </div>
+    </section>
+
+    <section class="py-20 bg-brand-900 text-white text-center">
+        <div class="max-w-2xl mx-auto px-6">
+            <h2 class="font-bold text-3xl sm:text-4xl">Recharge your attention.</h2>
+            <p class="text-brand-200/80 mt-4">Free to start. Takes about two minutes to set up.</p>
+            <a href="https://apps.apple.com/search?term=Recharge%20Screen%20Time" rel="noopener" class="inline-flex mt-8 px-8 py-3.5 text-base font-semibold rounded-full bg-white text-brand-900 hover:bg-brand-50 transition-colors">Get Recharge on the App Store</a>
+        </div>
+    </section>
+
+    <footer class="bg-brand-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-14">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <a href="/recharge" class="inline-flex items-center gap-3 mb-4"><img src="/assets/recharge-icon.png" alt="Recharge" class="h-10 w-10 rounded-[11px]"><span class="font-bold text-xl">Recharge</span></a>
+                    <p class="text-brand-300/60 text-sm leading-relaxed max-w-xs">Screen Time, as a battery. Made by <a href="/" class="underline underline-offset-2 hover:text-white">Solvr Labs</a>.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">App</h4>
+                    <ul class="space-y-2"><li><a href="/recharge" class="text-brand-300/50 hover:text-white text-sm transition-colors">Overview</a></li><li><a href="/recharge#faq" class="text-brand-300/50 hover:text-white text-sm transition-colors">FAQ</a></li><li><a href="/recharge/support" class="text-brand-300/50 hover:text-white text-sm transition-colors">Support</a></li></ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Legal</h4>
+                    <ul class="space-y-2"><li><a href="/recharge/privacy" class="text-brand-300/50 hover:text-white text-sm transition-colors">Privacy Policy</a></li><li><a href="/recharge/terms" class="text-brand-300/50 hover:text-white text-sm transition-colors">Terms of Use</a></li><li><a href="/recharge/copyright" class="text-brand-300/50 hover:text-white text-sm transition-colors">Copyright</a></li></ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-800 mt-10 pt-6 text-center text-brand-300/40 text-xs">&copy; 2026 Solvr Labs, LLC. All rights reserved. Recharge is a trademark of Solvr Labs, LLC. Apple, iPhone, Screen Time and App Store are trademarks of Apple Inc.</div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('burger').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('mobile-menu').classList.toggle('hidden'); });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        document.querySelectorAll('.faq-item button').forEach(b => b.addEventListener('click', () => b.parentElement.classList.toggle('open')));
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
