@@ -1,12 +1,5 @@
 [
   {
-    "slug": "voice-ai-in-2026-whats-actually-good",
-    "title": "Voice AI in 2026: What's Actually Good Now",
-    "tag": "Opinion",
-    "summary": "Voice AI has improved dramatically. Here's what's production-ready, what's still rough, and what I'm using for client projects.",
-    "context": "Cover the current state of voice AI platforms — ElevenLabs, Play.ht, Deepgram, etc. Latency has dropped to near-real-time. Voices sound natural. But interruption handling is still tricky, multilingual support varies, and some platforms charge per minute. Compare from a builder's perspective. Mention that Radar uses ElevenLabs and why. Position Solvr Labs as having deep expertise in voice AI for service businesses."
-  },
-  {
     "slug": "zapier-vs-n8n-for-service-business-automation",
     "title": "Zapier vs n8n: Which Is Better for Service Business Automation?",
     "tag": "Comparison",
