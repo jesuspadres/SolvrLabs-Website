@@ -3,11 +3,11 @@
  * Generates a blog post from the next topic in the queue.
  *
  * Usage:
- *   ANTHROPIC_API_KEY=sk-... node scripts/generate-blog-post.js
+ *   CHEAPERINFERENCE_API_KEY=ci_live_... node scripts/generate-blog-post.js
  *
  * What it does:
  *   1. Reads blog/topics.json and picks the first topic
- *   2. Calls Claude API to generate the blog post HTML
+ *   2. Calls DeepSeek V4 Pro (via CheaperInference) to generate the blog post HTML
  *   3. Writes the post to blog/<slug>.html
  *   4. Adds a card to blog.html
  *   5. Removes the topic from the queue
@@ -23,28 +23,28 @@ const BLOG_INDEX = path.join(ROOT, "blog.html");
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-function callClaude(prompt) {
+function callLLM(prompt) {
   return new Promise((resolve, reject) => {
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.CHEAPERINFERENCE_API_KEY;
     if (!apiKey) {
-      reject(new Error("ANTHROPIC_API_KEY environment variable is required"));
+      reject(new Error("CHEAPERINFERENCE_API_KEY environment variable is required"));
       return;
     }
 
+    // OpenAI-compatible chat completions via CheaperInference.
     const body = JSON.stringify({
-      model: "claude-sonnet-5",
-      max_tokens: 16000,
+      model: "deepseek-v4-pro",
+      max_tokens: 32000, // headroom: reasoning tokens count toward this
       messages: [{ role: "user", content: prompt }],
     });
 
     const options = {
-      hostname: "api.anthropic.com",
-      path: "/v1/messages",
+      hostname: "api.cheaperinference.com",
+      path: "/v1/chat/completions",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
+        Authorization: `Bearer ${apiKey}`,
       },
     };
 
@@ -58,16 +58,17 @@ function callClaude(prompt) {
             reject(new Error(parsed.error.message));
             return;
           }
-          if (parsed.stop_reason !== "end_turn") {
-            reject(new Error(`Unexpected stop_reason: ${parsed.stop_reason}`));
+          const choice = parsed.choices && parsed.choices[0];
+          if (!choice) {
+            reject(new Error(`No choices in API response: ${data.slice(0, 500)}`));
             return;
           }
-          // Response may include thinking blocks — take only the text.
-          const text = parsed.content
-            .filter((b) => b.type === "text")
-            .map((b) => b.text)
-            .join("");
-          resolve(text);
+          if (choice.finish_reason !== "stop") {
+            reject(new Error(`Unexpected finish_reason: ${choice.finish_reason}`));
+            return;
+          }
+          // Reasoning models return their thinking separately (reasoning_content) — take only the answer.
+          resolve(choice.message.content || "");
         } catch (e) {
           reject(new Error(`Failed to parse API response: ${data.slice(0, 500)}`));
         }
@@ -167,7 +168,7 @@ async function main() {
     )
     .join("\n                ");
 
-  // 2. Generate post content via Claude
+  // 2. Generate post content via DeepSeek
   const prompt = `You are writing a blog post for Solvr Labs (solvrlabs.com). The author is Jessy, a solo full-stack developer who builds AI automation systems for service businesses (plumbers, cleaners, landscapers, property managers). He uses n8n, Claude AI, Supabase, Next.js, Twilio, Stripe, and Vercel.
 
 Write in first person. Casual but knowledgeable developer tone — like a dev diary / build log. Talk about real problems, real solutions, real tools. No marketing fluff. No filler. Be specific and technical where it helps, but keep it accessible.
@@ -240,9 +241,9 @@ Use these HTML elements:
 - <a href="https://taskline.solvrlabs.com" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank"> for Taskline links
 - <a href="/contact" class="text-brand-600 hover:text-brand-700 font-medium"> for CTA links
 
-Write 800-1200 words. End with a natural CTA linking to /contact or /radar (whichever fits the topic). Do NOT include the article wrapper tags — just the inner content starting with an <h2>.`;
+Write 800-1200 words. End with a natural CTA linking to /assessment (free operations assessment) or /radar (whichever fits the topic). Do NOT include the article wrapper tags — just the inner content starting with an <h2>.`;
 
-  const articleContent = await callClaude(prompt);
+  const articleContent = await callLLM(prompt);
 
   // 3. Build full HTML page
   const html = `<!DOCTYPE html>
