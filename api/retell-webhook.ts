@@ -4,9 +4,11 @@ import Retell from 'retell-sdk'
 
 // Solvr Labs — Retell call-ended notification webhook (v0)
 //
-// Purpose: when Ana finishes a call, email Jessy so he can pull the transcript
-// from the Retell dashboard manually. No DB, no Claude — this is the minimum
-// viable feedback loop while we test the agent in production.
+// Purpose: when Ana finishes a call, email Jessy a summary + transcript.
+// We wait for `call_analyzed` (not `call_ended`) because that's the event
+// that carries Retell's post-call analysis (summary, sentiment, success)
+// alongside the transcript. No DB, no extra LLM call — Retell does the
+// summarizing.
 //
 // Endpoint: POST https://www.solvrlabs.com/api/retell-webhook
 // Configured via scripts/retell-setup.mjs in the solvr-platform repo.
@@ -67,6 +69,18 @@ interface RetellCall {
   start_timestamp?: number
   end_timestamp?: number
   duration_ms?: number
+  transcript?: string
+  recording_url?: string
+  disconnection_reason?: string
+  call_analysis?: RetellCallAnalysis
+}
+
+interface RetellCallAnalysis {
+  call_summary?: string
+  user_sentiment?: string
+  call_successful?: boolean
+  in_voicemail?: boolean
+  custom_analysis_data?: Record<string, unknown>
 }
 
 interface RetellWebhookPayload {
@@ -113,7 +127,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'invalid_json' })
   }
 
-  if (payload.event !== 'call_ended') {
+  if (payload.event !== 'call_analyzed') {
     return res.status(200).json({ ok: true, ignored: payload.event })
   }
 
@@ -154,13 +168,37 @@ async function notifyNewCall(call: RetellCall): Promise<void> {
   const whenLabel = formatPhoenixTime(call.end_timestamp ?? call.start_timestamp)
   const dashboardUrl = RETELL_DASHBOARD_CALL_URL(call.call_id)
 
-  const lines = [
+  const analysis = call.call_analysis ?? {}
+  const summary = analysis.call_summary?.trim() || '(no summary generated)'
+  const transcript = call.transcript?.trim() || '(no transcript — caller may have hung up immediately)'
+
+  const details = [
     `From: ${caller}`,
     `Duration: ${durationLabel}`,
     `When: ${whenLabel} (Phoenix)`,
-    `Call ID: ${call.call_id}`,
+  ]
+  if (analysis.user_sentiment) details.push(`Sentiment: ${analysis.user_sentiment}`)
+  if (analysis.call_successful !== undefined) details.push(`Successful: ${analysis.call_successful ? 'yes' : 'no'}`)
+  if (analysis.in_voicemail) details.push(`Voicemail: yes`)
+  if (call.disconnection_reason) details.push(`Ended by: ${call.disconnection_reason}`)
+
+  const custom = Object.entries(analysis.custom_analysis_data ?? {})
+    .filter(([, v]) => v !== null && v !== undefined && v !== '')
+    .map(([k, v]) => `${k}: ${typeof v === 'string' ? v : JSON.stringify(v)}`)
+
+  const lines = [
+    `SUMMARY`,
+    summary,
+    ``,
+    ...details,
+    ...(custom.length ? [``, `EXTRACTED`, ...custom] : []),
     ``,
     `Open in Retell: ${dashboardUrl}`,
+    ...(call.recording_url ? [`Recording: ${call.recording_url}`] : []),
+    `Call ID: ${call.call_id}`,
+    ``,
+    `TRANSCRIPT`,
+    transcript,
   ]
 
   const resend = new Resend(apiKey)
