@@ -1,12 +1,5 @@
 [
   {
-    "slug": "zapier-vs-n8n-for-service-business-automation",
-    "title": "Zapier vs n8n: Which Is Better for Service Business Automation?",
-    "tag": "Comparison",
-    "summary": "Zapier is easier. n8n is more powerful. Here's which one makes sense for your service business — and when to skip both.",
-    "context": "Compare Zapier and n8n specifically for service business use cases: call routing, job creation, emergency alerts, calendar booking, CRM syncing. Zapier is great for simple workflows but gets expensive fast ($50-100+/mo) and has limits on complex logic. n8n is self-hosted, free, and handles complex branching — but requires technical setup. The real angle: for most tradespeople, you shouldn't be building automations at all. Radar and Taskline handle the complex stuff out of the box. Position Solvr Labs as the done-for-you alternative to DIY automation."
-  },
-  {
     "slug": "supabase-for-everything-my-go-to-backend",
     "title": "Supabase for Everything: Why It's My Go-To Backend",
     "tag": "Build Log",
