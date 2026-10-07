@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /blog-art/
+Disallow: /docs/
+Disallow: /scripts/
+
+Sitemap: https://www.solvrlabs.com/sitemap.xml
