@@ -1,9 +1,1 @@
-[
-  {
-    "slug": "supabase-for-everything-my-go-to-backend",
-    "title": "Supabase for Everything: Why It's My Go-To Backend",
-    "tag": "Build Log",
-    "summary": "PostgreSQL, auth, real-time, storage, edge functions — all in one platform. Here's how I use Supabase for client projects and Taskline.",
-    "context": "Technical but accessible post about why Supabase is the best backend for solo developers and small teams. Row-level security for multi-tenant apps, real-time subscriptions for live dashboards, edge functions for webhooks. Compare to Firebase and raw Postgres setups. Include specific patterns from Taskline like the proposal storage and feedback loop. This post shows the technical depth behind Solvr Labs products."
-  }
-]
+[]

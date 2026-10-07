@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase for Everything: Why It's My Go-To Backend - Solvr Labs</title>
+    <meta name="description" content="PostgreSQL, auth, real-time, storage, edge functions, all in one platform. Here's how I use Supabase for client projects and TaskLine, and the one setting behind the 16,000 databases just found wide open.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Supabase for Everything: Why It's My Go-To Backend">
+    <meta property="og:description" content="PostgreSQL, auth, real-time, storage, edge functions, all in one platform. Here's how I use Supabase for client projects and TaskLine, and the one setting behind the 16,000 databases just found wide open.">
+    <meta property="og:url" content="https://solvrlabs.com/blog/supabase-for-everything-my-go-to-backend">
+    <meta property="og:image" content="https://solvrlabs.com/blog/images/supabase-for-everything-my-go-to-backend.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Supabase for Everything: Why It's My Go-To Backend">
+    <meta name="twitter:description" content="PostgreSQL, auth, real-time, storage, edge functions, all in one platform. Here's how I use Supabase for client projects and TaskLine, and the one setting behind the 16,000 databases just found wide open.">
+    <meta name="twitter:image" content="https://solvrlabs.com/blog/images/supabase-for-everything-my-go-to-backend.png">
+    <link rel="icon" type="image/png" href="../assets/favicon-solvrlabs.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#f0f5ff',100:'#e1ebff',200:'#c8d8fe',300:'#a3bffc',400:'#7da0f8',500:'#5a7de6',600:'#4664d6',700:'#3a53bd',800:'#33469a',900:'#2c3a7c',950:'#1d264e' },
+                        gray: { 50:'#f9fafb',100:'#f2f3f6',200:'#e5e7eb',300:'#d1d5db',400:'#9ca3af',500:'#6b7280',600:'#4b5563',700:'#374151',800:'#1f2937',900:'#1d1e20' },
+                    },
+                    fontFamily: { sans: ['"DM Sans"','system-ui','sans-serif'], display: ['"DM Sans"','system-ui','sans-serif'] },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+        html { overflow-x: clip; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f2f3f6; } ::-webkit-scrollbar-thumb { background: #5a7de6; border-radius: 3px; }
+        .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+        .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; }
+        .burger span { display:block; width:22px; height:2px; background:#2c3a7c; transition:all 0.3s ease; }
+        .burger.active span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity:0; }
+        .burger.active span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+        .prose h2 { font-size: 1.5rem; font-weight: 700; color: #2c3a7c; margin-top: 2.5rem; margin-bottom: 1rem; }
+        .prose h3 { font-size: 1.25rem; font-weight: 600; color: #33469a; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .prose p { color: #6b7280; line-height: 1.8; margin-bottom: 1.25rem; }
+        .prose ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; }
+        .prose ul li { color: #6b7280; line-height: 1.8; margin-bottom: 0.5rem; }
+        .prose strong { color: #374151; font-weight: 600; }
+        .prose code { background: #f0f5ff; color: #4664d6; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
+        .prose blockquote { border-left: 3px solid #5a7de6; padding-left: 1.25rem; margin: 1.5rem 0; font-style: italic; color: #9ca3af; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 overflow-x-hidden">
+
+    <!-- Nav -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <a href="/" class="py-3.5">
+                    <img src="../assets/full-logo-png (1).png" alt="Solvr Labs" class="h-[36px] md:h-[50px]">
+                </a>
+                <div class="hidden md:flex items-center gap-10">
+                    <a href="/" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Home</a>
+                    <div class="relative group">
+                        <button class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors inline-flex items-center gap-1">Products <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <div class="w-64 bg-white rounded-xl border border-gray-200/80 shadow-xl shadow-gray-200/50 overflow-hidden">
+                                <a href="/radar" class="flex items-center gap-3 px-4 py-3 hover:bg-brand-50 transition-colors">
+                                    <div class="w-9 h-9 rounded-lg bg-brand-100 flex items-center justify-center flex-shrink-0"><svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg></div>
+                                    <div><p class="text-sm font-semibold text-brand-900">Radar</p><p class="text-xs text-gray-400">AI receptionist &amp; dispatcher</p></div>
+                                </a>
+                                <a href="https://taskline.solvrlabs.com" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 hover:bg-brand-50 transition-colors border-t border-gray-100">
+                                    <div class="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0"><img src="/assets/TaskLine-Logo.png" alt="Taskline" class="w-full h-full object-cover"></div>
+                                    <div><p class="text-sm font-semibold text-brand-900">Taskline</p><p class="text-xs text-gray-400">AI-powered job management</p></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="/services" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Services</a>
+                    <a href="/about" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">About</a>
+                    <a href="/#work" class="text-lg font-medium text-gray-500 hover:text-brand-600 transition-colors">Work</a>
+                    <a href="/assessment" class="px-6 py-2.5 text-base font-semibold rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-colors shadow-sm">Book a Call</a>
+                </div>
+                <button id="burger" class="burger md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100">
+            <div class="px-6 py-4 space-y-1">
+                <a href="/" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Home</a>
+                <div>
+                    <button onclick="document.getElementById('mobile-products').classList.toggle('hidden')" class="flex items-center justify-between w-full px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Products <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+                    <div id="mobile-products" class="hidden pl-4 space-y-1 mt-1">
+                        <a href="/radar" class="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50"><span class="w-6 h-6 rounded-md bg-brand-100 flex items-center justify-center flex-shrink-0"><svg class="w-3.5 h-3.5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg></span> Radar</a>
+                        <a href="https://taskline.solvrlabs.com" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50"><span class="w-6 h-6 rounded-md overflow-hidden flex-shrink-0"><img src="/assets/TaskLine-Logo.png" alt="Taskline" class="w-full h-full object-cover"></span> Taskline</a>
+                    </div>
+                </div>
+                <a href="/services" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Services</a>
+                <a href="/about" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">About</a>
+                <a href="/#work" class="block px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50">Work</a>
+                <a href="/assessment" class="block mt-3 px-3 py-2.5 text-sm font-semibold text-center text-white rounded-full bg-brand-600">Book a Call</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Article Header -->
+    <section class="pt-32 pb-12 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <a href="/blog" class="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors mb-6">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
+                Back to Blog
+            </a>
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-xs font-semibold text-brand-600 bg-brand-100 px-2.5 py-1 rounded-full">Build Log</span>
+                <span class="text-xs text-gray-400">Oct 7, 2026</span>
+            </div>
+            <h1 class="font-bold text-3xl sm:text-4xl text-brand-900 leading-tight mb-4">Supabase for Everything: Why It's My Go-To Backend</h1>
+            <p class="text-gray-500 text-lg leading-relaxed">PostgreSQL, auth, real-time, storage, edge functions, all in one platform. Here's how I use Supabase for client projects and TaskLine, and the one setting behind the 16,000 databases just found wide open.</p>
+        </div>
+    </section>
+
+    <!-- Article Body -->
+    <article class="py-16 bg-white">
+        <div class="max-w-3xl mx-auto px-6 prose">
+<img src="/blog/images/supabase-for-everything-my-go-to-backend.png" alt="A Postgres database with row level security locking each customer to their own rows" class="w-full rounded-2xl border border-gray-200" width="1200" height="630">
+
+<h2>16,000 Supabase databases were just found wide open. I still use it for everything.</h2>
+
+<p>Late last month, the security firm UpGuard published research showing <a href="https://www.upguard.com/blog/everything-everywhere-systemic-data-exposure-in-supabase-apps" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">16,326 Supabase databases with tables anyone on the internet could read</a>. They scanned about 300,000 domains that showed signs of running on Supabase, and over half of the exposed databases had personal info in them: names, addresses, phone numbers. A smaller set leaked passwords and auth tokens. <a href="https://techcrunch.com/2026/09/25/some-supabase-customers-are-publicly-exposing-reams-of-peoples-data-to-the-web/" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">TechCrunch</a> and <a href="https://www.bleepingcomputer.com/news/security/misconfigured-supabase-apps-expose-data-in-over-16-000-databases/" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">BleepingComputer</a> picked it up the same week.</p>
+
+<p>Supabase is the backend I build almost everything on, including <a href="https://taskline.solvrlabs.com" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank">TaskLine</a> and the custom portals I build for clients. So I want to do two things in this post: explain why I still pick it, and explain the one setting behind most of those leaks, in plain English, so you know what to ask whoever builds your software.</p>
+
+<h2>Why a plumber or property manager should care about a database story</h2>
+
+<p>Because the data in these apps is <em>your</em> customer list. One of UpGuard's examples was a US valet service with more than 100,000 customer records and 665 staff records sitting readable on the open web. Swap "valet" for "HVAC company" or "cleaning service" and it's the exact data a client portal or job app holds: who your customers are, where they live, how to reach them.</p>
+
+<p>And more of that data is getting wired into new tools every month. Housecall Pro's 2026 survey found <a href="https://www.housecallpro.com/resources/ai-in-the-trades/" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">48% of home service pros already use AI</a> in their business (53% of plumbers, 54% of electricians). Homebase found <a href="https://www.joinhomebase.com/blog/small-business-ai-gap-report" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">74% of small businesses are using or piloting AI</a>, and the number one worry, at 51%, is data privacy. That worry is reasonable. The UpGuard research is what it looks like when nobody checks.</p>
+
+<h2>What Supabase actually is</h2>
+
+<p>Supabase is a hosted <code>Postgres</code> database with the stuff every app needs bolted on: user logins (<code>auth</code>), file storage, real-time updates, and <code>edge functions</code> for small bits of server code like webhooks. It's not a niche tool anymore. In June it raised <a href="https://www.orrick.com/en/News/2026/06/Supabase-Raises-500-Million-at-10-5-Billion-Valuation-to-Accelerate-Lead-in-Agentic-Infrastructure" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">$500 million at a $10.5 billion valuation</a> and says more than 9 million developers use it.</p>
+
+<p>The pricing is a big reason it works for small businesses. Per <a href="https://supabase.com/pricing" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">Supabase's pricing page</a>, the free plan gives you a 500 MB database but pauses after a week of inactivity, which is fine for prototypes and not fine for a business. The Pro plan starts at $25/month, never pauses, and includes daily backups. Team starts at $599/month if you need SOC 2 paperwork. For a 10-person service company, Pro is usually all you need.</p>
+
+<h2>Why it's my go-to backend</h2>
+
+<h3>Row level security, for real multi-tenant apps</h3>
+
+<p>Most of what I build has the same shape: one database, lots of people who should only see their own slice. Customers see their own jobs and invoices. Techs see their own schedule. The owner sees everything. Postgres <code>row level security</code> (RLS) lets me write those rules once, inside the database, instead of hoping every screen in the app remembers to filter correctly. If a bug in the front end asks for the wrong rows, the database says no.</p>
+
+<h3>Real-time without extra plumbing</h3>
+
+<p>In TaskLine, when a client sends a message or a payment comes in, the dashboard updates instantly through Supabase's real-time subscriptions. No polling, no separate websocket server to babysit.</p>
+
+<h3>Your history becomes the AI's context</h3>
+
+<p>TaskLine stores approved proposals in Supabase and uses them as context when it drafts the next one, which is how the AI ends up writing in the owner's voice with their pricing patterns. Because it's just Postgres, that data is also there for normal reporting: revenue by month, quotes that never closed, all with plain SQL.</p>
+
+<h3>Why not Firebase or raw Postgres?</h3>
+
+<p>Firebase is a solid product, but for jobs, customers, invoices and line items I want real relational tables and SQL, not documents I have to stitch together. Raw Postgres on a server gives me the tables but makes me build auth, storage, backups and an API myself. Supabase sits in the middle, and if a client ever wants to leave, it's a standard Postgres database they can take with them.</p>
+
+<h2>So what went wrong for those 16,000?</h2>
+
+<p>Here's the part that matters. Supabase exposes your tables through an API, and the key the browser uses to call it is public on purpose. The thing that protects your data is RLS. Supabase's own <a href="https://supabase.com/docs/guides/database/postgres/row-level-security" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">docs</a> are blunt about it: "A table in an exposed schema without RLS is readable and writable by any role with a grant on it."</p>
+
+<p>UpGuard found that RLS is switched on by default for tables created in Supabase's Table Editor, but tables created through the API, which is how AI coding agents tend to create them, don't get it by default. Add policies that look restrictive but aren't, plus secret keys pasted into front-end code, and you get the list. BleepingComputer noted the common thread was apps built by AI coding agents whose owners didn't know the setting existed, though UpGuard was clear its scan can't prove that for every site.</p>
+
+<p>Supabase's CISO told TechCrunch that projects are "secure by default" and that security is a shared responsibility. Both things can be true. The platform gives you the lock. Someone still has to turn it.</p>
+
+<h3>What's real and what's hype</h3>
+
+<p><strong>Real:</strong> AI tools can build a working app on Supabase in an afternoon. I use Claude for a lot of my own build work. <strong>Hype:</strong> that "working" means "safe to put customer data in." An app that loads the right screens can still hand every row in the database to anyone who opens the browser console.</p>
+
+<h2>The checklist I run on every project</h2>
+
+<ul>
+<li><strong>RLS on every table, no exceptions.</strong> <code>alter table jobs enable row level security;</code> is the first line after any <code>create table</code>.</li>
+<li><strong>Policies tied to the logged-in user.</strong> Something like <code>using ( (select auth.uid()) = owner_id )</code>, so a customer only ever gets their own rows. No <code>using ( true )</code> on anything with personal data.</li>
+<li><strong>Secret keys stay on the server.</strong> The docs say it straight: never put a secret key in the browser. Mine live in edge functions and server routes only.</li>
+<li><strong>Test as a stranger.</strong> Before launch I hit the API with the public key and no login. If anything comes back from a customer table, it doesn't ship.</li>
+<li><strong>Limit what AI tools can touch.</strong> As of October 6, Supabase supports <a href="https://supabase.com/changelog" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">scoped access tokens</a> that can be locked to one project and read-only access, including for its MCP server. If an AI assistant is helping build or query your app, it gets the smallest key that works.</li>
+</ul>
+
+<h2>Where Solvr Labs fits</h2>
+
+<p>This is exactly the work behind my <a href="/custom-software" class="text-brand-600 hover:text-brand-700 font-medium">custom software</a> service. When I build a client portal, an owner dashboard, or a full job management platform for a service business, it runs on Next.js, Supabase and the Claude API, with RLS set up before a single real customer record goes in.</p>
+
+<ul>
+<li><strong>You own it.</strong> 100% of the code and data, hosted on your own Vercel and Supabase accounts. If we stop working together, you keep everything.</li>
+<li><strong>It's sized for a small business.</strong> A focused app usually takes 4 to 6 weeks, and a Supabase Pro plan for a small company starts at $25/month, versus stacking another per-seat SaaS subscription. (Worth noting: <a href="https://www.thesmallbusinessexpo.com/blog/small-business-software-costs/" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">41% of small business owners</a> told Small Business Expo their software costs went up this past year.)</li>
+<li><strong>It works with what you already use.</strong> Stripe for payments, Twilio for texts, Google for calendar, and <a href="/radar" class="text-brand-600 hover:text-brand-700 font-medium">Radar</a> if you want calls answered and jobs booked automatically.</li>
+<li><strong>Or skip the build.</strong> If you just need proposals, jobs, invoicing and follow-ups, <a href="https://taskline.solvrlabs.com" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank">TaskLine</a> already does that on the same stack, and TaskLine users get the Radar setup fee waived.</li>
+</ul>
+
+<h2>What to do this week</h2>
+
+<p>If someone (or some AI) built an app for your business that stores customer info, ask them three questions:</p>
+
+<ul>
+<li>Is row level security turned on for every table with customer data?</li>
+<li>What can someone see with the public key and no login? Have you actually tested it?</li>
+<li>Where does the secret key live? (The right answer is "only on the server.")</li>
+</ul>
+
+<p>If you get a blank stare, that's your answer. And if you're not sure what you even have, book a <a href="/assessment" class="text-brand-600 hover:text-brand-700 font-medium">free operations assessment</a>. It's 30 minutes, you get a written report, and we can go through what you're running and where your customer data actually lives.</p>
+
+<h2>Sources</h2>
+
+<ul>
+<li><a href="https://www.upguard.com/blog/everything-everywhere-systemic-data-exposure-in-supabase-apps" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">Everything Everywhere: Systemic Data Exposure in Supabase Apps</a>, UpGuard, Oct 2026</li>
+<li><a href="https://techcrunch.com/2026/09/25/some-supabase-customers-are-publicly-exposing-reams-of-peoples-data-to-the-web/" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">Some Supabase customers are publicly exposing reams of people's data to the web</a>, TechCrunch, Sep 25, 2026</li>
+<li><a href="https://www.bleepingcomputer.com/news/security/misconfigured-supabase-apps-expose-data-in-over-16-000-databases/" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">Over 16,000 Supabase databases expose PII, passwords, auth tokens</a>, BleepingComputer, Sep 28, 2026</li>
+<li><a href="https://supabase.com/docs/guides/database/postgres/row-level-security" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">Row Level Security</a>, Supabase Docs</li>
+<li><a href="https://supabase.com/pricing" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">Pricing</a>, Supabase</li>
+<li><a href="https://supabase.com/changelog" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">Changelog: scoped personal access tokens</a>, Supabase, Oct 6, 2026</li>
+<li><a href="https://www.orrick.com/en/News/2026/06/Supabase-Raises-500-Million-at-10-5-Billion-Valuation-to-Accelerate-Lead-in-Agentic-Infrastructure" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">Supabase Raises $500 Million at $10.5 Billion Valuation</a>, Orrick, Jun 8, 2026</li>
+<li><a href="https://www.housecallpro.com/resources/ai-in-the-trades/" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">AI in the Trades</a>, Housecall Pro, Jun 2026</li>
+<li><a href="https://www.joinhomebase.com/blog/small-business-ai-gap-report" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">2026 Main Street AI Gap Report</a>, Homebase, Sep 22, 2026</li>
+<li><a href="https://www.thesmallbusinessexpo.com/blog/small-business-software-costs/" class="text-brand-600 hover:text-brand-700 font-medium" target="_blank" rel="noopener">41% Of Small Business Owners Report Rising Software Costs</a>, Small Business Expo, Mar 2026</li>
+</ul>
+        </div>
+    </article>
+
+    <!-- More Posts -->
+    <section class="py-16 bg-brand-50/50">
+        <div class="max-w-3xl mx-auto px-6">
+            <h3 class="reveal font-bold text-xl text-brand-900 mb-6">More Posts</h3>
+            <div class="reveal reveal-delay-1 space-y-4">
+                <a href="/blog/zapier-vs-n8n-for-service-business-automation" class="block bg-white rounded-xl p-5 border border-gray-200/80 hover:border-brand-200 transition-colors">
+                    <span class="text-xs text-gray-400">Oct 5, 2026</span>
+                    <h4 class="font-semibold text-brand-900 mt-1">Zapier vs n8n: Which Is Better for Service Business Automation?</h4>
+                </a>
+                <a href="/blog/building-taskline" class="block bg-white rounded-xl p-5 border border-gray-200/80 hover:border-brand-200 transition-colors">
+                    <span class="text-xs text-gray-400">Feb 5, 2026</span>
+                    <h4 class="font-semibold text-brand-900 mt-1">Building TaskLine: AI-Powered Freelancer Management</h4>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-14">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <a href="/" class="inline-block mb-4"><img src="../assets/full-logo-png (1).png" alt="Solvr Labs" class="h-10 md:h-14 brightness-0 invert"></a>
+                    <p class="text-brand-300/60 text-sm leading-relaxed max-w-xs">AI automation and custom software for service businesses.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Navigation</h4>
+                    <ul class="space-y-2"><li><a href="/" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home</a></li><li><a href="/services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Services</a></li><li><a href="/about" class="text-brand-300/50 hover:text-white text-sm transition-colors">About</a></li><li><a href="/blog" class="text-brand-300/50 hover:text-white text-sm transition-colors">Blog</a></li><li><a href="/contact" class="text-brand-300/50 hover:text-white text-sm transition-colors">Contact</a></li><li><a href="/assessment" class="text-brand-300/50 hover:text-white text-sm transition-colors">Free Assessment</a></li></ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm mb-4 uppercase tracking-wider text-brand-300/80">Services</h4>
+                    <ul class="space-y-2"><li><a href="/ai-automation" class="text-brand-300/50 hover:text-white text-sm transition-colors">AI Workflow Automation</a></li><li><a href="/radar" class="text-brand-300/50 hover:text-white text-sm transition-colors">Radar</a></li><li><a href="/custom-software" class="text-brand-300/50 hover:text-white text-sm transition-colors">Custom Software</a></li></ul>
+                    <h4 class="font-semibold text-sm mb-3 mt-5 uppercase tracking-wider text-brand-300/80">Industries</h4>
+                    <ul class="space-y-2"><li><a href="/home-services" class="text-brand-300/50 hover:text-white text-sm transition-colors">Home Services</a></li><li><a href="/property-management" class="text-brand-300/50 hover:text-white text-sm transition-colors">Property Management</a></li></ul>
+                </div>
+            </div>
+            <div class="border-t border-brand-800 mt-10 pt-6 text-center text-brand-300/40 text-xs">&copy; 2026 Solvr Labs, LLC. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('burger').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('mobile-menu').classList.toggle('hidden'); });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
