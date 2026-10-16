@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solvr Labs blog headers</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #1d264e; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { width: min(100vw, calc(100vh * 1200 / 630)); height: auto; aspect-ratio: 1200 / 630; display: block; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1200" height="630"></canvas>
+<script>
+"use strict";
+// =====================================================================
+//  SOLVR LABS BLOG HEADERS — 1200x630 (blog card + link preview), one era per header, 1s each.
+//  Stills: render with tools/still.mjs at t = 0.5, 1.5, 2.5 ... Style: solvr-flow.
+// =====================================================================
+const FPS = 24, W = 1200, H = 630;
+const BPM = 120, BEAT = 60 / BPM, E8 = BEAT / 2, E16 = BEAT / 4;
+const HEADERS = [
+  ['missed-call-cost', 'case', () => { impactMissedCall(); sfFrame(SF.b200); }],
+  ['crm-compare',      'comparison', () => crossroadsCrm()],
+  ['blog-automation',  'build', () => blueprintBlog()],
+  ['supabase-backend', 'build', () => blueprintSupabase()],
+  ['plumber-10-hours', 'case', () => { impactPlumberHours(); sfFrame(SF.b200); }],
+  ['dialzara', 'comparison', () => crossDialzara()],
+  ['goodcall', 'comparison', () => crossGoodcall()],
+  ['rosie', 'comparison', () => crossRosie()],
+  ['ruby', 'comparison', () => crossRuby()],
+  ['smith', 'comparison', () => crossSmith()],
+  ['zapier-n8n', 'comparison', () => crossZapierN8n()],
+  ['copilot', 'build', () => blueprintCopilot()],
+  ['receptionist', 'build', () => blueprintReceptionist()],
+  ['taskline', 'build', () => blueprintTaskline()],
+  ['claude-business', 'build', () => blueprintClaudeBusiness()],
+  ['servicetitan', 'build', () => blueprintServiceTitan()],
+  ['hvac', 'opinion', () => editorialHvac()],
+  ['in-public', 'opinion', () => editorialInPublic()],
+  ['n8n-switch', 'opinion', () => editorialAutomationBill()],
+  ['voice-ai', 'opinion', () => editorialVoice()],
+  ['ai-cant', 'opinion', () => editorialAiCant()],
+  ['answering', 'opinion', () => editorialAnsweringService()],
+  ['toolbox', 'opinion', () => editorialToolbox()],
+  ['agent-caller', 'opinion', () => editorialAgentCaller()],
+];
+const DURATION = HEADERS.length;
+const NFRAMES = Math.round(DURATION * FPS);
+const LOOP_T = NFRAMES / FPS;
+const SAFE = { top: 40, bottom: 40, right: 40 };
+const CX = W / 2;
+const HAND = '"DM Sans", "Helvetica Neue", Arial, system-ui, sans-serif';
+const ERA_LIST = HEADERS.map(([, , f], i) => [i, i + 1, f]);
+const SHOTS = HEADERS.map(([k], i) => [k, i, i, i + 1, k]);
+const TIMELINE = {
+  width: W, height: H, fps: FPS, bpm: BPM, duration: DURATION, frames: NFRAMES, loop: LOOP_T, safe: SAFE,
+  format: 'stills',
+  shots: SHOTS.map(([key, era, t0, t1, title], i) => ({ id: i + 1, key, era, t0, t1, title })),
+  cuts: HEADERS.slice(1).map((_, i) => i + 1), morphs: [], cues: {},
+  acts: [{ name: 'headers', role: 'build', t0: 0, t1: DURATION }],
+  board: HEADERS.map(([k], i) => ({ t: i + 0.5, title: k, sound: '-', next: '-' })),
+  narration: [],
+};
+window.TIMELINE = TIMELINE;

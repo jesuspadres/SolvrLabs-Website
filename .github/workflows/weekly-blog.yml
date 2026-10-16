@@ -1,9 +1,10 @@
 name: Weekly Blog Post
 
 on:
-  schedule:
-    # Every Monday at 9am UTC (2am MST)
-    - cron: '0 9 * * 1'
+  # Weekly schedule paused: posts + header images are now made by a Claude scheduled task
+  # (see blog-art/README.md). Re-enable by uncommenting.
+  # schedule:
+  #   - cron: '0 9 * * 1'
   workflow_dispatch: # Manual trigger
 
 permissions:

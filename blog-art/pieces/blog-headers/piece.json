@@ -1,0 +1,8 @@
+{
+  "name": "blog-headers",
+  "title": "Solvr Labs blog headers (style frames)",
+  "format": { "width": 1200, "height": 630, "fps": 24, "bpm": 120, "duration": 3.0, "frames": 72 },
+  "storyFormat": "stills: one era per blog header",
+  "style": "solvr-flow",
+  "review": { "safe": { "top": 40, "bottom": 40, "right": 40 }, "refs": {} }
+}
